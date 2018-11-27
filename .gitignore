@@ -1,2 +1,3 @@
 virtual
 .vscode
+__pycache__/
