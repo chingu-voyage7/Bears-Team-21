@@ -3,10 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <title>Saboteur</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>   
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
     <script type="text/javascript" src="{{url_for('static', filename='js/main.js')}}"></script>
 </head>
 <body>
     <h1>Saboteur</h1>
+  <p>Test code for Flask-SocketIO</p>
+  <button id="create_game_room">Create Game</button>
+  <button id="join_game_room">Join Game</button>
 </body>
 </html>
