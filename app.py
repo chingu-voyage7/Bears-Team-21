@@ -3,7 +3,7 @@ from flask import Flask, render_template, redirect, url_for, request, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_socketio import SocketIO, emit, send, join_room
 from werkzeug.security import generate_password_hash, check_password_hash
-from socket_module import GameRoomNamespace
+from classes.socket_module import GameRoomNamespace
 
 app = Flask(__name__)
 app.config['SECRET KEY'] = 'thisissecret' # os.getenv("SABOTEUR_SECRET_KEY")
