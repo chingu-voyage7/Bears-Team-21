@@ -11,7 +11,7 @@ class GameRoomNamespace(Namespace):
     def on_play_turn(self, data):
         emit('game_update', data)
 
-    def on_play_turn(self, data):
+    def on_something_else(self, data):
         emit('game_update', data)
 
 
