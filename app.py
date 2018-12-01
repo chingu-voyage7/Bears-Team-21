@@ -2,9 +2,9 @@ import os
 from flask import Flask, render_template, redirect, url_for, request, session
 import sqlite3
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from classes.socket_module import GameRoomNamespace
-from classes.database import add_user
+from classes.database import add_user, find_user
 import string, random
 
 app = Flask(__name__)
@@ -16,6 +16,10 @@ c = db.cursor()
 
 socketio = SocketIO(app)
 game_rooms = {}
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
  
 @app.route('/')
 def index():
@@ -25,9 +29,24 @@ def index():
 def signup(text=''):
     if request.method == 'POST':
         username = request.form['username']
-        password = generate_password_hash(request.form['password'])
+        password = request.form['password']
         text = add_user(username,password)
-    return render_template('signup.html',text=text)
+    return render_template('signup.html', text=text)
+
+@app.route('/login', methods=['GET','POST'])
+def login(text=''):
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if find_user(username,password) is not None:
+            return redirect('dashboard')
+        else:
+            text = 'Wrong username or password'
+    return render_template('login.html', text=text)
+
+@app.route('/dashboard')
+def dashboard():
+    return render_template('dashboard.html')
 
 @socketio.on('create_room')
 def on_create(data):

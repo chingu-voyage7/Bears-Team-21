@@ -1,4 +1,5 @@
 import sqlite3
+from werkzeug.security import generate_password_hash, check_password_hash
 
 DATABASE = 'database.db'
 
@@ -13,8 +14,9 @@ def init_db():
 def add_user(username, password):
     db = sqlite3.connect(DATABASE)
     c = db.cursor()
+    password = generate_password_hash(password)
     try:
-        c.execute('INSERT INTO users VALUES ("%s", "%s")' % (username, password))
+        c.execute('INSERT INTO users VALUES (?, ?)',(username, password,))
         db.commit()
     except sqlite3.Error as e:
         if str(e).startswith('UNIQUE'):
@@ -24,5 +26,14 @@ def add_user(username, password):
         return 'Error. Please try again.'
     db.close()
     return 'Signed up successfully!'
+
+def find_user(username,password):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    user = c.execute('''SELECT * FROM users WHERE
+    username = ?''', (username,)).fetchone()
+    if user is not None:
+        return check_password_hash(user[1], password)
+    return False
 
 init_db()
