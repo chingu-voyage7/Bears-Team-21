@@ -74,10 +74,10 @@ def on_join(data):
         game_rooms[roomId].append(data['userId'])
         join_room(roomId)
         send(game_rooms[roomId], roomId=roomId)
+        emit('roomsList',make_rm_List(), broadcast=True)
         socketio.on_namespace(GameRoomNamespace(roomId))
     else:
         emit('error', {'error': 'Unable to join room.'})
-    emit('roomsList',make_rm_List(), broadcast=True)
 
 @socketio.on("leave")
 def on_leave(roomId):
