@@ -52,10 +52,7 @@ def dashboard():
 
 @socketio.on('connect')
 def send_rm_list():
-    roomList = {}
-    for key in game_rooms:
-        roomList[key] = len(game_rooms[key])
-    emit('roomsList',roomList)
+    emit('roomsList',make_rm_List())
 
 @socketio.on('create_room')
 def on_create(data):
@@ -66,6 +63,7 @@ def on_create(data):
     game_rooms[roomId] = [data["userId"]]
     join_room(roomId)
     emit('join_room', {'game_roomId': roomId})
+    emit('roomsList',make_rm_List(), broadcast=True)
 
 @socketio.on('join_room')
 def on_join(data):
@@ -79,6 +77,7 @@ def on_join(data):
         socketio.on_namespace(GameRoomNamespace(roomId))
     else:
         emit('error', {'error': 'Unable to join room.'})
+    emit('roomsList',make_rm_List(), broadcast=True)
 
 @socketio.on("leave")
 def on_leave(roomId):
@@ -89,6 +88,12 @@ def random_string():
     # testing function
     N = 20
     return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(N))
+
+def make_rm_List():
+    roomList = {}
+    for key in game_rooms:
+        roomList[key] = len(game_rooms[key])
+    return roomList
 
 if __name__ == "__main__":
     app.debug = True
