@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, session, jsonify, json
 import sqlite3
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -15,7 +15,9 @@ db = sqlite3.connect(DATABASE)
 c = db.cursor()
 
 socketio = SocketIO(app)
-game_rooms = {}
+game_rooms = {'roomId1': ["Jhon","Alex","Alice"],
+            'roomId2': ["Bob"],
+            'roomId3': ["Ted","Max"]}
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -48,23 +50,30 @@ def login(text=''):
 def dashboard():
     return render_template('dashboard.html')
 
+@socketio.on('connect')
+def send_rm_list():
+    roomList = {}
+    for key in game_rooms:
+        roomList[key] = len(game_rooms[key])
+    emit('roomsList',roomList)
+
 @socketio.on('create_room')
 def on_create(data):
-    print('Creating')
+    print(data)
     # create game room, query game-manager.py for new game room
-    room_entry = data#{STUFF: "TO-BE DEFINED", roomId: random_string(), players: []}
-    roomId = room_entry['roomId']
-    game_rooms[roomId] = roomId
+    #room_entry = data#{STUFF: "TO-BE DEFINED", roomId: random_string(), players: []}
+    roomId = data['roomId']
+    game_rooms[roomId] = [data["userId"]]
     join_room(roomId)
     emit('join_room', {'game_roomId': roomId})
 
 @socketio.on('join_room')
 def on_join(data):
-    print('Joining')
+    print(data['userId'] + " joining " + data['roomId'])
     # join a game room
     roomId = data['roomId']
     if roomId in game_rooms:
-        game_rooms[roomId] # append(data['userId'])
+        game_rooms[roomId].append(data['userId'])
         join_room(roomId)
         send(game_rooms[roomId], roomId=roomId)
         socketio.on_namespace(GameRoomNamespace(roomId))
