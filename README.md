@@ -1,6 +1,8 @@
 # Bears-Team-21
 Multiplayer Board Game - Saboteur | Voyage-7 | https://chingu.io/
 
+![Image description](https://cf.geekdo-images.com/itemrep/img/aoCM1KdOmd7w56bQr4JSKWdDpaE=/fit-in/246x300/pic3989824.jpg)
+
 ## Chingu-Voyage Project Idea
 
 Develop a turn based board game, using JavaScript/socket.io for the front-end and Python/Flask for the back-end. The general idea it’s to build a Tile Game inspired by Saboteur. The web client interface should allow the users to join different rooms and join a Game, each game should allow a minimum of 2 players up to 10. Also there should be the option to play against Bots AI. 
@@ -108,4 +110,5 @@ This project is licensed under the GNU GPLv3 - see the [LICENSE.md](LICENSE.md) 
 
 ## Acknowledgments
 
+* The original [Saboteur](https://boardgamegeek.com/boardgame/9220/saboteur)
 * Inspiration [Board Game Arena](https://en.boardgamearena.com)
