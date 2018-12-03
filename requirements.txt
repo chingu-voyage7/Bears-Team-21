@@ -1,0 +1,4 @@
+Werkzeug==0.14.1
+Flask==1.0.2
+Flask_SocketIO==3.1.0
+Flask_Login==0.4.1
