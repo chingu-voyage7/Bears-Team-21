@@ -1,11 +1,11 @@
-import os
+#!/usr/bin/env python
+import os, sqlite3
 from flask import Flask, render_template, redirect, url_for, request, session, jsonify, json
-import sqlite3
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from classes.socket_module import GameRoomNamespace
 from classes.database import add_user, find_user
-import string, random
+import classes.settings as config
 
 app = Flask(__name__)
 app.config['SECRET KEY'] = 'thisissecret' # os.getenv("SABOTEUR_SECRET_KEY")
@@ -52,13 +52,18 @@ def dashboard():
 
 @socketio.on('connect')
 def send_rm_list():
-    emit('roomsList',make_rm_List())
+    join_room('/lobby')
+    print('/room joined')
+    emit('roomsList',make_rm_List(),room='/lobby')
 
 @socketio.on('create_room')
 def on_create(data):
+    #if not current_user.is_authenticated:
+    #    print (request.sid + ' unauthorized')
+    #    return
     print(data)
     # create game room, query game-manager.py for new game room
-    #room_entry = data#{STUFF: "TO-BE DEFINED", roomId: random_string(), players: []}
+    #room_entry = data#{STUFF: "TO-BE DEFINED", roomId: random_string(20), players: []}
     roomId = data['roomId']
     game_rooms[roomId] = [data["userId"]]
     join_room(roomId)
@@ -67,15 +72,19 @@ def on_create(data):
 
 @socketio.on('join_room')
 def on_join(data):
-    print(data['userId'] + " joining " + data['roomId'])
+    #if not current_user.is_authenticated:
+    #    print (request.sid + ' unauthorized')
+    #    return
+    print(request.sid + " joining " + data['roomId'])
     # join a game room
     roomId = data['roomId']
-    if roomId in game_rooms:
+    if (roomId in game_rooms) and (len(game_rooms[roomId]) < config.MAX_ROOM_SIZE)  and (data['userId'] not in game_rooms[roomId]):
         game_rooms[roomId].append(data['userId'])
+        leave_room('/lobby')
         join_room(roomId)
         send(game_rooms[roomId], roomId=roomId)
-        emit('roomsList',make_rm_List(), broadcast=True)
-        socketio.on_namespace(GameRoomNamespace(roomId))
+        emit('roomsList',make_rm_List(), room='/lobby')
+        socketio.on_namespace(GameRoomNamespace('/lobby'))
     else:
         emit('error', {'error': 'Unable to join room.'})
 
@@ -83,11 +92,6 @@ def on_join(data):
 def on_leave(roomId):
         leave_room(roomId)
         emit("leave game room", room=roomId)
-
-def random_string():
-    # testing function
-    N = 20
-    return ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(N))
 
 def make_rm_List():
     roomList = {}

@@ -1,0 +1,1 @@
+MAX_ROOM_SIZE = 10

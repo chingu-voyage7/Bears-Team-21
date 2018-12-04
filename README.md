@@ -19,23 +19,32 @@ Flask_SocketIO==3.1.0
 Flask==1.0.2
 Flask_Login==0.4.1
 ```
-How to install them
-```
-$ pip install -r requirements.txt
-```
 
 ### Installing
 
-Cloning this repository
+Clone this repository
 
 ```
 $ git clone https://github.com/chingu-voyage7/Bears-Team-21.git
 ```
 
+It is suggested to make a virtual environment:
+
+```
+$ virtualenv venv
+$ . venv/bin/activate
+```
+
+Install dependencies 
+
+```
+(venv) $ pip install -r requirements.txt
+```
+
 Run the server app
 
 ```
-$ python app.py
+(venv) $ python app.py
 ```
 
 Browse on your local machine 
