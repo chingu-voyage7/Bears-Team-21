@@ -33,7 +33,17 @@ def find_user(username,password):
     user = c.execute('''SELECT * FROM users WHERE
     username = ?''', (username,)).fetchone()
     if user is not None:
-        return check_password_hash(user[1], password)
-    return False
+        if check_password_hash(user[1], password):
+            return user
+    return None
+
+def find_username(username):
+    db = sqlite3.connect(DATABASE)
+    c = db.cursor()
+    user = c.execute("SELECT username from users where username = (?)",
+                    [username])
+    user = c.fetchone()
+    userid = user[0]
+    return userid
 
 init_db()
