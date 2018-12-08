@@ -1,9 +1,10 @@
-const socket = io.connect('http://' + document.domain + ':' + location.port);
+const socket = io.connect('http://' + document.domain + ':' + location.port+'/lobby');
 
 function load_game_rooms(data) {
     // to bind
     return false;
 }
+
 socket.on('connect', () => {
    console.log(`Websocket ${socket.id} connected!`);
    //socket.emit('join', '/home?');
@@ -14,8 +15,8 @@ socket.on('roomsList',(rmData)=>{
 
     let roomListDiv = document.querySelector('.gamerooms');
     roomListDiv.innerHTML = "";
-    Object.keys(rmData).forEach(room => {
-        roomListDiv.innerHTML += `<div class="room" ns="${room}">${room} - Players ${rmData[room]}/10</div>`;
+    Object.keys(rmData['roomList']).forEach(room => {
+        roomListDiv.innerHTML += `<div class="room" ns="${room}">${room} - Players ${rmData['roomList'][room]}/10</div>`;
     });
 
     Array.from(document.getElementsByClassName('room')).forEach(room=>{
@@ -28,9 +29,12 @@ socket.on('roomsList',(rmData)=>{
 })
 
 socket.on('join_room', message_data => {
-  console.log(message_data);
-  var socket = io.connect('http://' + document.domain + ':' + location.port + '/roomId1');  
+  console.log(message_data); 
 });
+
+socket.on('my_response', message_data => {
+    console.log('server response '+message_data); 
+  });
 
 function createGame() {
     const endpoint = document.querySelector('#new-room').value;
