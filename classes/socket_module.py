@@ -58,8 +58,8 @@ class GameLobbyNs(Namespace):
     def on_create_room(self, data):
         print('create_room' + data['roomId'])
         roomId = data['roomId']
-        self.game_rooms[roomId] = [data["userId"]]
-        join_room(roomId)
+        self.game_rooms[roomId] = []
+        self.on_join_room( data)
         emit('roomsList',{'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def on_my_event(self, message):
