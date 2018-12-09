@@ -44,8 +44,9 @@ socket.on('roomsList',(rmData)=>{
 })
 
 socket.on('join_room', message_data => {
-  console.log(message_data); 
+  console.log("join_room "+message_data); 
   document.querySelector('#new-room').innerHTML="";
+  document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}`;
 });
 
 socket.on('my_response', message_data => {

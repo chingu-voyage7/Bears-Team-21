@@ -60,7 +60,7 @@ class GameLobbyNs(Namespace):
         roomId = data['roomId']
         self.game_rooms[roomId] = [data["userId"]]
         join_room(roomId)
-        emit('join_room', {'game_roomId': roomId})
+        #emit('join_room', {'game_roomId': roomId})
         emit('roomsList',self.make_rm_List(), broadcast=True)
 
     def on_my_event(self, message):
@@ -89,7 +89,7 @@ class GameLobbyNs(Namespace):
             join_room('/'+roomId)
             self.add_player(data['userId'],data['roomId'])
             #send(self.game_rooms[roomId], roomId=roomId)
-            #emit('roomsList',self.make_rm_List(), room='/lobby')
+            emit('join_room',{'room':'/'+roomId}, room='/'+roomId)
         else:
             emit('error', {'error': 'Unable to join room.'})
 
