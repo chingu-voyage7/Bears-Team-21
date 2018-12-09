@@ -33,11 +33,11 @@ class GameLobbyNs(Namespace):
 
     def remove_player(self, userId, roomId):
         self.game_rooms[roomId].remove(userId)
-        emit('roomsList',self.make_rm_List(), room='/lobby')
+        emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def add_player(self, userId, roomId):
         self.game_rooms[roomId].append(userId)
-        emit('roomsList',self.make_rm_List(), room='/lobby')
+        emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def on_connect(self):
         join_room('/lobby')
@@ -85,10 +85,10 @@ class GameLobbyNs(Namespace):
         print(request.sid + " joining " + data['roomId'])
         roomId = data['roomId']
         if (roomId in self.game_rooms) and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  and (data['userId'] not in self.game_rooms[roomId]):
-            self.add_player(data['userId'],data['roomId'])
             leave_room(session.get('room'))
             join_room(roomId)
-            send(self.game_rooms[roomId], roomId=roomId)
+            self.add_player(data['userId'],data['roomId'])
+            #send(self.game_rooms[roomId], roomId=roomId)
             #emit('roomsList',self.make_rm_List(), room='/lobby')
         else:
             emit('error', {'error': 'Unable to join room.'})

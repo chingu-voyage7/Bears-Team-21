@@ -1,9 +1,24 @@
 const socket = io.connect('http://' + document.domain + ':' + location.port+'/lobby');
 
-function load_game_rooms(data) {
-    // to bind
-    return false;
-}
+const RESPONSE_EVENTS = [
+    'round_result',
+    'new_round',
+    'score_gold',
+    'show_end_card',
+    'update_counters',
+    'gold_earned',
+    'gold_stolen',
+    'gold_card_earned',
+    'path_card_destroyed',
+    'show_goal_card',
+    'path_card_played',
+    'tool_status_changed',
+    'draw_new_cards',
+    'draw_new_role',
+    'give_cards',
+    'cards_discarded'
+]
+
 
 socket.on('connect', () => {
    console.log(`Websocket ${socket.id} connected!`);
@@ -30,6 +45,7 @@ socket.on('roomsList',(rmData)=>{
 
 socket.on('join_room', message_data => {
   console.log(message_data); 
+  document.querySelector('#new-room').innerHTML="";
 });
 
 socket.on('my_response', message_data => {
