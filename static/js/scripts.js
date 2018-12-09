@@ -45,8 +45,11 @@ socket.on('roomsList',(rmData)=>{
 
 socket.on('join_room', message_data => {
   console.log("join_room "+message_data); 
-  document.querySelector('#new-room').innerHTML="";
-  document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}`;
+  document.querySelector('#new-room').innerHTML=`<button class="btn btn-warning" id="testP">TestEvent</button>`;
+  document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
+  document.querySelector('#testP').addEventListener('click', e =>{
+    socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
+  });
 });
 
 socket.on('my_response', message_data => {
@@ -54,9 +57,9 @@ socket.on('my_response', message_data => {
   });
 
 function createGame() {
-    const endpoint = document.querySelector('#new-room').value;
+    const endpoint = document.querySelector('#lbl-new-room').value;
     console.log('Creating game...' + endpoint);
-    socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: endpoint, userId: socket.id});
+    socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: '/'+endpoint, userId: socket.id});
 }
 function joinGame(endpoint) {
     console.log('Joining game...' + endpoint);

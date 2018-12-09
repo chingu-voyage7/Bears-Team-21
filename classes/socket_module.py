@@ -56,12 +56,11 @@ class GameLobbyNs(Namespace):
         disconnect()
 
     def on_create_room(self, data):
-        print('create_room'+data)
+        print('create_room' + data['roomId'])
         roomId = data['roomId']
         self.game_rooms[roomId] = [data["userId"]]
         join_room(roomId)
-        #emit('join_room', {'game_roomId': roomId})
-        emit('roomsList',self.make_rm_List(), broadcast=True)
+        emit('roomsList',{'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def on_my_event(self, message):
         session['receive_count'] = session.get('receive_count', 0) + 1
@@ -89,7 +88,7 @@ class GameLobbyNs(Namespace):
             join_room('/'+roomId)
             self.add_player(data['userId'],data['roomId'])
             #send(self.game_rooms[roomId], roomId=roomId)
-            emit('join_room',{'room':'/'+roomId}, room='/'+roomId)
+            emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
         else:
             emit('error', {'error': 'Unable to join room.'})
 
