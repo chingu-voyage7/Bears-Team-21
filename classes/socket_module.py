@@ -31,8 +31,14 @@ class GameLobbyNs(Namespace):
             roomList[key] = len(self.game_rooms[key])
         return roomList
 
-    def remove_player(self, userId, roomId):
-        self.game_rooms[roomId].remove(userId)
+    def remove_player_room(self, userId, roomId):
+        if ('/lobby#'+userId) in self.game_rooms[roomId]:
+            self.game_rooms[roomId].remove('/lobby#'+userId)
+            emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
+
+    def remove_player(self, userId):
+        for key in self.game_rooms:
+            self.remove_player_room(userId, key)
         emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def add_player(self, userId, roomId):
@@ -45,6 +51,7 @@ class GameLobbyNs(Namespace):
         emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def on_disconnect(self):
+        self.remove_player(request.sid)
         print('Client disconnected', request.sid)
 
     def on_my_ping(self):
@@ -99,6 +106,7 @@ class GameLobbyNs(Namespace):
 
     def on_leave(self, message):
         leave_room(message['room'])
+        self.remove_player_room(request.sid, message['room'])
         print("leave")
         session['receive_count'] = session.get('receive_count', 0) + 1
         emit('my_response', {'data': 'In rooms: ' + ', '.join(rooms()), 'count': session['receive_count']})
