@@ -85,8 +85,8 @@ class GameLobbyNs(Namespace):
         print(request.sid + " joining " + data['roomId'])
         roomId = data['roomId']
         if (roomId in self.game_rooms) and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  and (data['userId'] not in self.game_rooms[roomId]):
-            leave_room(session.get('room'))
-            join_room(roomId)
+            leave_room('/lobby')
+            join_room('/'+roomId)
             self.add_player(data['userId'],data['roomId'])
             #send(self.game_rooms[roomId], roomId=roomId)
             #emit('roomsList',self.make_rm_List(), room='/lobby')
@@ -94,7 +94,7 @@ class GameLobbyNs(Namespace):
             emit('error', {'error': 'Unable to join room.'})
 
     def on_join(self, message):
-        join_room(message['room'])
+        join_room('/'+message['room'])
         session['receive_count'] = session.get('receive_count', 0) + 1
         emit('my_response', {'data': 'In rooms: ' + ', '.join(rooms()), 'count': session['receive_count']})
 
