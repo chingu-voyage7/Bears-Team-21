@@ -13,7 +13,7 @@ DATABASE = 'database.db'
 db = sqlite3.connect(DATABASE)
 c = db.cursor()
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, ping_timeout=30000)
 
 game_rooms = {'roomId1': ["Jhon","Alex","Alice"],
             'roomId2': ["Bob"],

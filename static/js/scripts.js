@@ -54,17 +54,24 @@ socket.on('join_room', message_data => {
 
 socket.on('my_response', message_data => {
     console.log('server response '+message_data); 
-  });
+});
 
 function createGame() {
     const endpoint = document.querySelector('#lbl-new-room').value;
     console.log('Creating game...' + endpoint);
     socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: endpoint, userId: socket.id});
 }
+
 function joinGame(endpoint) {
     console.log('Joining game...' + endpoint);
     socket.emit('join_room', {roomId: endpoint, userId: socket.id});
 }
+
 $(()=>{
     document.querySelector('#create_game_room').onclick = createGame;
 })
+
+socket.on('disconnect', () => {
+    console.log(`Websocket ${socket.id} disconnected!`);
+
+ });

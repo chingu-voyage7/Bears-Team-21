@@ -1,9 +1,10 @@
 from flask import Flask, render_template, session, request
 from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
+from flask_login import current_user
 import classes.settings as config
 
 class GameLobbyNs(Namespace):
-
+    clients = []
     game_rooms = {'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
 
     RESPONSE_EVENTS = [
@@ -32,8 +33,8 @@ class GameLobbyNs(Namespace):
         return roomList
 
     def remove_player_room(self, userId, roomId):
-        if ('/lobby#'+userId) in self.game_rooms[roomId]:
-            self.game_rooms[roomId].remove('/lobby#'+userId)
+        if (userId) in self.game_rooms[roomId]:
+            self.game_rooms[roomId].remove(current_user.username)
             emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def remove_player(self, userId):
@@ -47,7 +48,7 @@ class GameLobbyNs(Namespace):
 
     def on_connect(self):
         join_room('/lobby')
-        print('/room joined')
+        print('/room joined ')#+ session['username']
         emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def on_disconnect(self):
@@ -90,12 +91,14 @@ class GameLobbyNs(Namespace):
     def on_join_room(self, data):
         print(request.sid + " joining " + data['roomId'])
         roomId = data['roomId']
-        if (roomId in self.game_rooms) and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  and (data['userId'] not in self.game_rooms[roomId]):
+        if (roomId in self.game_rooms) and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  and (current_user.username not in self.game_rooms[roomId]):
             leave_room('/lobby')
             join_room('/'+roomId)
-            self.add_player(data['userId'],data['roomId'])
+            self.add_player(current_user.username, data['roomId'])
             #send(self.game_rooms[roomId], roomId=roomId)
             emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
+            self.clients.append((current_user.username, request.sid))
+            print(self.clients)
         else:
             emit('error', {'error': 'Unable to join room.'})
 
