@@ -1,10 +1,10 @@
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import current_user
 import classes.settings as config
 
 class GameLobbyNs(Namespace):
-    clients = []
+    clients = {}
     game_rooms = {'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
 
     RESPONSE_EVENTS = [
@@ -47,12 +47,14 @@ class GameLobbyNs(Namespace):
         emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def on_connect(self):
+        self.clients[current_user.username] = request.sid
         join_room('/lobby')
         print('/room joined ')#+ session['username']
         emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
 
     def on_disconnect(self):
         self.remove_player(request.sid)
+        if current_user.username in self.clients: del dict[current_user.username] 
         print('Client disconnected', request.sid)
 
     def on_my_ping(self):
@@ -90,17 +92,17 @@ class GameLobbyNs(Namespace):
 
     def on_join_room(self, data):
         print(request.sid + " joining " + data['roomId'])
+        emit('roomsList', {'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
         roomId = data['roomId']
+        leave_room('/lobby')
+        join_room('/'+roomId)
         if (roomId in self.game_rooms) and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  and (current_user.username not in self.game_rooms[roomId]):
-            leave_room('/lobby')
-            join_room('/'+roomId)
             self.add_player(current_user.username, data['roomId'])
             #send(self.game_rooms[roomId], roomId=roomId)
             emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
-            self.clients.append((current_user.username, request.sid))
             print(self.clients)
-        else:
-            emit('error', {'error': 'Unable to join room.'})
+        elif (current_user.username in self.game_rooms[roomId]):
+            emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_join(self, message):
         join_room('/'+message['room'])
@@ -108,10 +110,14 @@ class GameLobbyNs(Namespace):
         emit('my_response', {'data': 'In rooms: ' + ', '.join(rooms()), 'count': session['receive_count']})
 
     def on_leave(self, message):
+        print('leaving ' + message['room'])
         leave_room(message['room'])
-        self.remove_player_room(request.sid, message['room'])
-        print("leave")
+        join_room('/lobby')
+        #/lobby
+        self.remove_player_room(current_user.username, message['room'][1:])
         session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('my_response', {'data': 'In rooms: ' + ', '.join(rooms()), 'count': session['receive_count']})
-
+        emit('roomsList',{'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room='/lobby')
+        emit('restore_input',{'data': 'Connected', 'count': 0, 'roomList': self.make_rm_List()},room=request.sid)
+        #emit('update_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
+        return redirect('dashboard')
 
