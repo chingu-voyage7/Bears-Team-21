@@ -54,7 +54,7 @@ class GameLobbyNs(Namespace):
 
     def on_disconnect(self):
         self.remove_player(request.sid)
-        if current_user.username in self.clients: del dict[current_user.username] 
+        if current_user.username in self.clients: del self.clients[current_user.username] 
         print('Client disconnected', request.sid)
 
     def on_my_ping(self):
