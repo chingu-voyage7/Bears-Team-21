@@ -2,6 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <title>Saboteur</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -10,12 +14,31 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/main.js')}}"></script>
 </head>
 <body>
-    <h1>Saboteur</h1>
-    <div class="container-fluid">
-        <div class="row">
-            <a href="{{url_for('signup')}}">Sign Up</a>
-            <a href="{{url_for('login')}}">Log In</a>
+    
+    <div class="container">
+        <div class="header clearfix">
+          <nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="{{url_for('signup')}}">Sign Up</a></li>
+              <li role="presentation"><a href="{{url_for('login')}}">Log In</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav>
+          <h3 class="text-muted">Saboteur</h3>
         </div>
-    </div>
+  
+        <div class="jumbotron">
+          <h1>Saboteur The Game</h1>
+          <p class="lead">In Saboteur, each player takes on the role of a gold-digging dwarf or a saboteur who wants to hinder exploration of the gold mines — but each player knows only his own role, so the digging may or may not go as planned!</p>
+          <p><a class="btn btn-lg btn-success" href="{{url_for('signup')}}" role="button">Sign up!</a></p>
+        </div>
+  
+  
+        <footer class="footer">
+          <p>© 2019 Bear-Team-21.</p>
+        </footer>
 </body>
 </html>
+

@@ -2,6 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <title>Saboteur</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -10,12 +14,22 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/main.js')}}"></script>
 </head>
 <body>
-    <h1>Sign up</h1>
-    <form action="{{url_for('signup')}}" method='POST'>
-        <input type="text" name="username" required>
-        <input type="password" name="password" required>
-        <input type="submit">
-    </form>
-    <p>{{text | safe}}</p>
+    <div class="container">
+        <form action="{{url_for('login')}}" method='POST' class="form-signin">
+          <h2 class="form-signin-heading">Please Sign in</h2>
+          <label for="inputUser" class="sr-only">Username</label>
+          <input type="text" name = "username" id="inputUser" class="form-control" placeholder="Username" required="" autofocus="">
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+          <div class="checkbox">
+            <label>
+              <input type="checkbox" value="remember-me"> Remember me
+            </label>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        </form>
+        <p>{{text | safe}}</p>
+      </div> 
 </body>
+</html>
 </html>
