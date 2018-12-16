@@ -57,7 +57,6 @@ class GameLobbyNs(Namespace):
         emit('roomsList', {'data': 'Connected', 'count': 0, 
         'roomList': self.make_rm_List()},room='/lobby')
 
-
     def on_disconnect(self):
         self.remove_player(request.sid)
         if current_user.username in self.clients: del self.clients[current_user.username] 
