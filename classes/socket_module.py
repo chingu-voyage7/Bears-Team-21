@@ -51,7 +51,7 @@ class GameLobbyNs(Namespace):
         'roomList': self.make_rm_List()},room='/lobby')
 
     def on_connect(self):
-        self.clients[current_user.username] = request.sid
+        self.clients[current_user.username] = session['username']
         join_room('/lobby')
         print('/room joined ')#+ session['username']
         emit('roomsList', {'data': 'Connected', 'count': 0, 
@@ -139,3 +139,5 @@ class GameLobbyNs(Namespace):
         #emit('update_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
         return redirect('dashboard')
 
+    def on_send_message(self, message, room, methods=['GET', 'POST']):
+        emit('receiveMessage', message, room=room)
