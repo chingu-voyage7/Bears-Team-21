@@ -101,8 +101,8 @@ class GameLobbyNs(Namespace):
             #send(self.game_rooms[roomId], roomId=roomId)
             emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
             print(self.clients)
-        #elif (current_user.username in self.game_rooms[roomId]):
-        #    emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
+        elif (current_user.username in self.game_rooms[roomId]): #need it for refrersh page load
+            emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     #def on_join(self, message):
     #    join_room('/'+message['room'])
