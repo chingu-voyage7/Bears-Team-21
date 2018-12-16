@@ -29,6 +29,7 @@ socket.on('roomsList',(rmData)=>{
     console.log(rmData);
     
     //setCookie("rooms-list", JSON.stringify(rmData), 1);
+    $('#toggle-ready').hide();
 
     let roomListDiv = document.querySelector('.gamerooms');
     roomListDiv.innerHTML = "";
@@ -57,10 +58,18 @@ socket.on('my_response', message_data => {
 
 socket.on('restore_input', message_data => {
     document.querySelector('#new-room').innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button id="create_game_room">Create Game</button></div>`;
+    document.querySelector('#create_game_room').onclick = createGame;
+    document.querySelector('#create_game_room').addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+          document.getElementById("create_game_room").click();
+        }
+      });
 });
 
 function buildRoomList(message_data){
-  document.querySelector('#new-room').innerHTML=`<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;
+  let buttonsHtml = `<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;//<button class="btn btn-primary" id="btn-start">Start Game</button>
+  document.querySelector('#new-room').innerHTML= buttonsHtml;
   document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
   document.querySelector('#testP').addEventListener('click', e =>{
     socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
@@ -69,6 +78,8 @@ function buildRoomList(message_data){
     socket.emit('leave',{'data':"test",'room':message_data['room']})
     setCookie("endpoint", "/lobby", 1);
   });
+  $('#toggle-ready').show();
+  
 }
 
 function createGame() {
@@ -82,15 +93,17 @@ function joinGame(endpoint) {
     socket.emit('join_room', {roomId: endpoint, userId: socket.id});
 }
 
-$(()=>{
-    document.querySelector('#create_game_room').onclick = createGame;
-})
 
 socket.on('disconnect', () => {
     console.log(`Websocket ${socket.id} disconnected!`);
     
     setCookie("endpoint", "", 1);
  });
+
+socket.on('start-game', message_data => {
+    $(location).attr('href', '/game'+message_data['room']);
+
+});
 
  function setCookie(cname, cvalue, exdays) {
     var d = new Date();
@@ -123,4 +136,9 @@ socket.on('disconnect', () => {
     } 
     
   } 
-  checkCookie()
+
+  $('#toggle-ready').change(function() {
+    socket.emit('ready_event', 'Toggle: ' + $(this).prop('checked'));
+  })
+
+  checkCookie();

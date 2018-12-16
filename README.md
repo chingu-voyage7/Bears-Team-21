@@ -55,6 +55,8 @@ http://127.0.0.1:5000/
 
 ## About Saboteur
 
+⚠️ This Project is still a work in progress, rules of the game might be changed and be updated accordingly.
+
 ### Goal
 
 Get as many gold nuggets as possible during the three rounds of the game. In order to do so,
@@ -106,10 +108,8 @@ Roles are randomly selected among a set that depends upon the number of players:
 
 ## Authors
 
-* **[ALF3run](https://github.com/ALF3run)**
 * **[rektix](https://github.com/rektix)**
 * **[Ventrosky](https://github.com/Ventrosky)**
-* **[Yusadolat](https://github.com/Yusadolat)**
 
 See also the list of [contributors](https://github.com/chingu-voyage7/Bears-Team-21/graphs/contributors) who participated in this project.
 

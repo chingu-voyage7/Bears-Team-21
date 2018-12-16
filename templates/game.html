@@ -14,21 +14,26 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/main.js')}}"></script>
 </head>
 <body>
+    
     <div class="container">
-        <form action="{{url_for('login')}}" method='POST' class="form-signin">
-          <h2 class="form-signin-heading">Please Log in</h2>
-          <label for="inputUser" class="sr-only">Username</label>
-          <input type="text" name = "username" id="inputUser" class="form-control" placeholder="Username" required="" autofocus="">
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" value="remember-me"> Remember me
-            </label>
-          </div>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </form>
-        <p>{{text | safe}}</p>
-    </div> 
+        <div class="header clearfix">
+          <nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation"><a href="{{url_for('dashboard')}}">Leave Game</a></li>
+            </ul>
+          </nav>
+          <h3 class="text-muted">Saboteur</h3>
+        </div>
+  
+        <div class="jumbotron">
+          <h1>Saboteur The Game</h1>
+          <p class="lead">In Saboteur, each player takes on the role of a gold-digging dwarf or a saboteur who wants to hinder exploration of the gold mines — but each player knows only his own role, so the digging may or may not go as planned!</p>
+        </div>
+  
+  
+        <footer class="footer">
+          <p>© 2019 Bear-Team-21.</p>
+        </footer>
+    </div>
 </body>
 </html>

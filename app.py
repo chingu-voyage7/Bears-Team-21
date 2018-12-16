@@ -81,6 +81,13 @@ def dashboard():
     resp.set_cookie('user-cookie=', 'room_list')
     return resp
 
+@app.route('/game/<gamename>')
+def game_screen(gamename):
+    print(gamename)
+    gamename = request.cookies.get('endpoint')
+    print(gamename)
+    return render_template('game.html', gamename=gamename)
+
 if __name__ == "__main__":
     app.debug = True
     app.run()
