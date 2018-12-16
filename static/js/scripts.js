@@ -19,7 +19,6 @@ const RESPONSE_EVENTS = [
     'cards_discarded'
 ]
 
-
 socket.on('connect', () => {
    console.log(`Websocket ${socket.id} connected!`);
    //socket.emit('join', '/home?');
@@ -72,6 +71,7 @@ function createLobby(){
         document.querySelector('.toggle').click();
     };
 }
+
 function buildRoomList(message_data){
   let buttonsHtml = `<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;//<button class="btn btn-primary" id="btn-start">Start Game</button>
   document.querySelector('#new-room').innerHTML= buttonsHtml;
@@ -91,6 +91,7 @@ function createGame() {
     const endpoint = document.querySelector('#lbl-new-room').value;
     console.log('Creating game...' + endpoint);
     socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: endpoint, userId: socket.id});
+    setCookie("endpoint", "/"+endpoint, 1);
 }
 
 function joinGame(endpoint) {
@@ -112,14 +113,14 @@ socket.on('start_game', message_data => {
 
 });
 
- function setCookie(cname, cvalue, exdays) {
+function setCookie(cname, cvalue, exdays) {
     var d = new Date();
     d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  }
+}
   
-  function getCookie(cname) {
+function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
@@ -132,9 +133,9 @@ socket.on('start_game', message_data => {
       }
     }
     return "";
-  }
+}
   
-  function checkCookie() {
+function checkCookie() {
     var endpoint = getCookie("endpoint");
 
     if (endpoint != "") {
@@ -144,13 +145,13 @@ socket.on('start_game', message_data => {
         console.log("cookie-check" + endpoint);
     }
     
-  } 
+} 
 
-  setInterval(function() {
+setInterval(function() {
     if($('.toggle').css('display') == 'none' ) return;
     socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
-  }, 5000);
+}, 5000);
 
-  $( document ).ready(function() {
+$( document ).ready(function() {
     checkCookie();
 });
