@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import os, sqlite3
-from flask import Flask, render_template, redirect, url_for, request, session, jsonify, json
+from flask import Flask, render_template, redirect, url_for, request, session, jsonify, json, make_response
 from flask_socketio import SocketIO, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from classes.socket_module import GameLobbyNs
@@ -13,7 +13,7 @@ DATABASE = 'database.db'
 db = sqlite3.connect(DATABASE)
 c = db.cursor()
 
-socketio = SocketIO(app)
+socketio = SocketIO(app, ping_timeout=30000)
 
 game_rooms = {'roomId1': ["Jhon","Alex","Alice"],
             'roomId2': ["Bob"],
@@ -77,7 +77,9 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    resp = make_response(render_template('dashboard.html'))
+    resp.set_cookie('user-cookie=', 'room_list')
+    return resp
 
 if __name__ == "__main__":
     app.debug = True
