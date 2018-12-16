@@ -82,7 +82,7 @@ def dashboard():
     return resp
 
 @app.route('/game/<gamename>')
-def game_screen(gamename):
+def game(gamename):
     print(gamename)
     gamename = request.cookies.get('endpoint')
     print(gamename)

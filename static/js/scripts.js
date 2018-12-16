@@ -68,6 +68,7 @@ function createLobby(){
           document.getElementById("create_game_room").click();
         }
       });
+    document.querySelector('#toggle-ready').checked = false;
 }
 function buildRoomList(message_data){
   let buttonsHtml = `<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;//<button class="btn btn-primary" id="btn-start">Start Game</button>
@@ -98,11 +99,11 @@ function joinGame(endpoint) {
 
 socket.on('disconnect', () => {
     console.log(`Websocket ${socket.id} disconnected!`);
-    
+    document.querySelector('#toggle-ready').checked = false
     setCookie("endpoint", "", 1);
  });
 
-socket.on('start-game', message_data => {
+socket.on('start_game', message_data => {
     $(location).attr('href', '/game'+message_data['room']);
 
 });
@@ -141,10 +142,12 @@ socket.on('start-game', message_data => {
     
   } 
 
-  $('#toggle-ready').change(function() {
-    socket.emit('ready_event', 'Toggle: ' + $(this).prop('checked'));
-  })
+  setInterval(function() {
+    if($('.toggle').css('display') == 'none' ) return;
+      console.log("I'm ready? "+document.querySelector('#toggle-ready').checked);
+    socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
+  }, 5000);
 
   $( document ).ready(function() {
     checkCookie();
-  });
+});
