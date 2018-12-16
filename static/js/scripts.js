@@ -148,7 +148,6 @@ socket.on('start_game', message_data => {
 
   setInterval(function() {
     if($('.toggle').css('display') == 'none' ) return;
-      console.log("I'm ready? "+document.querySelector('#toggle-ready').checked);
     socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
   }, 5000);
 

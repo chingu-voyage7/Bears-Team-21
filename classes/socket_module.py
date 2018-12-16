@@ -100,16 +100,12 @@ class GameLobbyNs(Namespace):
         join_room('/'+roomId)
         if (roomId in self.game_rooms) and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  and (current_user.username not in self.game_rooms[roomId]):
             self.add_player(current_user.username, data['roomId'])
-            #send(self.game_rooms[roomId], roomId=roomId)
             emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
-            print(self.clients)
         elif (current_user.username in self.game_rooms[roomId]): #need it for refrersh page load
             emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_ready_event(self, message):
-        print('player_ready ' + request.sid + ' ' + current_user.username + str(message['Toggle']))
         self.player_ready[current_user.username] = message['Toggle']
-        print(self.player_ready)
         playersReady = True
         for roomId in self.game_rooms:
             if current_user.username in self.game_rooms[roomId]:
@@ -128,7 +124,6 @@ class GameLobbyNs(Namespace):
         print('leaving ' + message['room'])
         leave_room(message['room'])
         join_room('/lobby')
-        #/lobby
         self.remove_player_room(current_user.username, message['room'][1:])
         emit('roomsList',{'data': 'Connected', 'roomList': self.make_rm_List()},room='/lobby')
         emit('restore_input',{'data': 'Connected', 'roomList': self.make_rm_List()},room=request.sid)
