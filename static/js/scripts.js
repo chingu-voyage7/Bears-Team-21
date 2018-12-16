@@ -68,7 +68,9 @@ function createLobby(){
           document.getElementById("create_game_room").click();
         }
       });
-    document.querySelector('#toggle-ready').checked = false;
+    if (document.querySelector('#toggle-ready').checked){
+        document.querySelector('.toggle').click();
+    };
 }
 function buildRoomList(message_data){
   let buttonsHtml = `<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;//<button class="btn btn-primary" id="btn-start">Start Game</button>
@@ -99,7 +101,9 @@ function joinGame(endpoint) {
 
 socket.on('disconnect', () => {
     console.log(`Websocket ${socket.id} disconnected!`);
-    document.querySelector('#toggle-ready').checked = false
+    if (document.querySelector('#toggle-ready').checked){
+        document.querySelector('.toggle').click();
+    };
     setCookie("endpoint", "", 1);
  });
 
