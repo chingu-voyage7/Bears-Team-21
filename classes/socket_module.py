@@ -101,13 +101,13 @@ class GameLobbyNs(Namespace):
             #send(self.game_rooms[roomId], roomId=roomId)
             emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
             print(self.clients)
-        elif (current_user.username in self.game_rooms[roomId]):
-            emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
+        #elif (current_user.username in self.game_rooms[roomId]):
+        #    emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
-    def on_join(self, message):
-        join_room('/'+message['room'])
-        session['receive_count'] = session.get('receive_count', 0) + 1
-        emit('my_response', {'data': 'In rooms: ' + ', '.join(rooms()), 'count': session['receive_count']})
+    #def on_join(self, message):
+    #    join_room('/'+message['room'])
+    #    session['receive_count'] = session.get('receive_count', 0) + 1
+    #    emit('my_response', {'data': 'In rooms: ' + ', '.join(rooms()), 'count': session['receive_count']})
 
     def on_leave(self, message):
         print('leaving ' + message['room'])
