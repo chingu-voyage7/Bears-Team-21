@@ -29,7 +29,7 @@ socket.on('roomsList',(rmData)=>{
     console.log(rmData);
     
     //setCookie("rooms-list", JSON.stringify(rmData), 1);
-    $('#toggle-ready').hide();
+    $('.toggle').css('display','none');
 
     let roomListDiv = document.querySelector('.gamerooms');
     roomListDiv.innerHTML = "";
@@ -45,6 +45,7 @@ socket.on('roomsList',(rmData)=>{
             setCookie("endpoint", endpoint, 1);
         })
     });
+    createLobby();
 })
 
 socket.on('join_room', message_data => {
@@ -56,8 +57,10 @@ socket.on('my_response', message_data => {
     console.log('server response '+message_data); 
 });
 
-socket.on('restore_input', message_data => {
-    document.querySelector('#new-room').innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button class="btn btn-warning" id="create_game_room">Create Game</button></div>`;
+socket.on('restore_input',createLobby);
+
+function createLobby(){
+    document.getElementById('new-room').innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button class="btn btn-warning" id="create_game_room">Create Game</button></div>`;
     document.querySelector('#create_game_room').onclick = createGame;
     document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
         event.preventDefault();
@@ -65,8 +68,7 @@ socket.on('restore_input', message_data => {
           document.getElementById("create_game_room").click();
         }
       });
-});
-
+}
 function buildRoomList(message_data){
   let buttonsHtml = `<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;//<button class="btn btn-primary" id="btn-start">Start Game</button>
   document.querySelector('#new-room').innerHTML= buttonsHtml;
@@ -78,7 +80,7 @@ function buildRoomList(message_data){
     socket.emit('leave',{'data':"test",'room':message_data['room']})
     setCookie("endpoint", "/lobby", 1);
   });
-  $('#toggle-ready').show();
+  $('.toggle').css('display','block');
   
 }
 
@@ -131,9 +133,11 @@ socket.on('start-game', message_data => {
     var endpoint = getCookie("endpoint");
 
     if (endpoint != "") {
-        console.log("cookie-check" + endpoint)
+        console.log("cookie-check" + endpoint);
         joinGame(endpoint)
-    } 
+    } else {
+        console.log("cookie-check" + endpoint);
+    }
     
   } 
 
@@ -141,4 +145,6 @@ socket.on('start-game', message_data => {
     socket.emit('ready_event', 'Toggle: ' + $(this).prop('checked'));
   })
 
-  checkCookie();
+  $( document ).ready(function() {
+    checkCookie();
+  });
