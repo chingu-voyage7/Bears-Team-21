@@ -108,10 +108,7 @@ Roles are randomly selected among a set that depends upon the number of players:
 
 ## Authors
 
-* **[rektix](https://github.com/rektix)**
-* **[Ventrosky](https://github.com/Ventrosky)**
-
-See also the list of [contributors](https://github.com/chingu-voyage7/Bears-Team-21/graphs/contributors) who participated in this project.
+See the list of [contributors](https://github.com/chingu-voyage7/Bears-Team-21/graphs/contributors) who participated in this project.
 
 ## License
 
