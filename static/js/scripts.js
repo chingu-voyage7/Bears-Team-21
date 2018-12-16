@@ -91,7 +91,7 @@ function createGame() {
     const endpoint = document.querySelector('#lbl-new-room').value;
     console.log('Creating game...' + endpoint);
     socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: endpoint, userId: socket.id});
-    setCookie("endpoint", "/"+endpoint, 1);
+    setCookie("endpoint", endpoint, 1);
 }
 
 function joinGame(endpoint) {
@@ -147,11 +147,17 @@ function checkCookie() {
     
 } 
 
-setInterval(function() {
-    if($('.toggle').css('display') == 'none' ) return;
-    socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
-}, 5000);
+//setInterval(function() {
+//   if($('.toggle').css('display') == 'none' ) return;
+//    socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
+//}, 5000);
+
+
 
 $( document ).ready(function() {
     checkCookie();
+    $('.toggle').on('change',()=>{
+        console.log("ready toggle");
+        socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
+    });
 });

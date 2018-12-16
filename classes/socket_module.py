@@ -109,7 +109,7 @@ class GameLobbyNs(Namespace):
         playersReady = True
         for roomId in self.game_rooms:
             if current_user.username in self.game_rooms[roomId]:
-                if len(self.game_rooms[roomId]) < 2:
+                if len(self.game_rooms[roomId]) < config.MIN_PLAYER_START:
                     playersReady = False
                 else:
                     for player in self.game_rooms[roomId]:
