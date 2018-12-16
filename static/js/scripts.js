@@ -57,7 +57,7 @@ socket.on('my_response', message_data => {
 });
 
 socket.on('restore_input', message_data => {
-    document.querySelector('#new-room').innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button id="create_game_room">Create Game</button></div>`;
+    document.querySelector('#new-room').innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button class="btn btn-warning" id="create_game_room">Create Game</button></div>`;
     document.querySelector('#create_game_room').onclick = createGame;
     document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
         event.preventDefault();
