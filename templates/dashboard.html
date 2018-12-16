@@ -6,7 +6,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>   
+    <link rel="stylesheet" href="{{url_for('static', filename='vendor/bootstrap-toggle.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
+    <script type="text/javascript" src="{{url_for('static', filename='vendor/bootstrap-toggle.min.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static', filename='js/scripts.js')}}"></script>
 </head>
 <body>
@@ -21,12 +23,15 @@
             </div>
         </div>
         <div class="row" id="new-room">
-            <div class="col-sm-8">
+            <!--<div class="col-sm-8">
                 <input id="lbl-new-room" type="text" placeholder="Enter Room Name" />
             </div>
             <div class="col-sm-4 roomsbtn">
-                <button id="create_game_room">Create Game</button>
-            </div>
+                <button id="create_game_room" class="btn btn-warning">Create Game</button>
+            </div>-->
+        </div>
+        <div class="row" id="player-ready"></div>
+            <input id="toggle-ready" type="checkbox" data-toggle="toggle" data-on="Ready" data-off="Not Ready" data-onstyle="success" data-offstyle="danger" style="display: none;">
         </div>
         <div id="chat">
             <div class="messages">
@@ -38,5 +43,15 @@
               </form>
         </div>
     </div>
+    <script>
+    //$('#toggle-ready').hide();
+    //document.querySelector('#create_game_room').onclick = createGame;
+    //document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
+    //    event.preventDefault();
+    //    if (event.keyCode === 13) {
+    //      document.getElementById("create_game_room").click();
+    //    }
+    //  });
+    </script>
 </body>
 </html>

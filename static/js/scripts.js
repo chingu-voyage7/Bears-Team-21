@@ -19,9 +19,6 @@ const RESPONSE_EVENTS = [
     'cards_discarded'
 ]
 
-
-
-
 socket.on('connect', () => {
     console.log(`Websocket ${socket.id} connected!`);
     //socket.emit('join', '/home?');
@@ -48,6 +45,7 @@ socket.on('roomsList',(rmData)=>{
     console.log(rmData);
     
     //setCookie("rooms-list", JSON.stringify(rmData), 1);
+    $('.toggle').css('display','none');
 
     let roomListDiv = document.querySelector('.gamerooms');
     roomListDiv.innerHTML = "";
@@ -63,6 +61,7 @@ socket.on('roomsList',(rmData)=>{
             setCookie("endpoint", endpoint, 1);
         })
     });
+    createLobby();
 })
 
 socket.on('join_room', message_data => {
@@ -74,26 +73,42 @@ socket.on('my_response', message_data => {
     console.log('server response '+message_data); 
 });
 
-socket.on('restore_input', message_data => {
-    document.querySelector('#new-room').innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button id="create_game_room">Create Game</button></div>`;
-});
+socket.on('restore_input',createLobby);
+
+function createLobby(){
+    document.getElementById('new-room').innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button class="btn btn-warning" id="create_game_room">Create Game</button></div>`;
+    document.querySelector('#create_game_room').onclick = createGame;
+    document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+          document.getElementById("create_game_room").click();
+        }
+      });
+    if (document.querySelector('#toggle-ready').checked){
+        document.querySelector('.toggle').click();
+    };
+}
 
 function buildRoomList(message_data){
-    document.querySelector('#new-room').innerHTML=`<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;
-    document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
-    document.querySelector('#testP').addEventListener('click', e =>{
-        socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
-    });
-    document.querySelector('#btn-leave').addEventListener('click', e =>{
-        socket.emit('leave',{'data':"test",'room':message_data['room']})
-        setCookie("endpoint", "/lobby", 1);
-    });
+  let buttonsHtml = `<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;//<button class="btn btn-primary" id="btn-start">Start Game</button>
+  document.querySelector('#new-room').innerHTML= buttonsHtml;
+  document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
+  document.querySelector('#testP').addEventListener('click', e =>{
+    socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
+  });
+  document.querySelector('#btn-leave').addEventListener('click', e =>{
+    socket.emit('leave',{'data':"test",'room':message_data['room']})
+    setCookie("endpoint", "/lobby", 1);
+  });
+  $('.toggle').css('display','block');
+  
 }
 
 function createGame() {
     const endpoint = document.querySelector('#lbl-new-room').value;
     console.log('Creating game...' + endpoint);
     socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: endpoint, userId: socket.id});
+    setCookie("endpoint", endpoint, 1);
 }
 
 function joinGame(endpoint) {
@@ -101,14 +116,18 @@ function joinGame(endpoint) {
     socket.emit('join_room', {roomId: endpoint, userId: socket.id});
 }
 
-$(()=>{
-    document.querySelector('#create_game_room').onclick = createGame;
-})
 
 socket.on('disconnect', () => {
     console.log(`Websocket ${socket.id} disconnected!`);
-    
+    if (document.querySelector('#toggle-ready').checked){
+        document.querySelector('.toggle').click();
+    };
     setCookie("endpoint", "", 1);
+});
+
+socket.on('start_game', message_data => {
+    $(location).attr('href', '/game'+message_data['room']);
+
 });
 
 function setCookie(cname, cvalue, exdays) {
@@ -137,8 +156,26 @@ function checkCookie() {
     var endpoint = getCookie("endpoint");
 
     if (endpoint != "") {
-        console.log("cookie-check" + endpoint)
+        console.log("cookie-check" + endpoint);
         joinGame(endpoint)
-    } 
+    } else {
+        console.log("cookie-check" + endpoint);
+    }
+    
 } 
-checkCookie()
+
+//setInterval(function() {
+//   if($('.toggle').css('display') == 'none' ) return;
+//    socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
+//}, 5000);
+
+
+
+$( document ).ready(function() {
+    checkCookie();
+    $('.toggle').on('change',()=>{
+        console.log("ready toggle");
+        socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
+    });
+});
+
