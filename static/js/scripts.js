@@ -76,7 +76,7 @@ socket.on('my_response', message_data => {
 socket.on('restore_input',createLobby);
 
 function createLobby(){
-    document.getElementById('new-room').innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button class="btn btn-warning" id="create_game_room">Create Game</button></div>`;
+    $('#new-room').show();//.innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button class="btn btn-warning" id="create_game_room">Create Game</button></div>`;
     document.querySelector('#create_game_room').onclick = createGame;
     document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
         event.preventDefault();
@@ -91,7 +91,8 @@ function createLobby(){
 
 function buildRoomList(message_data){
   let buttonsHtml = `<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;//<button class="btn btn-primary" id="btn-start">Start Game</button>
-  document.querySelector('#new-room').innerHTML= buttonsHtml;
+  $('#new-room').hide();
+  document.querySelector('#event-room').innerHTML= buttonsHtml;
   document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
   document.querySelector('#testP').addEventListener('click', e =>{
     socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
