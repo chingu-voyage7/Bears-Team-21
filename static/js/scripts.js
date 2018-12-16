@@ -20,10 +20,29 @@ const RESPONSE_EVENTS = [
 ]
 
 
+
+
 socket.on('connect', () => {
     console.log(`Websocket ${socket.id} connected!`);
     //socket.emit('join', '/home?');
+    $( 'form' ).on( 'submit', function( e ) {
+        e.preventDefault()
+        let user_name = socket.id;
+        let user_input = $( 'input.message' ).val()
+        socket.emit('send_message', {
+          user_name : user_name,
+          message : user_input
+        }, room="/lobby" )
+        $('input.message').val('').focus()
+      } )
 });
+
+socket.on('receiveMessage', function(msg) {
+    console.log( msg )
+    if(typeof msg.user_name !== 'undefined') {
+      $('div.messages').append('<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>')
+    }
+  })
 
 socket.on('roomsList',(rmData)=>{
     console.log(rmData);
