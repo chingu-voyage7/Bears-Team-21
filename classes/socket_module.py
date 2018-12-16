@@ -54,7 +54,7 @@ class GameLobbyNs(Namespace):
         emit('roomsList', {'data': 'Connected', 'roomList': self.make_rm_List()},room='/lobby')
 
     def on_connect(self):
-        self.clients[current_user.username] = request.sid
+        self.clients[current_user.username] = session['username']
         join_room('/lobby')
         print('/room joined ')#+ session['username']
         emit('roomsList', {'data': 'Connected', 'roomList': self.make_rm_List()},room='/lobby')
@@ -96,13 +96,17 @@ class GameLobbyNs(Namespace):
         print(request.sid + " joining " + data['roomId'])
         emit('roomsList', {'data': 'Connected', 'roomList': self.make_rm_List()},room='/lobby')
         roomId = data['roomId']
+
         leave_room('/lobby')
         join_room('/'+roomId)
-        if (roomId in self.game_rooms) and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  and (current_user.username not in self.game_rooms[roomId]):
+        if ((roomId in self.game_rooms) 
+        and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  
+        and (current_user.username not in self.game_rooms[roomId])):
             self.add_player(current_user.username, data['roomId'])
             emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
         elif (current_user.username in self.game_rooms[roomId]): #need it for refrersh page load
-            emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
+            emit('join_room',{'room':'/'+roomId, 
+            'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_ready_event(self, message):
         self.player_ready[current_user.username] = message['Toggle']
@@ -129,3 +133,5 @@ class GameLobbyNs(Namespace):
         emit('restore_input',{'data': 'Connected', 'roomList': self.make_rm_List()},room=request.sid)
         return redirect('dashboard')
 
+    def on_send_message(self, message, room, methods=['GET', 'POST']):
+        emit('receiveMessage', message, room=room)

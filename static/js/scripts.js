@@ -20,9 +20,26 @@ const RESPONSE_EVENTS = [
 ]
 
 socket.on('connect', () => {
-   console.log(`Websocket ${socket.id} connected!`);
-   //socket.emit('join', '/home?');
+    console.log(`Websocket ${socket.id} connected!`);
+    //socket.emit('join', '/home?');
+    $( 'form' ).on( 'submit', function( e ) {
+        e.preventDefault()
+        let user_name = socket.id;
+        let user_input = $( 'input.message' ).val()
+        socket.emit('send_message', {
+          user_name : user_name,
+          message : user_input
+        }, room="/lobby" )
+        $('input.message').val('').focus()
+      } )
 });
+
+socket.on('receiveMessage', function(msg) {
+    console.log( msg )
+    if(typeof msg.user_name !== 'undefined') {
+      $('div.messages').append('<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>')
+    }
+  })
 
 socket.on('roomsList',(rmData)=>{
     console.log(rmData);
@@ -48,8 +65,8 @@ socket.on('roomsList',(rmData)=>{
 })
 
 socket.on('join_room', message_data => {
-  console.log("join_room "+message_data); 
-  buildRoomList(message_data);
+    console.log("join_room "+message_data); 
+    buildRoomList(message_data);
 });
 
 socket.on('my_response', message_data => {
@@ -106,7 +123,7 @@ socket.on('disconnect', () => {
         document.querySelector('.toggle').click();
     };
     setCookie("endpoint", "", 1);
- });
+});
 
 socket.on('start_game', message_data => {
     $(location).attr('href', '/game'+message_data['room']);
@@ -119,22 +136,22 @@ function setCookie(cname, cvalue, exdays) {
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-  
+
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');
     for(var i = 0; i < ca.length; i++) {
-      var c = ca[i];
-      while (c.charAt(0) == ' ') {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
         c = c.substring(1);
-      }
-      if (c.indexOf(name) == 0) {
+        }
+        if (c.indexOf(name) == 0) {
         return c.substring(name.length, c.length);
-      }
+        }
     }
     return "";
 }
-  
+
 function checkCookie() {
     var endpoint = getCookie("endpoint");
 
@@ -161,3 +178,4 @@ $( document ).ready(function() {
         socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
     });
 });
+

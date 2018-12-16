@@ -48,8 +48,8 @@ def signup(text=''):
     if current_user.is_authenticated:
         return redirect('dashboard')
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
         text = add_user(username,password)
     return render_template('signup.html', text=text)
 
@@ -58,11 +58,12 @@ def login(text=''):
     if current_user.is_authenticated:
         return redirect('dashboard')
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        username = request.form.get('username')
+        password = request.form.get('password')
         user = find_user(username, password)
         if user is not None:
-            login_user(User(username))
+            login_user(User(username),remember=request.form.get('remember_me'))
+            session['username'] = username
             return redirect('dashboard')
         else:
             text = 'Wrong username or password'
