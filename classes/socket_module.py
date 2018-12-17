@@ -104,9 +104,10 @@ class GameLobbyNs(Namespace):
         and (current_user.username not in self.game_rooms[roomId])):
             self.add_player(current_user.username, data['roomId'])
             emit('join_room',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
-        elif (current_user.username in self.game_rooms[roomId]): #need it for refrersh page load
-            emit('join_room',{'room':'/'+roomId, 
-            'players': self.game_rooms[roomId]}, room='/'+roomId)
+        elif roomId != '/lobby':
+            if (current_user.username in self.game_rooms[roomId]): #need it for refrersh page load
+                emit('join_room',{'room':'/'+roomId, 
+                'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_ready_event(self, message):
         self.player_ready[current_user.username] = message['Toggle']

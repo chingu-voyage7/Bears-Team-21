@@ -89,10 +89,9 @@ function createLobby(){
     };
 }
 
-function buildRoomList(message_data){
-  let buttonsHtml = `<button class="btn btn-warning" id="testP">TestEvent</button><button class="btn btn-warning" id="btn-leave">Leave Room</button>`;//<button class="btn btn-primary" id="btn-start">Start Game</button>
+function buildRoomList(message_data){  
   $('#new-room').hide();
-  document.querySelector('#event-room').innerHTML= buttonsHtml;
+  $('#event-room').show();
   document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
   document.querySelector('#testP').addEventListener('click', e =>{
     socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
@@ -100,6 +99,7 @@ function buildRoomList(message_data){
   document.querySelector('#btn-leave').addEventListener('click', e =>{
     socket.emit('leave',{'data':"test",'room':message_data['room']})
     setCookie("endpoint", "/lobby", 1);
+    $('#event-room').hide();
   });
   $('.toggle').css('display','block');
   
