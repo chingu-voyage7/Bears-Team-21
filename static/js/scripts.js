@@ -37,9 +37,9 @@ socket.on('connect', () => {
 socket.on('receiveMessage', function(msg) {
     console.log( msg )
     if(typeof msg.user_name !== 'undefined') {
-      $('div.messages').append('<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>')
+    $('div.messages').append('<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>')
     }
-  })
+})
 
 socket.on('roomsList',(rmData)=>{
     console.log(rmData);
@@ -81,28 +81,27 @@ function createLobby(){
     document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
         event.preventDefault();
         if (event.keyCode === 13) {
-          document.getElementById("create_game_room").click();
+            document.getElementById("create_game_room").click();
         }
-      });
+    });
     if (document.querySelector('#toggle-ready').checked){
         document.querySelector('.toggle').click();
     };
 }
 
 function buildRoomList(message_data){  
-  $('#new-room').hide();
-  $('#event-room').show();
-  document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
-  document.querySelector('#testP').addEventListener('click', e =>{
-    socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
-  });
-  document.querySelector('#btn-leave').addEventListener('click', e =>{
-    socket.emit('leave',{'data':"test",'room':message_data['room']})
-    setCookie("endpoint", "/lobby", 1);
-    $('#event-room').hide();
-  });
-  $('.toggle').css('display','block');
-  
+    $('#new-room').hide();
+    $('#event-room').show();
+    document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
+    document.querySelector('#testP').addEventListener('click', e =>{
+        socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
+    });
+    document.querySelector('#btn-leave').addEventListener('click', e =>{
+        socket.emit('leave',{'data':"test",'room':message_data['room']})
+        setCookie("endpoint", "/lobby", 1);
+        $('#event-room').hide();
+    });
+    $('.toggle').css('display','block');
 }
 
 function createGame() {
@@ -117,7 +116,6 @@ function joinGame(endpoint) {
     socket.emit('join_room', {roomId: endpoint, userId: socket.id});
 }
 
-
 socket.on('disconnect', () => {
     console.log(`Websocket ${socket.id} disconnected!`);
     if (document.querySelector('#toggle-ready').checked){
@@ -128,7 +126,6 @@ socket.on('disconnect', () => {
 
 socket.on('start_game', message_data => {
     $(location).attr('href', '/game'+message_data['room']);
-
 });
 
 function setCookie(cname, cvalue, exdays) {

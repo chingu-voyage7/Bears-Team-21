@@ -7,7 +7,7 @@ body {
     background-color: #eee;
   }
   
-.header,,
+.header,
 .footer {
     padding-right: 15px;
     padding-left: 15px;
@@ -59,6 +59,12 @@ body {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
+}
+
+.toggle{
+    display: none;      
+    width: 105.15px !important; 
+    height: 34px !important;
 }
 
 @media (min-width: 768px) {
