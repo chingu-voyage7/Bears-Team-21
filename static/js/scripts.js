@@ -19,17 +19,23 @@ const RESPONSE_EVENTS = [
     'cards_discarded'
 ]
 
-socket.on('connect', () => {
-    console.log(`Websocket ${socket.id} connected!`);
+info = {}
+
+socket.on('connect', () => {    
+    info.username = $("#username").html();
+    info.room = "/lobby";
+    console.log(`Websocket ${info.username} connected!`);
     //socket.emit('join', '/home?');
     $( 'form' ).on( 'submit', function( e ) {
+        console.log("info",info);
         e.preventDefault()
-        let user_name = socket.id;
+        let user_name = info.username;
         let user_input = $( 'input.message' ).val()
-        socket.emit('send_message', {
-          user_name : user_name,
-          message : user_input
-        }, room="/lobby" )
+        if (user_input != '')
+            socket.emit('send_message', {
+            user_name : user_name,
+            message : user_input
+            }, room=info.room )
         $('input.message').val('').focus()
       } )
 });
@@ -65,6 +71,7 @@ socket.on('roomsList',(rmData)=>{
 })
 
 socket.on('join_room', message_data => {
+    info.room = message_data.room;
     console.log("join_room "+message_data); 
     buildRoomList(message_data);
 });
@@ -97,6 +104,7 @@ function buildRoomList(message_data){
         socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
     });
     document.querySelector('#btn-leave').addEventListener('click', e =>{
+        info.room = "/lobby";
         socket.emit('leave',{'data':"test",'room':message_data['room']})
         setCookie("endpoint", "/lobby", 1);
         $('#event-room').hide();
@@ -107,17 +115,17 @@ function buildRoomList(message_data){
 function createGame() {
     const endpoint = document.querySelector('#lbl-new-room').value;
     console.log('Creating game...' + endpoint);
-    socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: endpoint, userId: socket.id});
+    socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: endpoint, userId: info.username});
     setCookie("endpoint", endpoint, 1);
 }
 
 function joinGame(endpoint) {
     console.log('Joining game...' + endpoint);
-    socket.emit('join_room', {roomId: endpoint, userId: socket.id});
+    socket.emit('join_room', {roomId: endpoint, userId: info.username});
 }
 
 socket.on('disconnect', () => {
-    console.log(`Websocket ${socket.id} disconnected!`);
+    console.log(`Websocket ${info.username} disconnected!`);
     if (document.querySelector('#toggle-ready').checked){
         document.querySelector('.toggle').click();
     };

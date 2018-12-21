@@ -78,7 +78,8 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    resp = make_response(render_template('dashboard.html'))
+    resp = make_response(render_template('dashboard.html', 
+    user=session['username']))
     resp.set_cookie('user-cookie=', 'room_list')
     return resp
 

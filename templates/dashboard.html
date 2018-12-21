@@ -14,6 +14,7 @@
 <body>
     <h1>Dashboard</h1>
     <p>Test code for Flask-SocketIO</p>
+    <h1 id="username">{{user|safe}}</h1>
     <div class="container-fluid">
         <div class="row">
             <a href="{{url_for('logout')}}">Log Out</a>
