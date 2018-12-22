@@ -1,0 +1,35 @@
+
+.card {
+    display: inline-block;
+    border-radius:5px;
+}
+
+.sprite {
+    display:inline-block; 
+    overflow:hidden; 
+    background-repeat: no-repeat;
+    background-image:url("../imgs/cards.jpg");
+}
+  
+.path01 {
+    width:120px; 
+    height:195px; 
+    background-position: 0px 0px;
+}
+  
+.path02{
+    width:120px; 
+    height:195px; 
+    background-position: -120px 0px;
+}
+
+.path03 {
+    width:120px; 
+    height:195px; 
+    background-position: -121px -196px;
+}
+
+.game-board {
+    background-color: #076324;
+    background-image: url("../imgs/black-felt.png");
+}
