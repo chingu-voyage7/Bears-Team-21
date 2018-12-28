@@ -3,6 +3,12 @@
     "_edges_lists": "edges lists explaination -> N:2, E:1, S:-2, W:-1, dead-end:5, stairs:6",
     "card-width":120,
     "card-height":195,
+    "setup-cards": [
+        { "name":"path-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] },
+        { "name":"goal-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] },
+        { "name":"goal-01", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] },
+        { "name":"goal-02", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] }
+    ],
     "path-cards": [
         { "name":"path-01", "edges":[ [2, -2]] },
         { "name":"path-02", "edges":[ [2, -2]] },
@@ -74,5 +80,34 @@
         { "name":"path-68", "edges":[ [1, -1], [-2, 5] ] },
         { "name":"path-69", "edges":[ [1, -2], [1, -1], [-2, -1] ] },
         { "name":"path-70", "edges":[ [1, -2], [1, -1], [-2, -1] ] }
+    ],
+    "action-cards": [
+        { "name":"action-00", "type":"reveal" },
+        { "name":"action-01", "type":"reveal" },
+        { "name":"action-02", "type":"reveal" },
+        { "name":"action-03", "type":"reveal" },
+        { "name":"action-04", "type":"reveal" },
+        { "name":"action-05", "type":"reveal" },
+        { "name":"action-06", "type":"remove" },
+        { "name":"action-07", "type":"remove" },
+        { "name":"action-08", "type":"remove" },
+        { "name":"action-09", "type":"repair", "tools":["pickaxe"] },
+        { "name":"action-10", "type":"repair", "tools":["pickaxe"] },
+        { "name":"action-11", "type":"repair", "tools":["pickaxe","cart"] },
+        { "name":"action-12", "type":"repair", "tools":["pickaxe","light"] },
+        { "name":"action-13", "type":"repair", "tools":["light"] },
+        { "name":"action-14", "type":"repair", "tools":["light"] },
+        { "name":"action-15", "type":"repair", "tools":["light","cart"] },
+        { "name":"action-16", "type":"repair", "tools":["cart"] },
+        { "name":"action-17", "type":"repair", "tools":["cart"] },
+        { "name":"action-18", "type":"damage", "tools":["pickaxe"] },
+        { "name":"action-19", "type":"damage", "tools":["pickaxe"] },
+        { "name":"action-20", "type":"damage", "tools":["pickaxe"] },
+        { "name":"action-21", "type":"damage", "tools":["cart"] },
+        { "name":"action-22", "type":"damage", "tools":["cart"] },
+        { "name":"action-23", "type":"damage", "tools":["cart"] },
+        { "name":"action-24", "type":"damage", "tools":["light"] },
+        { "name":"action-25", "type":"damage", "tools":["light"] },
+        { "name":"action-26", "type":"damage", "tools":["light"] }
     ]
 }

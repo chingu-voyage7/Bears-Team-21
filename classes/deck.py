@@ -1,9 +1,9 @@
 import json, random
 from pprint import pprint   
 
-def load_cards_data(path):    
+def load_cards_data(path, name_set):    
     with open(path) as f:
-        data = list(json.load(f)['path-cards'])
+        data = list(json.load(f)[name_set])
     return data
 
 class Card:
@@ -25,8 +25,8 @@ class Card:
 
 class Deck:
 
-    def __init__(self, path):
-        cards = load_cards_data(path)
+    def __init__(self, path, name_set):
+        cards = load_cards_data(path, name_set)
         self.cards = []
         for card in cards:
             self.cards.append(Card(card['name'], card['edges']))
@@ -34,7 +34,7 @@ class Deck:
     def getData(self):
         return self.cards
 
-    def shffule(self):
+    def shuffle(self):
         random.shuffle(self.cards)
 
     def draw(self):
@@ -44,8 +44,8 @@ class Deck:
         return len(self.cards)
 
 def fuTest():
-    testDeck = Deck('paths.json')
-    testDeck.shffule()
+    testDeck = Deck('paths.json','path-cards')
+    testDeck.shuffle()
     pprint(testDeck.getData())
     print(testDeck.cards_remaining())
     testDeck.draw()
