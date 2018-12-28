@@ -6,8 +6,8 @@ class Board:
     def __init__(self):
         self.cells = []
         self.graph = Graph()
-        for n in range(0,1000):
-            self.cells.append(Vertex(f'{n:03}'))
+        for n in range(0,10000):
+            self.cells.append(Vertex(f'{n:04}'))
         self.graph.add_vertices(self.cells)
         self.initialEdges()
         print(self.graphPrint())
