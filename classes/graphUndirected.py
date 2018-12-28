@@ -18,14 +18,7 @@ class Vertex:
         
     def add_neighbors(self, neighbors):
         for neighbor in neighbors:
-            if isinstance(neighbor, Vertex):
-                if neighbor.name not in self.neighbors:
-                    self.neighbors.append(neighbor.name)
-                    neighbor.neighbors.append(self.name)
-                    self.neighbors = sorted(self.neighbors)
-                    neighbor.neighbors = sorted(neighbor.neighbors)
-            else:
-                return False
+            self.add_neighbor(neighbor)
         
     def __repr__(self):
         return str(self.neighbors)
@@ -41,8 +34,7 @@ class Graph:
             
     def add_vertices(self, vertices):
         for vertex in vertices:
-            if isinstance(vertex, Vertex):
-                self.vertices[vertex.name] = vertex.neighbors
+            self.add_vertex(vertex)
             
     def add_edge(self, vertex_from, vertex_to):
         if isinstance(vertex_from, Vertex) and isinstance(vertex_to, Vertex):
