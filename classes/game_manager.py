@@ -1,9 +1,11 @@
+from classes.player import Player
+
 class GameManager():
     def __init__(self,room,player_list):
         self.room = room
         self.prev_state = ''
         self.state = 'start_game'
-        self.player_list = player_list        
+        self.players = [Player(name) for name in player_list]
         self.state_listener()
 
     def state_listener(self):
@@ -41,12 +43,14 @@ class GameManager():
             self.state = 'round_over'
         else:
             self.current_player += 1 
-            self.current_player %= len(self.player_list)
+            self.current_player %= len(self.players)
             self.state = 'wait_for_move'
         print(self.state)
     
     def round_over(self):
         #split winnings
+        for player in self.players:
+            player.reset()
         self.rounds += 1
         if self.rounds == 3:
             self.state = 'game_over'

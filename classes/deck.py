@@ -1,16 +1,15 @@
 import json, random
 from pprint import pprint   
 
-def loadCardsData():
-    data = []
-    with open('data.json') as f:
+def loadCardsData(path):    
+    with open(path) as f:
         data = json.load(f)
-    return data['path-cards']
+    return list(data['path-cards'])
 
 class Deck:
 
-    def __init__(self):
-        self.data = loadCardsData()
+    def __init__(self, path):
+        self.data = loadCardsData(path)
 
     def getData(self):
         return self.data
@@ -20,12 +19,15 @@ class Deck:
 
     def remove(self,card):
         self.data.remove(card)
+
+    def draw(self):
+        return self.data.pop()
     
-    def cardremaining(self):
-        return self.data
+    def cards_remaining(self):
+        return len(self.data)
 
 def fuTest():
-    testDeck = Deck()
+    testDeck = Deck('paths.json')
     testDeck.shffule()
     pprint(testDeck.getData())
     testDeck.remove({'edges': [[0, 2]], 'name': 'path-01'})
