@@ -1,41 +1,57 @@
 import json, random
 from pprint import pprint   
 
-def loadCardsData(path):    
+def load_cards_data(path):    
     with open(path) as f:
-        data = json.load(f)
-    return list(data['path-cards'])
+        data = list(json.load(f)['path-cards'])
+    return data
+
+class Card:
+
+    def __init__(self, name, edges):
+        self.name = name
+        self.connections = {-2: [], -1: [], 1: [], 2: []}
+        for edge in edges:
+            if edge[0] < 3:
+                self.connections[edge[0]].append(edge[1])
+            if edge[1] < 3:
+                self.connections[edge[1]].append(edge[0])
+
+    def rotate(self):
+        c = self.connections
+        (c[-2], c[2]) = (c[2], c[-2])
+        (c[-1], c[1]) = (c[1], c[-1])
+            
 
 class Deck:
 
     def __init__(self, path):
-        self.data = loadCardsData(path)
+        cards = load_cards_data(path)
+        self.cards = []
+        for card in cards:
+            self.cards.append(Card(card['name'], card['edges']))
 
     def getData(self):
-        return self.data
+        return self.cards
 
     def shffule(self):
-        random.shuffle(self.data)
-
-    def remove(self,card):
-        self.data.remove(card)
+        random.shuffle(self.cards)
 
     def draw(self):
-        return self.data.pop()
+        return self.cards.pop()
     
     def cards_remaining(self):
-        return len(self.data)
+        return len(self.cards)
 
 def fuTest():
     testDeck = Deck('paths.json')
     testDeck.shffule()
     pprint(testDeck.getData())
-    testDeck.remove({'edges': [[0, 2]], 'name': 'path-01'})
-    testDeck.remove({'edges': [[0, 1], [1, 3], [3, 0]], 'name': 'path-30'})
-    testDeck.remove({'edges': [[0, 1], [1, 3], [3, 0]], 'name': 'path-31'})
-    testDeck.remove({'edges': [[0, 1], [1, 3], [3, 0]], 'name': 'path-32'})
-    testDeck.remove({'edges': [[0, 1], [1, 3], [3, 0]], 'name': 'path-33'})
-    testDeck.remove({'edges': [[0, 1], [1, 3], [3, 0]], 'name': 'path-34'})
+    print(testDeck.cards_remaining())
+    testDeck.draw()
+    testDeck.draw()
+    testDeck.draw()
+    print(testDeck.cards_remaining())
     pprint(testDeck.getData())
 
 #fuTest()
