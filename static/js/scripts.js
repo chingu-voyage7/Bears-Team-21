@@ -30,20 +30,43 @@ socket.on('connect', () => {
         console.log("info",info);
         e.preventDefault()
         let user_name = info.username;
-        let user_input = $( 'input.message' ).val()
+        let user_input = $( 'input.chat_input' ).val()
         if (user_input != '')
             socket.emit('send_message', {
             user_name : user_name,
             message : user_input
             }, room=info.room )
-        $('input.message').val('').focus()
+        $('input.chat_input').val('').focus()
       } )
 });
 
 socket.on('receiveMessage', function(msg) {
     console.log( msg )
     if(typeof msg.user_name !== 'undefined') {
-    $('div.messages').append('<div><b style="color: #000">'+msg.user_name+'</b> '+msg.message+'</div>')
+        var base_receive = `<div class="row msg_container base_receive">
+                <div class="col-md-2 col-xs-2 avatar">
+                    <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
+                </div>
+                <div class="col-md-10 col-xs-10">
+                    <div class="messages msg_receive">
+                        <b style="color: #000">${msg.user_name}</b> <p>${msg.message}</p>
+                    </div>
+                </div>
+            </div>`;
+        var base_sent=`<div class="row msg_container base_sent">
+                <div class="col-md-10 col-xs-10">
+                    <div class="messages msg_sent">
+                        <b style="color: #000">${msg.user_name}</b> <p>${msg.message}</p>
+                    </div>
+                </div>
+                <div class="col-md-2 col-xs-2 avatar">
+                    <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
+                </div>
+            </div>`;
+        $('div.msg_container_base').append(
+            (msg.user_name == $("#username").html() ? base_sent : base_receive)
+        );
+        $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
     }
 })
 
@@ -182,6 +205,16 @@ $( document ).ready(function() {
     $('.toggle').on('change',()=>{
         console.log("ready toggle");
         socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
+    });
+    $(".toggle-chat").click(function () {
+        $header = $(this);
+        $content = $(".msg_container_base");
+        $content.slideToggle(500, function () {
+            $header.text(function () {
+                return $content.is(":visible") ? "Collapse" : "Expand";
+            });
+        });
+    
     });
 });
 

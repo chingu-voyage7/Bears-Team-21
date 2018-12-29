@@ -38,18 +38,44 @@
             <button class="btn btn-warning" id="testP">TestEvent</button>
             <button class="btn btn-warning" id="btn-leave">Leave Room</button>
         </div>
-        <div class="row" id="player-ready"></div>
+        <div class="row" id="player-ready">
             <input id="toggle-ready" type="checkbox" data-toggle="toggle" data-on="Ready" data-off="Not Ready" data-onstyle="success" data-offstyle="danger" style="display: none;">
         </div>
-        <div id="chat">
-            <div class="messages">
-                
+        <div class="row" id="chat-row">
+        <div class="col-sm-8">
+            <div class="chatbody" id="chat">
+                <div class="panel panel-primary">
+                    <div class="panel-heading top-bar">
+                        <div class="col-md-10 col-xs-10">
+                            <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
+                            
+                        </div>
+                        <div class="col-md-2 col-xs-2">
+                            <i class="glyphicon glyphicon-asterisk toggle-chat pull-right">Collapse</i>
+                        </div>
+                    </div>
+                    <div class="panel-body msg_container_base">
+                        
+                    </div>
+                    <div class="panel-footer">
+                            <form action="" method="POST" class="form-wrapper cf"> 
+                                <div class="input-group">       
+                                    <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" id="btn-chat" type="submit"><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i></button>
+                                    </span>
+                                </div>
+                            </form>
+                    </div>
+    		    </div>
             </div>
-            <form action="" method="POST">                
-                <input type="text" class="message" placeholder="Messages"/>
-                <input type="submit"/>
-              </form>
         </div>
+
+        </div>
+
+
+    </div>
+
     </div>
     <script>
     //$('#toggle-ready').hide();
