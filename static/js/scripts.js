@@ -30,11 +30,12 @@ socket.on('connect', () => {
         console.log("info",info);
         e.preventDefault()
         let user_name = info.username;
-        let user_input = $( 'input.chat_input' ).val()
+        let user_input = $( 'input.chat_input' ).val();
         if (user_input != '')
             socket.emit('send_message', {
             user_name : user_name,
-            message : user_input
+            message : user_input,
+            room: $(".tab-pane.active")[0].id == "tab1primary" || info.room == "/lobby" ? "#tab1primary": "#tab2primary",
             }, room=info.room )
         $('input.chat_input').val('').focus()
       } )
@@ -63,7 +64,9 @@ socket.on('receiveMessage', function(msg) {
                     <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
                 </div>
             </div>`;
-        $('div.msg_container_base').append(
+        //var chatTab = msg.room == "/lobby"? "#tab1primary" : "#tab2primary"
+        console.log(msg.room)
+        $('div '+msg.room).append(
             (msg.user_name == $("#username").html() ? base_sent : base_receive)
         );
         $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
@@ -71,6 +74,8 @@ socket.on('receiveMessage', function(msg) {
 })
 
 socket.on('roomsList',(rmData)=>{
+    if (info.room != "/lobby") return;
+
     console.log(rmData);
     
     //setCookie("rooms-list", JSON.stringify(rmData), 1);
@@ -214,7 +219,13 @@ $( document ).ready(function() {
                 return $content.is(":visible") ? "Collapse" : "Expand";
             });
         });
-    
+    });
+    $(".nav li").on("click", function(e) {
+        console.log(e.target.hash)
+        $(".nav li").removeClass("active");
+        $(".tab-pane").removeClass("in active");
+        $(this).addClass("active");
+        $(e.target.hash).addClass("in active");
     });
 });
 

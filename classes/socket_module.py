@@ -104,8 +104,7 @@ class GameLobbyNs(Namespace):
         emit('roomsList', {'data': 'Connected', 
         'roomList': self.make_rm_List()},room='/lobby')
         roomId = data['roomId']
-
-        leave_room('/lobby')
+        #leave_room('/lobby')
         join_room('/'+roomId)
         if ((roomId in self.game_rooms) 
         and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  
@@ -113,7 +112,7 @@ class GameLobbyNs(Namespace):
             self.add_player(current_user.username, data['roomId'])
             emit('join_room',{'room':'/'+roomId, 
             'players': self.game_rooms[roomId]}, room='/'+roomId)
-        elif roomId != '/lobby':
+        #elif roomId != '/lobby':
             if (current_user.username in self.game_rooms[roomId]): #need it for refrersh page load
                 emit('join_room',{'room':'/'+roomId, 
                 'players': self.game_rooms[roomId]}, room='/'+roomId)

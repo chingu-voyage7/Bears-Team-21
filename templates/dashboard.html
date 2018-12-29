@@ -44,18 +44,26 @@
         <div class="row" id="chat-row">
         <div class="col-sm-8">
             <div class="chatbody" id="chat">
-                <div class="panel panel-primary">
+                <div class="panel with-nav-tabs panel-primary">
                     <div class="panel-heading top-bar">
-                        <div class="col-md-10 col-xs-10">
-                            <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
-                            
-                        </div>
                         <div class="col-md-2 col-xs-2">
+                            <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
+                        </div>    
+                        <div class="col-md-9 col-xs-9" id="chatTabs">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab1primary" data-toggle="tab">Lobby</a></li>
+                                <li><a href="#tab2primary" data-toggle="tab">Room</a></li>
+                            </ul>
+                        </div>   
+                        <div class="col-md-1 col-xs-1">
                             <i class="glyphicon glyphicon-asterisk toggle-chat pull-right">Collapse</i>
                         </div>
                     </div>
                     <div class="panel-body msg_container_base">
-                        
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="tab1primary"></div>
+                            <div class="tab-pane fade" id="tab2primary"></div>
+                        </div>
                     </div>
                     <div class="panel-footer">
                             <form action="" method="POST" class="form-wrapper cf"> 
