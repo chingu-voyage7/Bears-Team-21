@@ -54,7 +54,13 @@ class Board:
         # check left edge
         return -1 if ((n + 1) % self.DIMENSION == 0) else n - 1
     
-    def checkPosition(self, card, label):
+    def checkPosition(self, card, destLabel):
+        startLabel = self.nToLabel(self.START_IDX)
+        if destLabel in self.occupated.keys():
+            return False
+        if not self.find_path(startLabel, destLabel): 
+            return False
+        #to do check edges connections
         return True
 
     def addCard(self, card, label):
@@ -68,6 +74,12 @@ class Board:
         self.graph.add_edge(start,self.cells[self.cellAtEast(index)])
         print (self.occupated)
         return "toDo"
+
+    def addCardCeck(self, card, label):
+        if self.checkPosition(card, label):
+            self.addCard(card, label)
+            return True
+        return False
 
     def nToLabel(self, n):
         return self.PAD_NUM.format(n)
@@ -94,8 +106,10 @@ def fuTestBoard():
     testDeck = Deck('paths.json','path-cards')  
     testDeck.shuffle()
     card = testDeck.draw()
-    testBoard.addCard(card,"16")                   
-    print(testBoard.graphPrint())
+
+    print(testBoard.addCardCeck(card,"16"))
+    print(testBoard.addCardCeck(card,"42"))
+
     print(testBoard.graph.vertices)
     print(testBoard.find_path("52","53"))
 
