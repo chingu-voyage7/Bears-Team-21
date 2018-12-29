@@ -127,12 +127,15 @@ function createLobby(){
 function buildRoomList(message_data){  
     $('#new-room').hide();
     $('#event-room').show();
+    $('#tab2').css('visibility', 'visible');
     document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
     document.querySelector('#testP').addEventListener('click', e =>{
         socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
     });
     document.querySelector('#btn-leave').addEventListener('click', e =>{
         info.room = "/lobby";
+        $('#tab1').click();
+        $('#tab2').css('visibility', 'hidden');
         socket.emit('leave',{'data':"test",'room':message_data['room']})
         setCookie("endpoint", "/lobby", 1);
         $('#event-room').hide();
@@ -222,13 +225,15 @@ $( document ).ready(function() {
     });
     $("a.nourl").click(function(e){
         e.preventDefault();
+        
      });
+    //$('#tab2').hide();
     $(".nav li").on("click", function(e) {
-        console.log(e.target.hash)
         $(".nav li").removeClass("active");
         $(".tab-pane").removeClass("in active");
         $(this).addClass("active");
         $(e.target.hash).addClass("in active");
+        $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
     });
 });
 

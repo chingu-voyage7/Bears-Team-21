@@ -51,8 +51,8 @@
                         </div>    
                         <div class="col-md-9 col-xs-9" id="chatTabs">
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#tab1primary" data-toggle="tab" class="nourl">Lobby</a></li>
-                                <li><a href="#tab2primary" data-toggle="tab" class="nourl">Room</a></li>
+                                <li class="active"><a href="#tab1primary" data-toggle="tab" class="nourl" id="tab1">Lobby</a></li>
+                                <li><a href="#tab2primary" data-toggle="tab" class="nourl" id="tab2">Room</a></li>
                             </ul>
                         </div>   
                         <div class="col-md-1 col-xs-1">
@@ -68,7 +68,7 @@
                     <div class="panel-footer">
                             <form action="" method="POST" class="form-wrapper cf"> 
                                 <div class="input-group">       
-                                    <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
+                                    <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." autocomplete="off"/>
                                     <span class="input-group-btn">
                                         <button class="btn btn-primary" id="btn-chat" type="submit"><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i></button>
                                     </span>
