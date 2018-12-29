@@ -220,6 +220,9 @@ $( document ).ready(function() {
             });
         });
     });
+    $("a.nourl").click(function(e){
+        e.preventDefault();
+     });
     $(".nav li").on("click", function(e) {
         console.log(e.target.hash)
         $(".nav li").removeClass("active");
