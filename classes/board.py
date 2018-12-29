@@ -1,5 +1,5 @@
-from classes.graphUndirected import Graph, Vertex
-from classes.deck import Deck, Card
+from graphUndirected import Graph, Vertex
+from deck import Deck, Card
 
 import math
 
@@ -76,6 +76,17 @@ class Board:
         for key in card.connections.keys:
             card.connections[key]#to-Do
 
+    def find_path(self, start, end, path=[]):
+        path = path + [start]
+        if start == end:
+            return path
+        if start not in self.graph.vertices:
+            return None
+        for node in self.graph.vertices[start]:
+            if node not in path:
+                newpath = self.find_path(node, end, path)
+                if newpath: return newpath
+        return None
 
 ###################################################################################
 def fuTestBoard():
@@ -85,6 +96,8 @@ def fuTestBoard():
     card = testDeck.draw()
     testBoard.addCard(card,"16")                   
     print(testBoard.graphPrint())
+    print(testBoard.graph.vertices)
+    print(testBoard.find_path("52","53"))
 
 fuTestBoard()
 
