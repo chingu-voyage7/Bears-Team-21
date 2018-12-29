@@ -1,119 +1,89 @@
-from graphUndirected import Graph, Vertex
-from deck import Deck, Card
+from classes.deck import Deck, Card
 
 import math
 
+def set_direction(direction):
+    if direction == -2:
+        return (0,-1)
+    if direction == -1:
+        return (-1,0)
+    if direction == 2:
+        return (0,1)
+    if direction == 1:
+        return (1,0)
+
+dim = 19
+
 class Board:
-    DIMENSION = 10#100
-    NUM_CELLS = DIMENSION * DIMENSION
-    # node labels formatting
-    PAD_NUM = '{0:0'+str(len(str(NUM_CELLS - 1)))+'d}' 
-    # start card certer row & 1/4th column
-    START_IDX = ((DIMENSION // 2) * DIMENSION) + math.floor(DIMENSION* 0.25)
+    board = [[None for i in range(dim)] for i in range(dim)]
+    start_x = 5
+    start_y = 9
 
     def __init__(self):
-        self.occupated = {} # dict of cells occupated by cards
-        self.cells = [] # all the Vertex references of the board
-        self.graph = Graph()
-        for n in range(0, self.NUM_CELLS):
-            self.cells.append(Vertex(self.nToLabel(n)))
-        self.graph.add_vertices(self.cells)
-        self.initialEdges()
+        self.place_initial_cards()
+        self.available = []
+
+    def place_initial_cards(self):
+        setup_deck = Deck('paths.json','setup-cards')        
+        card = setup_deck.draw()
+        self.add_card(card, self.start_x, self.start_y)
+        card = setup_deck.draw()
+        self.add_card(card, self.start_x + 2, self.start_y + 8)
+        card = setup_deck.draw()
+        self.add_card(card, self.start_x - 2, self.start_y + 8)
+        card = setup_deck.draw()
+        self.add_card(card, self.start_x, self.start_y + 8)
+
+    def add_card(self, card, x, y):
+        self.board[x][y] = card
+        if [x, y] in self.available:
+            self.available.remove([x, y])
+        if not card.name.startswith('goal'):
+            self.available = []
+            self.find_available_spots(self.start_x, self.start_y, 1)
+            self.find_available_spots(self.start_x, self.start_y, 2)
+
+    def mark_available(self, x, y):        
+        self.available.append([x, y])
     
-    def initialEdges(self):
-        setupDeck = Deck('paths.json','setup-cards')
-        GOAL_IDX_COL =  self.START_IDX + 7
-        startCard = setupDeck.draw()
-        self.addCard(startCard, self.nToLabel(GOAL_IDX_COL))
-        startCard = setupDeck.draw() # testing randomly adding setup cards
-        self.addCard(startCard, self.nToLabel(GOAL_IDX_COL - self.DIMENSION))
-        startCard = setupDeck.draw()
-        self.addCard(startCard, self.nToLabel(GOAL_IDX_COL + self.DIMENSION))
-        startCard = setupDeck.draw()
-        self.addCard(startCard, self.nToLabel(self.START_IDX))
-        return ""
+    def add_card_check(self, card, x, y):
+        if self.check_position(card, x, y):
+            self.add_card(card, x, y)
 
-    
-    def graphPrint(self):
-        #return(str(self.graph.adjacencyList()) + '\n' + '\n' + str(self.graph.adjacencyMatrix()))
-        return(str(self.graph.adjacencyList()))
-    
-    def cellAtNord(self, n):
-        # check top edge
-        return -1 if n < self.DIMENSION else n - self.DIMENSION
-
-    def cellAtSud(self, n):
-        # check bottom edge
-        return -1 if n > (self.NUM_CELLS - self.DIMENSION) else n + self.DIMENSION
-
-    def cellAtEast(self, n):
-        # check right edge
-        return -1 if n % self.DIMENSION == 0 else n + 1
-
-    def cellAtWest(self, n):
-        # check left edge
-        return -1 if ((n + 1) % self.DIMENSION == 0) else n - 1
-    
-    def checkPosition(self, card, destLabel):
-        startLabel = self.nToLabel(self.START_IDX)
-        if destLabel in self.occupated.keys():
-            return False
-        if not self.find_path(startLabel, destLabel): 
-            return False
-        #to do check edges connections
-        return True
-
-    def addCard(self, card, label):
-        # add card no checks
-        self.occupated[label] = card.name
-        index = int(label)
-        start = self.cells[index]
-        self.graph.add_edge(start,self.cells[self.cellAtSud(index)])
-        self.graph.add_edge(start,self.cells[self.cellAtNord(index)])
-        self.graph.add_edge(start,self.cells[self.cellAtWest(index)])
-        self.graph.add_edge(start,self.cells[self.cellAtEast(index)])
-        print (self.occupated)
-        return "toDo"
-
-    def addCardCeck(self, card, label):
-        if self.checkPosition(card, label):
-            self.addCard(card, label)
-            return True
+    def check_position(self, card, x, y):
+        if [x,y] in self.available:
+            return self.check_adjacent(x, y, card.required)
         return False
 
-    def nToLabel(self, n):
-        return self.PAD_NUM.format(n)
+    def check_adjacent(self, x, y, required):
+        for direction in required:
+            (nx,ny) = set_direction(direction)
+            nx += x
+            ny += y
+            other = self.board[nx][ny]
+            if not -direction in other.required:
+                return False            
+        return True
 
-    def findAdjacentNodes(self, card, label):
-        for key in card.connections.keys:
-            card.connections[key]#to-Do
-
-    def find_path(self, start, end, path=[]):
-        path = path + [start]
-        if start == end:
-            return path
-        if start not in self.graph.vertices:
-            return None
-        for node in self.graph.vertices[start]:
-            if node not in path:
-                newpath = self.find_path(node, end, path)
-                if newpath: return newpath
-        return None
+    def find_available_spots(self, x, y, direction):        
+        for d in self.board[x][y].connections[direction]:
+            (nx,ny) = set_direction(d)
+            nx += x
+            ny += y
+            other = self.board[x][y-1]
+            if other is None:
+                self.mark_available(x,y-1)
+            else:
+                self.find_available_spots(nx,ny, -d)
 
 ###################################################################################
 def fuTestBoard():
-    testBoard = Board()   
-    testDeck = Deck('paths.json','path-cards')  
+    testBoard = Board()
+    testDeck = Deck('paths.json','path-cards')
     testDeck.shuffle()
-    card = testDeck.draw()
+    card = testDeck.draw()    
 
-    print(testBoard.addCardCeck(card,"16"))
-    print(testBoard.addCardCeck(card,"42"))
-
-    print(testBoard.graph.vertices)
-    print(testBoard.find_path("52","53"))
-
-fuTestBoard()
+#fuTestBoard()
 
 #001      ...          099
 #[[0. 1. 1. ... 0. 0. 0.]
@@ -130,12 +100,12 @@ fuTestBoard()
 #d = Vertex('D')
 #e = Vertex('E')
 #
-#a.add_neighbors([b,c,e]) 
+#a.add_neighbors([b,c,e])
 #b.add_neighbors([a,c])
 #c.add_neighbors([b,d,a,e])
 #d.add_neighbor(c)
 #e.add_neighbors([a,c])
-#        
+#
 #g = Graph()
 #print(graph(g))
 #print()

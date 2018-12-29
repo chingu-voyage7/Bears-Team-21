@@ -16,11 +16,19 @@ class Card:
                 self.connections[edge[0]].append(edge[1])
             if edge[1] < 3:
                 self.connections[edge[1]].append(edge[0])
+        self.set_required()
 
     def rotate(self):
         c = self.connections
         (c[-2], c[2]) = (c[2], c[-2])
         (c[-1], c[1]) = (c[1], c[-1])
+        self.set_required()
+
+    def set_required(self):
+        self.reqired = []
+        for c in self.connections:
+            if self.connections[c]:
+                self.reqired.append(c)
             
 
 class Deck:
