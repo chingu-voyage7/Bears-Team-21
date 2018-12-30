@@ -80,11 +80,12 @@ socket.on('roomsList',(rmData)=>{
     
     //setCookie("rooms-list", JSON.stringify(rmData), 1);
     $('.toggle').css('display','none');
-
-    let roomListDiv = document.querySelector('.gamerooms');
+    let roomListContainer = document.querySelector('.gamerooms');
+    roomListContainer.innerHTML = '<ul class="list-group"></ul>';
+    let roomListDiv = document.querySelector('.list-group');
     roomListDiv.innerHTML = "";
     Object.keys(rmData['roomList']).forEach(room => {
-        roomListDiv.innerHTML += `<div class="room" ns="${room}">${room} - Players ${rmData['roomList'][room]}/10</div>`;
+        roomListDiv.innerHTML += `<li class="list-group-item room" ns="${room}">${room} - Players ${rmData['roomList'][room]}/10</li>`;
     });
 
     Array.from(document.getElementsByClassName('room')).forEach(room=>{
@@ -128,7 +129,15 @@ function buildRoomList(message_data){
     $('#new-room').hide();
     $('#event-room').show();
     $('#tab2').css('visibility', 'visible');
-    document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
+    //document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
+    document.querySelector('.gamerooms').innerHTML=`<div class="row">
+    <div class="container" id="joinedDiv">
+        <h2>Joined Room: ${message_data['room']}</h2>
+        <h3>${message_data['players']}</h3>
+    </div>
+    </div>`;
+
+
     document.querySelector('#testP').addEventListener('click', e =>{
         socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
     });

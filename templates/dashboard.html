@@ -2,6 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <title>Saboteur</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -12,26 +16,32 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/scripts.js')}}"></script>
 </head>
 <body>
-    <h1>Dashboard</h1>
-    <p>Test code for Flask-SocketIO</p>
-    <h1 id="username">{{user|safe}}</h1>
-    <div class="container-fluid">
+
+        <div class="container">
+                <div class="header clearfix">
+                  <nav>
+                    <ul class="nav nav-pills pull-right">
+                      <li role="presentation"><a href="{{url_for('logout')}}">Log Out</a></li>
+                    </ul>
+                  </nav>
+                  <h3 class="text-muted">Dashboard <small id="username">{{user|safe}}</small> </h3>
+                </div>  
         <div class="row">
-            <a href="{{url_for('logout')}}">Log Out</a>
-        </div>
-        <div class="row">
+
             <div class="col-sm-12 gamerooms">
+                    <ul class="list-group">
+                    </ul>
             </div>
         </div>
         <div  class="row" id="list-rooms">
 
         </div>
         <div class="row" id="new-room">
-            <div class="col-sm-8">
-                <input id="lbl-new-room" type="text" placeholder="Enter Room Name" />
+            <div class="col-sm-9" id="new-room">
+                <input id="lbl-new-room" type="text" class="form-control" placeholder="Enter Room Name" aria-label="Enter Room Name">
             </div>
-            <div class="col-sm-4 roomsbtn">
-                <button id="create_game_room" class="btn btn-warning">Create Game</button>
+            <div class="col-sm-1">
+                <button class="btn btn-warning" id="create_game_room"> Create Game </button>
             </div>
         </div>
         <div class="row" id="event-room" style="display: none">
