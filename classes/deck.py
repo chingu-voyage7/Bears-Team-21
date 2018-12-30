@@ -10,7 +10,13 @@ class Card:
 
     def __init__(self, name, edges):
         self.name = name
+        
+class PathCard(Card):
+
+    def __init__(self, name, edges):
+        super().__init__(name)
         self.connections = {-2: [], -1: [], 1: [], 2: []}
+        self.edges = edges
         for edge in edges:
             if edge[0] < 3:
                 self.connections[edge[0]].append(edge[1])
@@ -25,11 +31,36 @@ class Card:
         self.set_required()
 
     def set_required(self):
-        self.reqired = []
+        self.required = []
         for c in self.connections:
             if self.connections[c]:
-                self.reqired.append(c)
-            
+                self.required.append(c)
+                
+class DoorCard(PathCard):
+
+    def __init__(self, name, edges, door):
+        super().__init__(name, edges)
+        self.door = door
+
+class ActionCard(Card):
+
+    def __init__(self, name, type):
+        super().__init__(name)
+        self.type = type
+
+class ToolCard(ActionCard):
+
+    def __init__(self, name, type, tools):
+
+        super().__init__(name, type)
+        self.tools = tools
+
+class RoleCard(Card):
+
+    def __init__(self, name, type):
+
+        super().__init__(name)
+        self.type = type
 
 class Deck:
 
@@ -37,7 +68,23 @@ class Deck:
         cards = load_cards_data(path, name_set)
         self.cards = []
         for card in cards:
-            self.cards.append(Card(card['name'], card['edges']))
+            name = card['name']            
+            if name.startswith('path') or name.startswith('goal'):                
+                edges = card['edges']
+                door = ['path-49','path-50','path-51',
+                        'path-52','path-53','path-54'] 
+                if name in door: 
+                    self.cards.append(DoorCard(name, edges, card['door']))
+                else:
+                    self.cards.append(PathCard(name, edges))
+            if name.startswith('action'):
+                type = card['type']
+                if 'tools' in card:
+                    self.cards.append(ToolCard(name, type, card['tools']))
+                else:
+                    self.cards.append(ActionCard(name, type))
+            if name.startswith('role'):
+                self.cards.append(RoleCard(name, card['type']))
 
     def getData(self):
         return self.cards
@@ -50,6 +97,9 @@ class Deck:
     
     def cards_remaining(self):
         return len(self.cards)
+
+    def concat(self, other):
+        self.cards += other.cards
 
 def fuTest():
     testDeck = Deck('paths.json','path-cards')

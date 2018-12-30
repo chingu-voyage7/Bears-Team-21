@@ -1,4 +1,6 @@
-from classes.player import Player
+from .player import Player
+from .deck import Deck, Card
+from .board import Board
 
 class GameManager():
     def __init__(self,room,player_list):
@@ -30,14 +32,19 @@ class GameManager():
     def start_round(self):
         print('round started')
         #create decks
+        deck = Deck('paths.json','path-cards')
+        deck.concat(Deck('paths.json', 'action-cards'))
+        roles = Deck('paths.json', 'role-cards')
         #deal roles and cards
         #set up map and player divs
+        board = Board()
         self.current_player = 0
         self.state = 'wait_for_move'    
         self.handle_move() #test only    
 
     def handle_move(self):
         #handle move logic
+        
         round_over = True #placeholder
         if round_over:
             self.state = 'round_over'

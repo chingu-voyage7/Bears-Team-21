@@ -1,4 +1,4 @@
-from classes.deck import Deck, Card
+from .deck import Deck, Card
 
 import math
 
@@ -15,37 +15,47 @@ def set_direction(direction):
 dim = 19
 
 class Board:
-    board = [[None for i in range(dim)] for i in range(dim)]
     start_x = 5
-    start_y = 9
+    start_y = 9    
 
     def __init__(self):
-        self.place_initial_cards()
+        self.visited = [[False for i in range(dim)] for i in range(dim)]
+        self.board = [[None for i in range(dim)] for i in range(dim)]
         self.available = []
+        self.place_initial_cards()
 
     def place_initial_cards(self):
-        setup_deck = Deck('paths.json','setup-cards')        
+        setup_deck = Deck('classes/paths.json','setup-cards')
         card = setup_deck.draw()
-        self.add_card(card, self.start_x, self.start_y)
+        self.add_card(card, self.start_x, self.start_y + 8)
         card = setup_deck.draw()
         self.add_card(card, self.start_x + 2, self.start_y + 8)
         card = setup_deck.draw()
         self.add_card(card, self.start_x - 2, self.start_y + 8)
         card = setup_deck.draw()
-        self.add_card(card, self.start_x, self.start_y + 8)
+        self.add_card(card, self.start_x, self.start_y)
+
+    def remove_card(self, x, y):
+        self.board[x][y] = None
+        self.find_available_spots(self.start_x, self.start_y, 1)
+        self.find_available_spots(self.start_x, self.start_y, 2)
 
     def add_card(self, card, x, y):
+        print('card placed')
         self.board[x][y] = card
         if [x, y] in self.available:
             self.available.remove([x, y])
         if not card.name.startswith('goal'):
             self.available = []
+            self.visited = [[False for i in range(dim)] for i in range(dim)]
             self.find_available_spots(self.start_x, self.start_y, 1)
             self.find_available_spots(self.start_x, self.start_y, 2)
+        print(self.available)
 
-    def mark_available(self, x, y):        
-        self.available.append([x, y])
-    
+    def mark_available(self, x, y):
+        if [x, y] not in self.available:
+            self.available.append([x, y])
+
     def add_card_check(self, card, x, y):
         if self.check_position(card, x, y):
             self.add_card(card, x, y)
@@ -61,29 +71,40 @@ class Board:
             nx += x
             ny += y
             other = self.board[nx][ny]
-            if not -direction in other.required:
-                return False            
+            if other is not None:
+                if not -direction in other.required:
+                    return False
         return True
 
-    def find_available_spots(self, x, y, direction):        
-        for d in self.board[x][y].connections[direction]:
-            (nx,ny) = set_direction(d)
-            nx += x
-            ny += y
-            other = self.board[x][y-1]
-            if other is None:
-                self.mark_available(x,y-1)
-            else:
-                self.find_available_spots(nx,ny, -d)
+    def check_visited(self, x1, y1, x2, y2):
+        if x2 is not None:
+            return self.visited[x1][y1] and self.visited[x2][y2]
+        return False
+
+    def find_available_spots(self, x, y, direction, px = None, py = None):       
+        if not self.check_visited(x, y, px, py):
+            for d in self.board[x][y].connections[direction]:
+                (nx,ny) = set_direction(d)
+                nx += x
+                ny += y
+                other = self.board[nx][ny]
+                if other is None:
+                    self.mark_available(nx,ny)
+                else:
+                    self.find_available_spots(nx, ny, -d, x, y)
+        self.visited[x][y] = True
 
 ###################################################################################
 def fuTestBoard():
     testBoard = Board()
-    testDeck = Deck('paths.json','path-cards')
-    testDeck.shuffle()
-    card = testDeck.draw()    
+    testDeck = Deck('classes/paths.json','path-cards')
+    card = testDeck.cards[0]
+    testBoard.add_card_check(card, 6, 10)
+    testBoard.add_card_check(card, 5, 11)
+    #testDeck.shuffle()
+    #card = testDeck.draw()
 
-#fuTestBoard()
+fuTestBoard()
 
 #001      ...          099
 #[[0. 1. 1. ... 0. 0. 0.]

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request, redirect,url_for
 from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import current_user
-import classes.settings as config
+import .settings as config
 
 class GameLobbyNs(Namespace):
     clients = {}
