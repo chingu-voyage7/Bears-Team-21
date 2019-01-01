@@ -185,6 +185,16 @@ img {
     visibility:hidden;
 }
 
+.game-board{
+    overflow: scroll;
+    height: 800px;
+    position: relative;
+}
+.square{
+    border: black;
+    border-style: dashed;
+    position: absolute;
+}
 @media (min-width: 768px) {
     .container {
       max-width: 730px;

@@ -55,13 +55,8 @@
         </div>
         <div class="row">    
             <div class="col-sm-12">
-                <div class="game-board well well-sm" style="min-height: 500px;">
-                    <div class="icon">
-                         <i class="glyphicon glyphicon-picture"></i>
-                    </div>
-                    <div class="text">
-                        <label class="text-muted">Game Board</label>
-                    </div>
+                <div class="game-board well well-sm" id="grid">
+
                 </div>
             </div>
         </div>
@@ -113,5 +108,32 @@
           <p>© 2019 Bear-Team-21.</p>
         </footer>
     </div>
+<script>
+    window.onload = function() {
+        var squarewidth = 120; 
+        var squareheight= 195; 
+        var divMain = document.getElementById('grid');
+        var size = 10;
+        var count = 0;
+        for (var j = 0; j < size; j++) {
+            for (var i = 0; i < size; i++) {
+                var sqr = document.createElement('div'), 
+                coord = {"x":i,"y":j} 
+                sqr.className = 'square'; 
+                count++;
+                sqr.id ="square-"+count;
+                console.log(sqr.id);
+                sqr.style.width = squarewidth + 'px'; 
+                sqr.style.height = squareheight + 'px'; 
+                sqr.style.left = (coord.x * squarewidth) + 'px'; 
+                sqr.style.top = (coord.y * squareheight) + 'px';
+                sqr.addEventListener('click', function(evt) { 
+                    console.log(this); 
+                }); 
+                divMain.appendChild(sqr); 
+            }
+        }
+    };
+</script>
 </body>
 </html>
