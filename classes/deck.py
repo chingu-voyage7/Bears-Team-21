@@ -8,7 +8,7 @@ def load_cards_data(path, name_set):
 
 class Card:
 
-    def __init__(self, name, edges):
+    def __init__(self, name):
         self.name = name
         
 class PathCard(Card):
@@ -102,7 +102,7 @@ class Deck:
         self.cards += other.cards
 
 def fuTest():
-    testDeck = Deck('paths.json','path-cards')
+    testDeck = Deck('classes/paths.json','action-cards')
     testDeck.shuffle()
     pprint(testDeck.getData())
     print(testDeck.cards_remaining())
