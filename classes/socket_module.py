@@ -1,7 +1,7 @@
 from flask import Flask, render_template, session, request, redirect,url_for
 from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import current_user
-import .settings as config
+from .settings import *
 
 class GameLobbyNs(Namespace):
     clients = {}
@@ -107,7 +107,7 @@ class GameLobbyNs(Namespace):
         #leave_room('/lobby')
         join_room('/'+roomId)
         if ((roomId in self.game_rooms) 
-        and (len(self.game_rooms[roomId]) < config.MAX_ROOM_SIZE)  
+        and (len(self.game_rooms[roomId]) < MAX_ROOM_SIZE)  
         and (current_user.username not in self.game_rooms[roomId])):
             self.add_player(current_user.username, data['roomId'])
             emit('join_room',{'room':'/'+roomId, 
@@ -122,7 +122,7 @@ class GameLobbyNs(Namespace):
         playersReady = True
         for roomId in self.game_rooms:
             if current_user.username in self.game_rooms[roomId]:
-                if len(self.game_rooms[roomId]) < config.MIN_PLAYER_START:
+                if len(self.game_rooms[roomId]) < MIN_PLAYER_START:
                     playersReady = False
                 else:
                     for player in self.game_rooms[roomId]:
