@@ -1,11 +1,11 @@
 
 .card {
-    display: inline-block;
+    display: inline-table;
     border-radius:5px;
+    margin-left: 5px !important;
 }
 
 .sprite {
-    display:inline-block; 
     overflow:hidden; 
     background-repeat: no-repeat;
     background-image:url("../imgs/cards.jpg");
