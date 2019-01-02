@@ -42,14 +42,14 @@ class GameManager():
         self.board = Board()
         self.current_player = 0
         self.state = 'wait_for_move'    
-        self.handle_move() #test only    
+        #self.handle_move() #test only    
 
-    def handle_move(self, card, x=None, y=None):
+    def handle_move(self, player, card, x=None, y=None, target=None):
         #handle move logic
         if isinstance(card, (PathCard, DoorCard)):
-            move_end = path_played(card, x, y)
-        elif isinstance(card, (ActionCard, ToolCard))
-            move_end = action_played(card)
+            move_end = self.path_played(card, player, x, y)
+        elif isinstance(card, (ActionCard, ToolCard)):
+            move_end = self.action_played(player, card, target)
         round_over = True #placeholder
         if move_end:
             if round_over:
@@ -60,42 +60,58 @@ class GameManager():
                 self.state = 'wait_for_move'
             print(self.state)
     
-    def path_played(self, card, x, y):
-        return self.board.add_card_check(card, x, y)
+    def path_played(self, player, card, x, y):
+        if player.is_ready():
+            return self.board.add_card_check(card, x, y)
 
-    def action_played(card, target):
-        if card.type == 'reveal':
+    def action_played(self, player, card, target):
+        if card.type == 'reveal': #show goal card
+            #emit signal for showing the goal card
             pass
+
         elif card.type == 'remove':
-            pass
+            target_card = self.board.board[target[0]][target[1]]
+            if isinstance(target_card, (PathCard, DoorCard)):
+                self.board.remove_card(target[0], target[1])
+
         elif card.type == 'repair':
             if isinstance(target, Player):
                 for tool in card.tools:
                     target.repair_tool(tool)
                 return True
             return False
+
         elif card.type == 'damage':
             if isinstance(target, Player):
                 for tool in card.tools:
                     target.break_tool(tool)
                 return True
             return False
+
         elif card.type == 'theft':
-            pass
+            player.steal_count += 1
+
         elif card.type == 'handsoff':
-            pass
+            player.steal_count -= 1
+
         elif card.type == 'swaphats':
+            #change role
             pass
+
         elif card.type == 'trapped':
-            pass
+            target.imprison()
+
         elif card.type == 'swaphand':
-            pass
+            (player.cards, target.cards) = (target.cards, player.cards)
+            #other draws card
+
         elif card.type == 'inspection':
+            #show player role card
             pass
+
         elif card.type == 'free':
-            pass
-        elif card.type == 'remove':
-            pass
+            target.release()            
+
         return True #placeholder
 
     def round_over(self):
