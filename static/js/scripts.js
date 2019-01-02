@@ -215,8 +215,6 @@ function checkCookie() {
 //    socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
 //}, 5000);
 
-
-
 $( document ).ready(function() {
     checkCookie();
     $('.toggle').on('change',()=>{
