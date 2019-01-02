@@ -73,7 +73,10 @@ def login(text=''):
 @login_required
 def logout():
     logout_user()
-    return redirect('/')
+    resp = make_response(render_template('index.html', 
+    user=session['username']))
+    resp.set_cookie('endpoint', '', expires=0)
+    return resp
 
 @app.route('/dashboard')
 @login_required
