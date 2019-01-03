@@ -11,19 +11,19 @@
     background-image:url("../imgs/cards.jpg");
 }
   
-.path01 {
+.path-01 {
     width:120px; 
     height:195px; 
     background-position: 0px 0px;
 }
   
-.path02{
+.path-02{
     width:120px; 
     height:195px; 
     background-position: -120px 0px;
 }
 
-.path03 {
+.path-03 {
     width:120px; 
     height:195px; 
     background-position: -121px -196px;
