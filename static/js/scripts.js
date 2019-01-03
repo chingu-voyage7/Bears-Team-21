@@ -141,15 +141,17 @@ function buildRoomList(message_data){
     document.querySelector('#testP').addEventListener('click', e =>{
         socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
     });
-    document.querySelector('#btn-leave').addEventListener('click', e =>{
+    document.querySelector('#btn-leave').addEventListener('click', leaveRooms);
+    $('.toggle').css('display','block');
+}
+
+function leaveRooms(){
         info.room = "/lobby";
         $('#tab1').click();
         $('#tab2').css('visibility', 'hidden');
         socket.emit('leave',{'data':"test",'room':message_data['room']})
         setCookie("endpoint", "/lobby", 1);
         $('#event-room').hide();
-    });
-    $('.toggle').css('display','block');
 }
 
 function createGame() {
@@ -242,5 +244,7 @@ $( document ).ready(function() {
         $(e.target.hash).addClass("in active");
         $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
     });
+    $("#leave-room").on("click",  leaveRooms);
+
 });
 
