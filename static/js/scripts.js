@@ -146,12 +146,14 @@ function buildRoomList(message_data){
 }
 
 function leaveRooms(){
+        var old = info.room
         info.room = "/lobby";
         $('#tab1').click();
         $('#tab2').css('visibility', 'hidden');
-        socket.emit('leave',{'data':"test",'room':message_data['room']})
+        socket.emit('leave',{'data':"test",'room':old})
         setCookie("endpoint", "/lobby", 1);
         $('#event-room').hide();
+        console.log("leave btn");
 }
 
 function createGame() {

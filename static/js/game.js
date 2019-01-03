@@ -1,5 +1,5 @@
 
-var testData = {hand: ["path-01","path-02","path-03"], role:"path-03", 
+var testData = {hand: ["path-01","path-02","path-03","path-19","path-20"], role:"path-03", 
 board:{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, 
 players:["Game Opponent 1","Game Opponent 2","Game Opponent 3","Game Opponent 4"]};
 
