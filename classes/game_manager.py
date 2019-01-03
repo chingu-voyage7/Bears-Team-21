@@ -38,6 +38,9 @@ class GameManager():
         self.deck.shuffle()
         self.roles.shuffle()
         #deal roles and cards
+        for player in self.players:
+            player.set_role(self.roles.draw().type)
+
         #set up map and player divs
         self.board = Board()
         self.current_player = 0
@@ -64,7 +67,7 @@ class GameManager():
         if player.is_ready():
             return self.board.add_card_check(card, x, y)
 
-    def action_played(self, player, card, target):
+    def action_played(self, player, card, target=None):
         if card.type == 'reveal': #show goal card
             #emit signal for showing the goal card
             pass
@@ -96,7 +99,8 @@ class GameManager():
 
         elif card.type == 'swaphats':
             #change role
-            pass
+            player = self.players[self.current_player]
+            player.set_role(self.roles.draw().type)
 
         elif card.type == 'trapped':
             target.imprison()
@@ -107,7 +111,8 @@ class GameManager():
 
         elif card.type == 'inspection':
             #show player role card
-            pass
+            player = self.players[target]
+            return player.role
 
         elif card.type == 'free':
             target.release()            
