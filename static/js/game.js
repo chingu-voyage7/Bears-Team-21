@@ -4,24 +4,6 @@ var testData = {hand: ["path-01","path-02","path-03","path-19","path-20"], role:
 board:{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, 
 players:["Game Opponent 1","Game Opponent 2","Game Opponent 3","Game Opponent 4"]};
 
-function setUpGameUI(testData){
-
-    testData.hand.forEach(function(name) {
-        var cardNode = document.createElement("DIV");  
-        cardNode.className= "card sprite " + name;
-        document.getElementById("hand").appendChild(cardNode);
-    });
-    var roleNode = document.createElement("DIV"); 
-    roleNode.className= "card sprite " + testData.role;
-    document.getElementById("player-role").appendChild(roleNode);
-
-    Object.keys(testData.board).forEach(function(key) {
-        console.log(key, testData.board[key]);
-        document.getElementById("square-"+key).className+=" sprite "+key;
-    });
-
-    
-}
 
 var socket
 
@@ -50,7 +32,7 @@ window.onload = function() {
             divMain.appendChild(sqr); 
         }
     }
-    setUpGameUI(testData);
+   
     $(".toggle-chat").click(function () {
         $header = $(this);
         $content = $(".msg_container_base");
@@ -127,6 +109,27 @@ window.onload = function() {
             </div>
             </div>`;
             document.getElementById("opponents").innerHTML += (opponentNode);
+        });
+    })
+
+    socket.on("update_hand", (data)=>{
+        data.forEach(function(name) {
+            var cardNode = document.createElement("DIV");  
+            cardNode.className= "card sprite " + name;
+            document.getElementById("hand").appendChild(cardNode);
+        });
+    })
+
+    socket.on("update_role", (data)=> {
+        var roleNode = document.createElement("DIV"); 
+        roleNode.className= "card sprite " + data["role"];
+        document.getElementById("player-role").appendChild(roleNode);
+    })
+
+    socket.on("update_board", (data)=> {
+        Object.keys(data).forEach(function(key) {
+            console.log(key, data[key]);
+            document.getElementById("square-"+key).className+=" sprite "+key;
         });
     })
 };

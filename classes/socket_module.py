@@ -141,7 +141,8 @@ class GameLobbyNs(Namespace):
         print('leaving ' + message['room'])
         leave_room(message['room'])
         join_room('/lobby')
-        self.remove_player_room(current_user.username, message['room'][1:])
+        if message['room'] != '/lobby':
+            self.remove_player_room(current_user.username, message['room'][1:])
         emit('roomsList',{'data': 'Connected', 
         'roomList': self.make_rm_List()},room='/lobby')
         emit('restore_input',{'data': 'Connected', 
@@ -158,7 +159,10 @@ class GameRoomNs(Namespace):
 
     def on_connect(self):
         print("got connection", request.namespace)#startedGame[request.namespace].players
-        emit("update_players", ["2","3"], broadcast=True)
+        emit("update_players", ["User Player","Opponent 1","Opponent 2"], broadcast=True) # testing, should pass data from gamemanager object
+        emit("update_hand", ["path-01","path-02","path-03","path-19","path-20"])
+        emit("update_role", {"role":"path-02"})
+        emit("update_board", {"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, broadcast=True)
         pass
 
     def on_disconnect(self):
