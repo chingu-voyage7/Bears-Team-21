@@ -17,7 +17,7 @@ class Card:
         
 class PathCard(Card):
 
-    def __init__(self, name, edges):
+    def __init__(self, name, edges, crystal):
         super().__init__(name)
         self.connections = {-2: [], -1: [], 1: [], 2: []}
         self.edges = edges
@@ -26,6 +26,7 @@ class PathCard(Card):
                 self.connections[edge[0]].append(edge[1])
             if edge[1] < 3:
                 self.connections[edge[1]].append(edge[0])
+        self.crystal = int(crystal)
         self.set_required()
 
     def rotate(self):
@@ -81,7 +82,8 @@ class Deck:
                 if name in door: 
                     self.cards.append(DoorCard(name, edges, card['door']))
                 else:
-                    self.cards.append(PathCard(name, edges))
+                    crystal = 'crystal' in card
+                    self.cards.append(PathCard(name, edges, crystal))
             if name.startswith('action'):
                 type = card['type']
                 if 'tools' in card:
@@ -116,5 +118,6 @@ class Deck:
 #    testDeck.draw()
 #    print(testDeck.cards_remaining())
 #    pprint(testDeck.getData())
+
 
 #fuTest()
