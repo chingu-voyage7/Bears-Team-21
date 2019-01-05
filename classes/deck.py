@@ -2,9 +2,7 @@ import json, random
 from pprint import pprint   
 
 def load_cards_data(path, name_set):    
-    mypath = os.getcwd()
-    print(mypath)
-    with open(mypath+'\\'+path) as f:
+    with open(path) as f:#mypath = os.getcwd()#print(mypath)mypath+'\\'
         data = list(json.load(f)[name_set])
     return data
 
@@ -17,7 +15,8 @@ class PathCard(Card):
 
     def __init__(self, name, edges, crystal):
         super().__init__(name)
-        self.connections = {-2: [], -1: [], 1: [], 2: []}
+        self.has_stairs = False
+        self.connections = {-2: [], -1: [], 1: [], 2: [], 6:[]}
         self.edges = edges
         for edge in edges:
             if edge[0] < 3:
@@ -45,7 +44,7 @@ class PathCard(Card):
 class DoorCard(PathCard):
 
     def __init__(self, name, edges, door):
-        super().__init__(name, edges)
+        super().__init__(name, edges, False)
         self.door = door
 
 class ActionCard(Card):
@@ -83,7 +82,8 @@ class Deck:
                 if name in door: 
                     self.cards.append(DoorCard(name, edges, card['door']))
                 else:
-                    self.cards.append(PathCard(name, edges))
+                    crystal = 'crystal' in card
+                    self.cards.append(PathCard(name, edges, crystal))
             if name.startswith('action'):
                 type = card['type']
                 if 'tools' in card:
