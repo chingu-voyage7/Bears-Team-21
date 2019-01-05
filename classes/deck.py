@@ -22,6 +22,9 @@ class PathCard(Card):
                 self.connections[edge[0]].append(edge[1])
             if edge[1] < 3:
                 self.connections[edge[1]].append(edge[0])
+            if edge[1] == 6:                
+                self.has_stairs = True
+                self.connections[6].append(edge[0])
         self.crystal = int(crystal)
         self.set_required()
 

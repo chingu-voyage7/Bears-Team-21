@@ -40,7 +40,15 @@ class GameManager():
         #deal roles and cards
         for player in self.players:
             player.set_role(self.roles.draw().type)
-
+        if len(self.players) <= 5:
+            start_cards = 6
+        elif len(self.players) <= 7:
+            start_cards = 5
+        else:
+            start_cards = 4 
+        for i in range(start_cards):
+            for player in self.players:
+                player.draw_card(self.deck.draw())
         #set up map and player divs
         self.board = Board()
         self.current_player = 0
@@ -53,7 +61,7 @@ class GameManager():
             move_end = self.path_played(card, player, x, y)
         elif isinstance(card, (ActionCard, ToolCard)):
             move_end = self.action_played(player, card, target)
-        round_over = True #placeholder
+        round_over = self.board.check_end()
         if move_end:
             if round_over:
                 self.state = 'round_over'
@@ -68,6 +76,7 @@ class GameManager():
             return self.board.add_card_check(card, x, y)
 
     def action_played(self, player, card, target=None):
+        player = self.players[self.current_player]
         if card.type == 'reveal': #show goal card
             #emit signal for showing the goal card
             pass
@@ -78,18 +87,14 @@ class GameManager():
                 self.board.remove_card(target[0], target[1])
 
         elif card.type == 'repair':
-            if isinstance(target, Player):
-                for tool in card.tools:
-                    target.repair_tool(tool)
-                return True
-            return False
+            t_player = self.players[target]            
+            for tool in card.tools:
+                t_player.repair_tool(tool)                
 
         elif card.type == 'damage':
-            if isinstance(target, Player):
-                for tool in card.tools:
-                    target.break_tool(tool)
-                return True
-            return False
+            t_player = self.players[target]           
+            for tool in card.tools:
+                t_player.break_tool(tool)                
 
         elif card.type == 'theft':
             player.steal_count += 1
@@ -99,23 +104,25 @@ class GameManager():
 
         elif card.type == 'swaphats':
             #change role
-            player = self.players[self.current_player]
             player.set_role(self.roles.draw().type)
 
         elif card.type == 'trapped':
-            target.imprison()
+            t_player = self.players[target] 
+            t_player.imprison()
 
-        elif card.type == 'swaphand':
-            (player.cards, target.cards) = (target.cards, player.cards)
+        elif card.type == 'swaphand': #modify this to ID
+            t_player = self.players[target] 
+            (player.cards, t_player.cards) = (t_player.cards, player.cards)
             #other draws card
 
         elif card.type == 'inspection':
             #show player role card
-            player = self.players[target]
-            return player.role
+            t_player = self.players[target] 
+            return t_player.role
 
         elif card.type == 'free':
-            target.release()            
+            t_player = self.players[target]
+            t_player.release()            
 
         return True #placeholder
 
