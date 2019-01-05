@@ -133,8 +133,8 @@ class GameLobbyNs(Namespace):
                 break
         if playersReady:
             print("all ready")
-            GameManager('/'+roomId, self.game_rooms[roomId])
-            startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])
+            #GameManager('/'+roomId, self.game_rooms[roomId])
+            #startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])
             emit('start_game',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_leave(self, message):
@@ -157,8 +157,8 @@ class GameLobbyNs(Namespace):
 class GameRoomNs(Namespace):
 
     def on_connect(self):
-        print("got connection", request.namespace)
-        emit("update_players", startedGame[request.namespace].players, broadcast=True)
+        print("got connection", request.namespace)#startedGame[request.namespace].players
+        emit("update_players", ["2","3"], broadcast=True)
         pass
 
     def on_disconnect(self):
