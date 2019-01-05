@@ -3,7 +3,7 @@ import os, sqlite3
 from flask import Flask, render_template, redirect, url_for, request, session, jsonify, json, make_response
 from flask_socketio import SocketIO, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from classes.socket_module import GameLobbyNs
+from classes.socket_module import GameLobbyNs, GameRoomNs
 from classes.database import add_user, find_user, find_username
 import classes.settings as config
 
@@ -91,7 +91,8 @@ def game(gamename):
     print(gamename)
     gamename = request.cookies.get('endpoint')
     print(gamename)
-    return render_template('game.html', gamename=gamename)
+    socketio.on_namespace(GameRoomNs('/'+gamename))
+    return make_response(render_template('game.html', gamename=gamename, user=session['username']))
 
 if __name__ == "__main__":
     app.debug = True

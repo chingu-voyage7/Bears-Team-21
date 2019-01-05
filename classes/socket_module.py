@@ -3,6 +3,8 @@ from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_roo
 from flask_login import current_user
 from .settings import *
 
+startedGame = {}
+
 class GameLobbyNs(Namespace):
     clients = {}
     game_rooms = {'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
@@ -131,8 +133,8 @@ class GameLobbyNs(Namespace):
                 break
         if playersReady:
             print("all ready")
-            emit('start_game',{'room':'/'+roomId, 
-            'players': self.game_rooms[roomId]}, room='/'+roomId)
+            startedGame[roomId] = {'room':'/'+roomId, 'players': self.game_rooms[roomId]}
+            emit('start_game',startedGame[roomId], room='/'+roomId)
 
     def on_leave(self, message):
         print('leaving ' + message['room'])
@@ -148,3 +150,22 @@ class GameLobbyNs(Namespace):
     def on_send_message(self, message, room, methods=['GET', 'POST']):
         print('got message')
         emit('receiveMessage', message, room=room)
+
+
+
+class GameRoomNs(Namespace):
+    def on_connect(self):
+        print("got connection")
+        pass
+
+    def on_disconnect(self):
+        print("got disconnection")
+        pass
+
+    def on_my_event(self, data):
+        print("got event")
+        emit('my_response', data)
+
+    def on_send_message(self, message, methods=['GET', 'POST']):
+        print('got message')
+        emit('receiveMessage', message, broadcast=True)

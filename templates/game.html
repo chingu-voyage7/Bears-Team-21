@@ -24,7 +24,7 @@
               <li role="presentation" id="leave-room"><a href="{{url_for('dashboard')}}">Leave Game</a></li>
             </ul>
           </nav>
-          <h3 class="text-muted">Saboteur</h3>
+          <h3 class="text-muted">Saboteur <small id="username">{{user|safe}}</small> <small id="gamename">{{gamename|safe}}</small> </h3>
         </div>
   
         <div class="row">
@@ -59,6 +59,42 @@
         <div class="row" id="opponents">
             
         </div>
+        <div class="row" id="chat-row">
+            <div class="col-sm-8">
+                <div class="chatbody" id="chat">
+                    <div class="panel with-nav-tabs panel-primary">
+                        <div class="panel-heading top-bar">
+                            <div class="col-md-2 col-xs-2">
+                                <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
+                            </div>    
+                            <div class="col-md-9 col-xs-9" id="chatTabs">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab1primary" data-toggle="tab" class="nourl" id="tab1">Room</a></li>
+                                </ul>
+                            </div>   
+                            <div class="col-md-1 col-xs-1">
+                                <i class="glyphicon glyphicon-asterisk toggle-chat pull-right">Collapse</i>
+                            </div>
+                        </div>
+                        <div class="panel-body msg_container_base">
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="tab1primary"></div>
+                                <div class="tab-pane fade" id="tab2primary"></div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                                    <div class="input-group">       
+                                        <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." autocomplete="off"/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" id="btn-chat" ><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i></button>
+                                        </span>
+                                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            </div>
         </div>
         <footer class="footer">
           <p>© 2019 Bear-Team-21.</p>
