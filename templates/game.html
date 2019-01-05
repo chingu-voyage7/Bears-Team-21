@@ -10,8 +10,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>   
-    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}"> 
+    <link rel="stylesheet" href="{{url_for('static', filename='css/cards.css')}}">
     <script type="text/javascript" src="{{url_for('static', filename='js/main.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/game.js')}}"></script>
 </head>
 <body>
     
@@ -19,18 +21,45 @@
         <div class="header clearfix">
           <nav>
             <ul class="nav nav-pills pull-right">
-              <li role="presentation"><a href="{{url_for('dashboard')}}">Leave Game</a></li>
+              <li role="presentation" id="leave-room"><a href="{{url_for('dashboard')}}">Leave Game</a></li>
             </ul>
           </nav>
           <h3 class="text-muted">Saboteur</h3>
         </div>
   
-        <div class="jumbotron">
-          <h1>Saboteur The Game</h1>
-          <p class="lead">In Saboteur, each player takes on the role of a gold-digging dwarf or a saboteur who wants to hinder exploration of the gold mines — but each player knows only his own role, so the digging may or may not go as planned!</p>
+        <div class="row">
+            <div class="col-sm-8">
+                    <div class="text">
+                            <label class="text-muted">Player Hand</label> 
+                        </div>
+                <div class="player-hand well well-sm" id="player-hand">
+                    
+                <section class="hand" id="hand">
+                   
+                </section>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                    <div class="text">
+                            <label class="text-muted">Player Role</label> 
+                        </div>
+                <div class="player-role well well-sm" id="player-role">
+                    
+                </div>
+            </div>
         </div>
-  
-  
+        <div class="row">    
+            <div class="col-sm-12">
+                <div class="game-board well well-sm" id="grid">
+
+                </div>
+            </div>
+        </div>
+    
+        <div class="row" id="opponents">
+            
+        </div>
+        </div>
         <footer class="footer">
           <p>© 2019 Bear-Team-21.</p>
         </footer>

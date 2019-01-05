@@ -1,0 +1,39 @@
+
+.card {
+    display: inline-table;
+    border-radius:5px;
+    margin-left: 5px !important;
+}
+
+.sprite {
+    overflow:hidden; 
+    background-repeat: no-repeat;
+    background-image:url("../imgs/cards.jpg");
+}
+  
+.path-01 {
+    width:120px; 
+    height:195px; 
+    background-position: 0px 0px;
+}
+  
+.path-02{
+    width:120px; 
+    height:195px; 
+    background-position: -120px 0px;
+}
+
+.path-03 {
+    width:120px; 
+    height:195px; 
+    background-position: -121px -196px;
+}
+.path-19, .path-20, .path-21, .path-22, .path-23 {
+    width:120px; 
+    height:195px; 
+    background-position: -12px -590px;
+}
+.game-board {
+    background-color: #076324;
+    background-image: url("../imgs/black-felt.png");
+}

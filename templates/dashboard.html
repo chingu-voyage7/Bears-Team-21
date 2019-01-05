@@ -2,6 +2,10 @@
 <html>
 <head>
     <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
     <title>Saboteur</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -12,36 +16,84 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/scripts.js')}}"></script>
 </head>
 <body>
-    <h1>Dashboard</h1>
-    <p>Test code for Flask-SocketIO</p>
-    <div class="container-fluid">
+
+        <div class="container">
+                <div class="header clearfix">
+                  <nav>
+                    <ul class="nav nav-pills pull-right">
+                      <li role="presentation" id="leave-room"><a href="{{url_for('logout')}}">Log Out</a></li>
+                    </ul>
+                  </nav>
+                  <h3 class="text-muted">Dashboard <small id="username">{{user|safe}}</small> </h3>
+                </div>  
         <div class="row">
-            <a href="{{url_for('logout')}}">Log Out</a>
-        </div>
-        <div class="row">
+
             <div class="col-sm-12 gamerooms">
+                    <ul class="list-group">
+                    </ul>
             </div>
+        </div>
+        <div  class="row" id="list-rooms">
+
         </div>
         <div class="row" id="new-room">
-            <!--<div class="col-sm-8">
-                <input id="lbl-new-room" type="text" placeholder="Enter Room Name" />
+            <div class="col-sm-9" id="new-room">
+                <input id="lbl-new-room" type="text" class="form-control" placeholder="Enter Room Name" aria-label="Enter Room Name">
             </div>
-            <div class="col-sm-4 roomsbtn">
-                <button id="create_game_room" class="btn btn-warning">Create Game</button>
-            </div>-->
+            <div class="col-sm-1">
+                <button class="btn btn-warning" id="create_game_room"> Create Game </button>
+            </div>
         </div>
-        <div class="row" id="player-ready"></div>
+        <div class="row" id="event-room" style="display: none">
+            <button class="btn btn-warning" id="testP">TestEvent</button>
+            <button class="btn btn-warning" id="btn-leave">Leave Room</button>
+        </div>
+        <div class="row" id="player-ready">
             <input id="toggle-ready" type="checkbox" data-toggle="toggle" data-on="Ready" data-off="Not Ready" data-onstyle="success" data-offstyle="danger" style="display: none;">
         </div>
-        <div id="chat">
-            <div class="messages">
-                
+        <div class="row" id="chat-row">
+        <div class="col-sm-8">
+            <div class="chatbody" id="chat">
+                <div class="panel with-nav-tabs panel-primary">
+                    <div class="panel-heading top-bar">
+                        <div class="col-md-2 col-xs-2">
+                            <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
+                        </div>    
+                        <div class="col-md-9 col-xs-9" id="chatTabs">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab1primary" data-toggle="tab" class="nourl" id="tab1">Lobby</a></li>
+                                <li><a href="#tab2primary" data-toggle="tab" class="nourl" id="tab2">Room</a></li>
+                            </ul>
+                        </div>   
+                        <div class="col-md-1 col-xs-1">
+                            <i class="glyphicon glyphicon-asterisk toggle-chat pull-right">Collapse</i>
+                        </div>
+                    </div>
+                    <div class="panel-body msg_container_base">
+                        <div class="tab-content">
+                            <div class="tab-pane fade in active" id="tab1primary"></div>
+                            <div class="tab-pane fade" id="tab2primary"></div>
+                        </div>
+                    </div>
+                    <div class="panel-footer">
+                            <form action="" method="POST" class="form-wrapper cf"> 
+                                <div class="input-group">       
+                                    <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." autocomplete="off"/>
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-primary" id="btn-chat" type="submit"><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i></button>
+                                    </span>
+                                </div>
+                            </form>
+                    </div>
+    		    </div>
             </div>
-            <form action="" method="POST">                
-                <input type="text" class="message" placeholder="Messages"/>
-                <input type="submit"/>
-              </form>
         </div>
+
+        </div>
+
+
+    </div>
+
     </div>
     <script>
     //$('#toggle-ready').hide();
