@@ -11,7 +11,14 @@
     background-image:url("../imgs/cards.jpg");
 }
 
-
+.path-00{
+    width:120px; 
+    height:195px; 
+}
+.goal-00{
+    width:120px; 
+    height:195px; 
+}
 .path-01, .path-02, .path-03, .path-04 {
     width:120px; 
     height:195px; 
@@ -23,7 +30,7 @@
     background-position: -1020px -990px;
 }
 
-.path-10,.path-11,.path-12,.path-13,.path-14{
+.path-10,.path-11,.path-12,.path-13,.path-14, .goal-01, .goal-02{
     width:120px; 
     height:195px; 
     background-position: -765px -990px;
@@ -318,4 +325,28 @@
 .game-board {
     background-color: #076324;
     background-image: url("../imgs/black-felt.png");
+}
+.bluedigger{
+    width:120px; 
+    height:195px;
+}
+.greendigge{
+    width:120px; 
+    height:195px;
+}
+.profiteer{
+    width:120px; 
+    height:195px;
+}
+.geologist{
+    width:120px; 
+    height:195px;
+}
+.theboss{
+    width:120px; 
+    height:195px;
+}
+.saboteurs{
+    width:120px; 
+    height:195px;
 }
