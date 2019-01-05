@@ -48,7 +48,6 @@ class Board:
         self.find_available_spots(self.start_x, self.start_y, 2)
 
     def add_card(self, card, x, y):
-        print('card placed')
         self.board[x][y] = card
         if card.has_stairs:
             self.stairs.append([x, y])
@@ -127,7 +126,7 @@ def fuTestBoard():
     #testDeck.shuffle()
     #card = testDeck.draw()
 
-fuTestBoard()
+#fuTestBoard()
 
 #001      ...          099
 #[[0. 1. 1. ... 0. 0. 0.]

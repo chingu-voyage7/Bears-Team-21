@@ -8,7 +8,9 @@ class GameManager():
         self.prev_state = ''
         self.state = 'start_game'
         self.players = [Player(name) for name in player_list]
-        self.state_listener()
+        self.start_game() #testing
+        self.start_round()    
+        #self.state_listener()
 
     def state_listener(self):
         while True:          
@@ -32,9 +34,9 @@ class GameManager():
     def start_round(self):
         print('round started')
         #create decks
-        deck = Deck('classes\paths.json','path-cards')
-        deck.concat(Deck('classes\paths.json', 'action-cards'))
-        roles = Deck('classes\paths.json', 'role-cards')
+        self.deck = Deck('classes\paths.json','path-cards')
+        self.deck.concat(Deck('classes\paths.json', 'action-cards'))
+        self.roles = Deck('classes\paths.json', 'role-cards')
         self.deck.shuffle()
         self.roles.shuffle()
         #deal roles and cards
@@ -53,9 +55,9 @@ class GameManager():
         board = Board()
         self.current_player = 0
         self.state = 'wait_for_move'    
-        self.handle_move() #test only    
+        #self.handle_move() #test only    
 
-    def handle_move(self):
+    def handle_move(self, player, card, x=None, y=None, target=None):
         #handle move logic
         if isinstance(card, (PathCard, DoorCard)):
             move_end = self.path_played(card, player, x, y)
@@ -141,3 +143,23 @@ class GameManager():
         print('winner = srs')
         #show buttons
         print(self.state)
+
+    def playersList(self):
+        listPlayers = []
+        for player in self.players:
+            listPlayers.append(player.name)
+        return listPlayers
+    
+    def playerHandList(self, name):
+        cardsList = []
+        for player in self.players:
+            if player.name == name:
+                for card in player.cards:
+                    cardsList.append(card.name)
+        return cardsList
+    
+    def getPlayerRole(self, name):
+        for player in self.players:
+            if player.name == name:
+                return player.role
+        return ""

@@ -2,7 +2,7 @@ import json, random
 from pprint import pprint   
 
 def load_cards_data(path, name_set):    
-    with open(path) as f:#mypath = os.getcwd()#print(mypath)mypath+'\\'
+    with open(path) as f:
         data = list(json.load(f)[name_set])
     return data
 
@@ -76,7 +76,6 @@ class Deck:
             name = card['name']            
             if name.startswith('path') or name.startswith('goal'):                
                 edges = card['edges']
-                print(name,edges)
                 door = ['path-49','path-50','path-51',
                         'path-52','path-53','path-54'] 
                 if name in door: 

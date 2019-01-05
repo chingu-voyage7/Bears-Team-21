@@ -158,6 +158,7 @@ socket.on('disconnect', () => {
 });
 
 socket.on('start_game', message_data => {
+    console.log(message_data);
     $(location).attr('href', '/game'+message_data['room']);
 });
 

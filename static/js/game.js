@@ -9,7 +9,7 @@ var socket
 
 window.onload = function() {
     const gameName = document.getElementById("gamename").firstChild.data;
-    socket = io.connect('http://' + document.domain + ':' + location.port+'/' + gameName);
+    socket = io.connect('http://' + document.domain + ':' + location.port+'/' + gameName, { query: 'foo=bar', extra: 'extra'});
     var squarewidth = 120; 
     var squareheight= 195; 
     var divMain = document.getElementById('grid');
@@ -113,6 +113,7 @@ window.onload = function() {
     })
 
     socket.on("update_hand", (data)=>{
+        document.getElementById("hand").innerHTML = ""
         data.forEach(function(name) {
             var cardNode = document.createElement("DIV");  
             cardNode.className= "card sprite " + name;

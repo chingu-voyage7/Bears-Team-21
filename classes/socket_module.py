@@ -132,9 +132,9 @@ class GameLobbyNs(Namespace):
                             playersReady = False
                 break
         if playersReady:
+            GameManager('/'+roomId, self.game_rooms[roomId])
+            startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])
             print("all ready")
-            #GameManager('/'+roomId, self.game_rooms[roomId])
-            #startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])
             emit('start_game',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_leave(self, message):
@@ -156,13 +156,18 @@ class GameLobbyNs(Namespace):
 
 
 class GameRoomNs(Namespace):
-
+    TEST_DATA = {
+        "test_players":["User Player","Opponent 1","Opponent 2"],
+        "test_hand":["path-01","path-02","path-03","path-19","path-20"],
+        "test_role":{"role":"path-02"},
+        "test_board":{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}
+    }
     def on_connect(self):
         print("got connection", request.namespace)#startedGame[request.namespace].players
-        emit("update_players", ["User Player","Opponent 1","Opponent 2"], broadcast=True) # testing, should pass data from gamemanager object
-        emit("update_hand", ["path-01","path-02","path-03","path-19","path-20"])
-        emit("update_role", {"role":"path-02"})
-        emit("update_board", {"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, broadcast=True)
+        emit("update_players", startedGame[request.namespace].playersList(), room=request.sid) # testing, should pass data from gamemanager object
+        emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)#current_user.username
+        emit("update_role", {"role":startedGame[request.namespace].getPlayerRole(current_user.username)}, room=request.sid)
+        emit("update_board", {"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, room=request.sid)
         pass
 
     def on_disconnect(self):
