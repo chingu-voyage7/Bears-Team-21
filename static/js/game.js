@@ -20,20 +20,7 @@ function setUpGameUI(testData){
         document.getElementById("square-"+key).className+=" sprite "+key;
     });
 
-    testData.players.forEach(function(name) {
-        var opponentNode = `<div class="col-sm-3">
-        <div class="game-opponent well well-sm" style="min-height: 100px;">
-            <div class="icon">
-                 <i class="glyphicon glyphicon-user"></i>
-            </div>
-            <div class="text">
-                <label class="text-muted">${name}</label>
-            </div>
-        </div>
-        </div>`;
-        
-        document.getElementById("opponents").innerHTML += (opponentNode);
-    });
+    
 }
 
 var socket
@@ -123,7 +110,25 @@ window.onload = function() {
             );
             $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
         }
-    })  
+    }) 
+    
+    socket.on("update_players", players => {
+        console.log(players);
+        document.getElementById("opponents").innerHTML = ""
+        players.forEach(function(name) {
+            var opponentNode = `<div class="col-sm-3">
+            <div class="game-opponent well well-sm" style="min-height: 100px;">
+                <div class="icon">
+                     <i class="glyphicon glyphicon-user"></i>
+                </div>
+                <div class="text">
+                    <label class="text-muted">${name}</label>
+                </div>
+            </div>
+            </div>`;
+            document.getElementById("opponents").innerHTML += (opponentNode);
+        });
+    })
 };
 
 const RESPONSE_EVENTS = [

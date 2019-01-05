@@ -2,7 +2,7 @@ from flask import Flask, render_template, session, request, redirect,url_for
 from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import current_user
 from .settings import *
-
+from .game_manager import GameManager
 startedGame = {}
 
 class GameLobbyNs(Namespace):
@@ -133,8 +133,9 @@ class GameLobbyNs(Namespace):
                 break
         if playersReady:
             print("all ready")
-            startedGame[roomId] = {'room':'/'+roomId, 'players': self.game_rooms[roomId]}
-            emit('start_game',startedGame[roomId], room='/'+roomId)
+            #GameManager('/'+roomId, self.game_rooms[roomId])
+            startedGame['/'+roomId] = {}#GameManager('/'+roomId,self.game_rooms[roomId])
+            emit('start_game',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_leave(self, message):
         print('leaving ' + message['room'])
@@ -154,8 +155,10 @@ class GameLobbyNs(Namespace):
 
 
 class GameRoomNs(Namespace):
+
     def on_connect(self):
-        print("got connection")
+        print("got connection", request.namespace)#startedGame[request.namespace].players
+        emit("update_players", ["1","2"], broadcast=True)
         pass
 
     def on_disconnect(self):

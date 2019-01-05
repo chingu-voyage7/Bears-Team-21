@@ -14,7 +14,7 @@ class Card:
 class PathCard(Card):
 
     def __init__(self, name, edges):
-        super().__init__(name)
+        super().__init__(name, edges)
         self.connections = {-2: [], -1: [], 1: [], 2: []}
         self.edges = edges
         for edge in edges:
@@ -71,6 +71,7 @@ class Deck:
             name = card['name']            
             if name.startswith('path') or name.startswith('goal'):                
                 edges = card['edges']
+                print(name,edges)
                 door = ['path-49','path-50','path-51',
                         'path-52','path-53','path-54'] 
                 if name in door: 
