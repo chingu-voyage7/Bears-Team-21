@@ -59,8 +59,6 @@ class Board:
     def add_card_check(self, card, x, y):
         if self.check_position(card, x, y):
             self.add_card(card, x, y)
-            return True
-        return False
 
     def check_position(self, card, x, y):
         if [x,y] in self.available:
