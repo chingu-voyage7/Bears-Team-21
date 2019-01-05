@@ -35,7 +35,12 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(id):
-    return User(find_username(id))
+    try:
+        user = User(find_username(id))
+    except Exception:
+        error = 'Invalid Username or Password'
+        return render_template('login.html', error=error)
+    return user
  
 @app.route('/')
 def index():

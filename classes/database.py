@@ -43,7 +43,8 @@ def find_username(username):
     user = c.execute("SELECT username from users where username = (?)",
                     [username])
     user = c.fetchone()
-    userid = user[0]
-    return userid
+    if user is not None:
+        return user[0]
+    return None
 
 init_db()
