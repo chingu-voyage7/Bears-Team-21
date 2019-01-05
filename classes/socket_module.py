@@ -141,8 +141,7 @@ class GameLobbyNs(Namespace):
         print('leaving ' + message['room'])
         leave_room(message['room'])
         join_room('/lobby')
-        if message['room'] != '/lobby':
-            self.remove_player_room(current_user.username, message['room'][1:])
+        self.remove_player_room(current_user.username, message['room'][1:])
         emit('roomsList',{'data': 'Connected', 
         'roomList': self.make_rm_List()},room='/lobby')
         emit('restore_input',{'data': 'Connected', 
