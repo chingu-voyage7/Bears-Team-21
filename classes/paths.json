@@ -4,11 +4,11 @@
     "_actions_type":"reveal (show goal card) - repair( fix broken tool) - damage( break player tool) - remove (remove path card) - theft (at end of round steal 1 gold from player) - handsoff(remeve theft card) - swaphand (exganges players hands) - inspection (show player role card) - swaphats (player chosen discard role and draw new one) - trapped(player cant play path cards , if still trapped end round dont get score) - free (removes trap card)",
     "card-width":120,
     "card-height":195,
-    "setup-cards": [
-        { "name":"path-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] },
+    "setup-cards": [        
         { "name":"goal-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ], "gold": true },
         { "name":"goal-01", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ], "gold": false },
-        { "name":"goal-02", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ], "gold": false }
+        { "name":"goal-02", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ], "gold": false },
+        { "name":"path-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1], [1, 6], [-1, 6], [2, 6], [-2, 6] ] }
     ],
     "path-cards": [
         { "name":"path-01", "edges":[ [2, -2]] },

@@ -1,7 +1,5 @@
 import json, random
 from pprint import pprint   
-from pathlib import Path
-import os
 
 def load_cards_data(path, name_set):    
     mypath = os.getcwd()
@@ -17,7 +15,7 @@ class Card:
         
 class PathCard(Card):
 
-    def __init__(self, name, edges):
+    def __init__(self, name, edges, crystal):
         super().__init__(name)
         self.connections = {-2: [], -1: [], 1: [], 2: []}
         self.edges = edges
@@ -26,6 +24,10 @@ class PathCard(Card):
                 self.connections[edge[0]].append(edge[1])
             if edge[1] < 3:
                 self.connections[edge[1]].append(edge[0])
+            if edge[1] == 6:                
+                self.has_stairs = True
+                self.connections[6].append(edge[0])
+        self.crystal = int(crystal)
         self.set_required()
 
     def rotate(self):

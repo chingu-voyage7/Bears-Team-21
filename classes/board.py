@@ -19,21 +19,28 @@ class Board:
     start_y = 9    
 
     def __init__(self):
-        self.visited = [[False for i in range(dim)] for i in range(dim)]
+        self.reset_visited()
         self.board = [[None for i in range(dim)] for i in range(dim)]
         self.available = []
+        self.stairs = []
         self.place_initial_cards()
+
+    def reset_visited(self):
+        self.visited = [[False for i in range(dim)] for i in range(dim)]
 
     def place_initial_cards(self):
         setup_deck = Deck('classes/paths.json','setup-cards')
         card = setup_deck.draw()
-        self.add_card(card, self.start_x, self.start_y + 8)
-        card = setup_deck.draw()
-        self.add_card(card, self.start_x + 2, self.start_y + 8)
-        card = setup_deck.draw()
-        self.add_card(card, self.start_x - 2, self.start_y + 8)
-        card = setup_deck.draw()
-        self.add_card(card, self.start_x, self.start_y)
+        self.add_card(card, self.start_x, self.start_y)        
+        setup_deck.shuffle()        
+        goals = [[self.start_x + 2, self.start_y + 8],
+                 [self.start_x - 2, self.start_y + 8],
+                 [self.start_x, self.start_y + 8]]
+        for coords in goals:
+            card = setup_deck.draw()
+            if card.name == 'goal-00':
+                self.goal_coords = [coords[0], coords[1]] 
+            self.add_card(card, coords[0], coords[1])        
 
     def remove_card(self, x, y):
         self.board[x][y] = None
@@ -43,13 +50,19 @@ class Board:
     def add_card(self, card, x, y):
         print('card placed')
         self.board[x][y] = card
+        if card.has_stairs:
+            self.stairs.append([x, y])
         if [x, y] in self.available:
             self.available.remove([x, y])
         if not card.name.startswith('goal'):
             self.available = []
-            self.visited = [[False for i in range(dim)] for i in range(dim)]
-            self.find_available_spots(self.start_x, self.start_y, 1)
-            self.find_available_spots(self.start_x, self.start_y, 2)
+            self.reset_visited()
+            self.find_available_spots(self.start_x, self.start_y, 6)
+            for stair in self.stairs:
+                x = stair[0]
+                y = stair[1]
+                if not self.visited[x][y]:
+                    self.find_available_spots(x, y, 6)
         print(self.available)
 
     def mark_available(self, x, y):
@@ -81,18 +94,28 @@ class Board:
             return self.visited[x1][y1] and self.visited[x2][y2]
         return False
 
-    def find_available_spots(self, x, y, direction, px = None, py = None):       
-        if not self.check_visited(x, y, px, py):
-            for d in self.board[x][y].connections[direction]:
-                (nx,ny) = set_direction(d)
-                nx += x
-                ny += y
-                other = self.board[nx][ny]
-                if other is None:
-                    self.mark_available(nx,ny)
-                else:
-                    self.find_available_spots(nx, ny, -d, x, y)
-        self.visited[x][y] = True
+    def find_available_spots(self, x, y, direction,
+    px = None, py = None, door = None):       
+        flag = True
+        if door is not None and hasattr(self.board[x][y], door):
+            flag = self.board[x][y].door == door
+        if flag:
+            if not self.check_visited(x, y, px, py):
+                self.visited[x][y] = True            
+                for d in self.board[x][y].connections[direction]:
+                    if d < 4:
+                        (nx,ny) = set_direction(d)                
+                        nx += x
+                        ny += y
+                        other = self.board[nx][ny]
+                        if other is None:
+                            self.mark_available(nx,ny)
+                        else:
+                            self.find_available_spots(nx, ny, -d, x, y, door)
+
+    def check_end(self):
+        return self.visited[self.goal_coords[0]][self.goal_coords[1]]
+        
 
 ###################################################################################
 def fuTestBoard():
