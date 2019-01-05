@@ -32,9 +32,9 @@ class GameManager():
     def start_round(self):
         print('round started')
         #create decks
-        deck = Deck('paths.json','path-cards')
-        deck.concat(Deck('paths.json', 'action-cards'))
-        roles = Deck('paths.json', 'role-cards')
+        deck = Deck('classes\paths.json','path-cards')
+        deck.concat(Deck('classes\paths.json', 'action-cards'))
+        roles = Deck('classes\paths.json', 'role-cards')
         #deal roles and cards
         #set up map and player divs
         board = Board()

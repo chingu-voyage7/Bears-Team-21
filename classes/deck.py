@@ -1,20 +1,24 @@
 import json, random
 from pprint import pprint   
+from pathlib import Path
+import os
 
 def load_cards_data(path, name_set):    
-    with open(path) as f:
+    mypath = os.getcwd()
+    print(mypath)
+    with open(mypath+'\\'+path) as f:
         data = list(json.load(f)[name_set])
     return data
 
 class Card:
 
-    def __init__(self, name, edges):
+    def __init__(self, name):
         self.name = name
         
 class PathCard(Card):
 
     def __init__(self, name, edges):
-        super().__init__(name, edges)
+        super().__init__(name)
         self.connections = {-2: [], -1: [], 1: [], 2: []}
         self.edges = edges
         for edge in edges:
@@ -102,15 +106,15 @@ class Deck:
     def concat(self, other):
         self.cards += other.cards
 
-def fuTest():
-    testDeck = Deck('paths.json','path-cards')
-    testDeck.shuffle()
-    pprint(testDeck.getData())
-    print(testDeck.cards_remaining())
-    testDeck.draw()
-    testDeck.draw()
-    testDeck.draw()
-    print(testDeck.cards_remaining())
-    pprint(testDeck.getData())
+#def fuTest():
+#    testDeck = Deck('paths.json','path-cards')
+#    testDeck.shuffle()
+#    pprint(testDeck.getData())
+#    print(testDeck.cards_remaining())
+#    testDeck.draw()
+#    testDeck.draw()
+#    testDeck.draw()
+#    print(testDeck.cards_remaining())
+#    pprint(testDeck.getData())
 
 #fuTest()
