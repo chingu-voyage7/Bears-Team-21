@@ -132,7 +132,7 @@ class GameLobbyNs(Namespace):
                             playersReady = False
                 break
         if playersReady:
-            GameManager('/'+roomId, self.game_rooms[roomId])
+            #GameManager('/'+roomId, self.game_rooms[roomId])
             startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])
             print("all ready")
             emit('start_game',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
