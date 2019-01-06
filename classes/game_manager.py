@@ -1,5 +1,5 @@
 from .player import Player
-from .deck import Deck, Card
+from .deck import Deck, ActionCard, DoorCard, PathCard, RoleCard, ToolCard
 from .board import Board
 
 class GameManager():
@@ -117,10 +117,11 @@ class GameManager():
                 t_player.break_tool(tool)                
 
         elif card.type == 'theft':
-            player.steal_count += 1
+            player.steal = True
 
         elif card.type == 'handsoff':
-            player.steal_count -= 1
+            t_player = self.players[target]
+            target.steal = False
 
         elif card.type == 'swaphats':
             #change role
