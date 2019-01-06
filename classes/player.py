@@ -8,6 +8,9 @@ class Player():
         self.role = ''
         self.gold = 0
 
+    def __gt__(self, other):
+        return self.gold > other.gold
+
     def set_role(self, role):
         self.role = role
 
@@ -24,7 +27,8 @@ class Player():
         self.tools[tool] = True
 
     def receive_gold(self, amount):
-        self.gold += amount
+        if amount > 0:
+            self.gold += amount
 
     def reset(self):
         self.tools = {'pickaxe': True,

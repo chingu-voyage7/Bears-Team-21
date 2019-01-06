@@ -42,12 +42,11 @@ class GameManager():
         #deal roles and cards
         for player in self.players:
             player.set_role(self.roles.draw().type)
-        if len(self.players) <= 5:
-            start_cards = 6
-        elif len(self.players) <= 7:
-            start_cards = 5
-        else:
-            start_cards = 4 
+        remove_cards = 10
+        for i in range(remove_cards):
+            self.deck.draw()
+        self.cards_in_play = len(self.deck)
+        start_cards = 6        
         for i in range(start_cards):
             for player in self.players:
                 player.draw_card(self.deck.draw())
@@ -57,28 +56,47 @@ class GameManager():
         self.state = 'wait_for_move'    
         #self.handle_move() #test only    
 
-    def handle_move(self, player, card, x=None, y=None, target=None):
+    def handle_move(self, card, x=None, y=None, target=None):
         #handle move logic
-        if isinstance(card, (PathCard, DoorCard)):
-            move_end = self.path_played(card, player, x, y)
-        elif isinstance(card, (ActionCard, ToolCard)):
-            move_end = self.action_played(player, card, target)
-        round_over = self.board.check_end()
-        if move_end:
-            if round_over:
-                self.state = 'round_over'
-            else:
-                self.current_player += 1 
-                self.current_player %= len(self.players)
-                self.state = 'wait_for_move'
-            print(self.state)
+        player = self.players[self.current_player]
+        if isinstance(card, list):
+            self.discard(player, card)
+        else:
+            card_obj = player.cards[card] 
+            if isinstance(card_obj, (PathCard, DoorCard)):
+                self.path_played(player, 
+                card, x, y)
+            elif isinstance(card_obj, (ActionCard, ToolCard)):
+                self.action_played(player, 
+                card, target)
+        round_over = self.board.check_end() or self.cards_in_play == 0
+        if round_over:
+            self.state = 'round_over'
+        else:
+            self.current_player += 1 
+            self.current_player %= len(self.players)
+            self.state = 'wait_for_move'
+        print(self.state)
     
+    def discard(self, player, cards):
+        for card in cards:
+            player.play_card(card)
+            self.cards_in_play -= 1
+        for card in cards:
+            if len(self.deck.cards):
+                player.draw_card(self.deck.draw())
+
     def path_played(self, player, card, x, y):
         if player.is_ready():
+            card = player.play_card(card)
+            self.cards_in_play -= 1
+            if len(self.deck.cards):
+                player.draw_card(self.deck.draw())
             return self.board.add_card_check(card, x, y)
 
-    def action_played(self, player, card, target=None):
-        player = self.players[self.current_player]
+    def action_played(self, player, card, target=None):        
+        card = player.play_card(card)
+        self.cards_in_play -= 1
         if card.type == 'reveal': #show goal card
             #emit signal for showing the goal card
             pass
@@ -124,12 +142,71 @@ class GameManager():
 
         elif card.type == 'free':
             t_player = self.players[target]
-            t_player.release()            
+            t_player.release()   
 
+        if len(self.deck.cards):
+                player.draw_card(self.deck.draw())
         return True #placeholder
 
     def round_over(self):
         #split winnings
+        self.board.reset_visited()
+        self.board.find_available_spots(self.board.start_x, 
+        self.board.start_y, 6, door='blue')
+        blue_connected = self.board.check_end()
+
+        self.board.reset_visited()
+        self.board.find_available_spots(self.board.start_x, 
+        self.board.start_y, 6, door='green')
+        green_connected = self.board.check_end()
+
+        last_player = self.players[self.current_player].role
+        #blue won
+        if last_player in ['bluedigger', 'theboss', 'geologist', 'profiteer']:
+            blue_won = blue_connected
+        elif last_player == 'greendigger':
+            blue_won = not green_connected
+        #green won
+        if last_player in ['greendigger', 'theboss', 'geologist', 'profiteer']:
+            green_won = green_connected
+        elif last_player == 'bluedigger':
+            green_won = not blue_connected
+
+        boss_won = blue_won or green_won
+        saboteur_won = not boss_won
+        geologist_gold = self.board.crystal_count
+
+        winners_count = 0
+        for player in self.players:
+            if player.role == 'bluedigger':
+                winners_count += blue_won
+            elif player.role == 'greendigger':
+                winners_count += green_won
+            elif player.role == 'theboss':
+                winners_count += boss_won
+            elif player.role == 'profiteer':
+                winners_count += 1
+            elif player.role == 'saboteur':
+                winners_count += saboteur_won
+
+        winnings = 6 - winners_count
+        if winnings < 1:
+            winnings = 1
+        
+        for player in self.players:
+            if player.role == 'bluedigger' and blue_won:
+                player.receive_gold(winnings)
+            elif player.role == 'greendigger' and green_won:
+                player.receive_gold(winnings)
+            elif player.role == 'theboss' and boss_won:
+                player.receive_gold(winnings - 1)
+            elif player.role == 'profiteer':
+                player.receive_gold(winnings - 2)
+            elif player.role == 'saboteur':
+                player.receive_gold(winnings)
+            elif player.role == 'geologist':
+                player.receive_gold(geologist_gold)
+
         for player in self.players:
             player.reset()
         self.rounds += 1
@@ -140,7 +217,12 @@ class GameManager():
         print(self.state)
     
     def game_over(self):
-        print('winner = srs')
+        winners = []
+        max_gold = max(self.players).gold
+        for player in self.players:
+            if player.gold == max_gold:
+                winners.append(player)
+        print('winners =', winners)
         #show buttons
         print(self.state)
 
