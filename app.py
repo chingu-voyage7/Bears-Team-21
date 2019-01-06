@@ -4,7 +4,7 @@ from flask import Flask, render_template, redirect, url_for, request, session, j
 from flask_socketio import SocketIO, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from classes.socket_module import GameLobbyNs
-from classes.database import add_user, find_user, find_username
+from classes.database import add_user, find_user
 import classes.settings as config
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(id):
-    return User(find_username(id))
+    return User(id)
  
 @app.route('/')
 def index():

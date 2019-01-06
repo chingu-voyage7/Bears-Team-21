@@ -37,12 +37,4 @@ def find_user(username,password):
             return user
     return None
 
-def find_username(username):
-    db = sqlite3.connect(DATABASE)
-    c = db.cursor()
-    user = c.execute("SELECT username from users where username = (?)",
-                    [username]).fetchone()
-    userid = user[0]
-    return userid
-
 init_db()
