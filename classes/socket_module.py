@@ -167,7 +167,7 @@ class GameRoomNs(Namespace):
         emit("update_players", startedGame[request.namespace].playersList(), room=request.sid) # testing, should pass data from gamemanager object
         emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)#current_user.username
         emit("update_role", {"role":startedGame[request.namespace].getPlayerRole(current_user.username)}, room=request.sid)
-        emit("update_board", {"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, room=request.sid)
+        emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid)
         pass
 
     def on_disconnect(self):

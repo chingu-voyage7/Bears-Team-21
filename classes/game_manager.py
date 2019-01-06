@@ -52,7 +52,7 @@ class GameManager():
             for player in self.players:
                 player.draw_card(self.deck.draw())
         #set up map and player divs
-        board = Board()
+        self.board = Board()
         self.current_player = 0
         self.state = 'wait_for_move'    
         #self.handle_move() #test only    

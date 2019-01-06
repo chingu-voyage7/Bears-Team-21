@@ -32,7 +32,10 @@ window.onload = function() {
             divMain.appendChild(sqr); 
         }
     }
-   
+    document.getElementById('grid').scrollBy({
+        top: 620,
+        left: 1090
+    });
     $(".toggle-chat").click(function () {
         $header = $(this);
         $content = $(".msg_container_base");

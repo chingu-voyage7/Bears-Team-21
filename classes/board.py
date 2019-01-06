@@ -1,5 +1,5 @@
 from .deck import Deck, Card
-
+from .settings import *
 import math
 
 def set_direction(direction):
@@ -114,7 +114,17 @@ class Board:
 
     def check_end(self):
         return self.visited[self.goal_coords[0]][self.goal_coords[1]]
-        
+    
+    def getBoardData(self):
+        cell = 0
+        data = {}
+        for row in self.board:
+            for col in row:
+                cell +=1
+                if (col is not None):
+                    data[str(cell)]=col.name
+            cell += GRID_UI - len(row)
+        return data
 
 ###################################################################################
 def fuTestBoard():
