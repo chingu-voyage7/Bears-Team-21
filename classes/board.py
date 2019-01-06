@@ -122,7 +122,7 @@ class Board:
             for col in row:
                 cell +=1
                 if (col is not None):
-                    data[str(cell)]=col.name
+                    data[str(cell)]= "goal-back" if col.name.startswith( 'goal' ) else col.name
             cell += GRID_UI - len(row)
         return data
 

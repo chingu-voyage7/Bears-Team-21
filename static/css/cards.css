@@ -9,15 +9,21 @@
     overflow:hidden; 
     background-repeat: no-repeat;
     background-image:url("../imgs/cards.jpg");
-}
-
+} 
 .path-00{
     width:120px; 
     height:195px; 
+    background-position: -645px -973px;
+}
+.goal-back{
+    width:120px; 
+    height:195px; 
+    background-position: -240px -1575px;
 }
 .goal-00{
     width:120px; 
     height:195px; 
+    background-position: -387px -782px;
 }
 .path-01, .path-02, .path-03, .path-04 {
     width:120px; 
@@ -53,7 +59,7 @@
 .path-25{
     width:120px; 
     height:195px; 
-    background-position: -890px -990px;
+    background-position: -903px -969px;
 }
 .path-26{
     width:120px; 
@@ -93,20 +99,17 @@
 .path-39{
     width:120px; 
     height:195px; 
+    background-position:-1021px -1174px;
 }
 .path-40{
     width:120px; 
     height:195px; 
+    background-position:-1150px -1172px;
 }
-.path-41{
+.path-41,.path-42{
     width:120px; 
     height:195px; 
-
-}
-.path-42{
-    width:120px; 
-    height:195px; 
-
+    background-position: -240px 0px;
 }
 .path-43{
     width:120px; 
@@ -121,99 +124,118 @@
 .path-45{
     width:120px; 
     height:195px; 
+    background-position: -360px 0px;
 }
 .path-46{
     width:120px; 
     height:195px; 
+    background-position: -480px 0px;
 }
 .path-47{
     width:120px; 
     height:195px; 
+    background-position: -600px 0px;
 }
 .path-48{
     width:120px; 
-    height:195px; 
+    height:195px;     
+    background-position: -840px 0px;
 }
 .path-49{
     width:120px; 
     height:195px; 
+    background-position: -720px 0px;
 }
 .path-50{
     width:120px; 
     height:195px; 
+    background-position: -1200px 0px;
 }
 .path-51 {
     width:120px; 
     height:195px; 
-    background-position: -121px -196px;
+    background-position: -120px -195px;
 }
 .path-52{
     width:120px; 
     height:195px; 
+    background-position: -961px 0px;
 }
 .path-53{
     width:120px; 
     height:195px; 
+    background-position: -1081px 0px;
 }
 .path-54{
     width:120px; 
     height:195px; 
+    background-position: -0px -195px;
 }
 .path-55{
     width:120px; 
     height:195px; 
+    background-position: -361px -387px;
 }
 .path-56{
     width:120px; 
     height:195px; 
+    background-position: 0px -387px;
 }
 .path-57{
     width:120px; 
     height:195px; 
+    background-position: -1202px -195px;
+
 }
 .path-58{
     width:120px; 
     height:195px; 
+    background-position: -241px -387px;
 }
-.path-59{
+.path-59, .path-60{
     width:120px; 
     height:195px; 
-}
-.path-60{
-    width:120px; 
-    height:195px; 
+    background-position: -120px -387px;
 }
 .path-61{
     width:120px; 
     height:195px; 
+    background-position: -480px -195px;
 }
 .path-62{
     width:120px; 
     height:195px; 
+    background-position: -361px -195px;
 }
 .path-63{
     width:120px; 
     height:195px; 
+    background-position: -601px -195px;
 }
 .path-64{
     width:120px; 
     height:195px; 
+    background-position: -721px -195px;
 }
 .path-65{
     width:120px; 
     height:195px; 
+    background-position: -240px -195px;
 }
 .path-66{
     width:120px; 
     height:195px; 
+    background-position: -1081px -195px;
 }
 .path-67{
     width:120px; 
     height:195px; 
+    background-position: -962px -195px;
 }
 .path-68{
     width:120px; 
     height:195px; 
+    background-position: -841px -195px;
 }
 .path-69,.path-70{
     width:120px; 
@@ -227,7 +249,7 @@
 .action-05{
     width:120px; 
     height:195px; 
-
+    background-position: -1803px -1575px;
 }
 .action-06,
 .action-07,
@@ -235,51 +257,61 @@
 .action-47{
     width:120px; 
     height:195px;
+    background-position: -1924px -1575px;
 }
 .action-09,
 .action-10{
     width:120px; 
     height:195px;
+    background-position: -1443px -1575px;
 }
 .action-11{
     width:120px; 
     height:195px;
+    background-position: -601px -1575px;
 }
 .action-12{
     width:120px; 
     height:195px;
+    background-position: -481px -1575px;
 }
 .action-13,
 .action-14{
     width:120px; 
     height:195px;
+    background-position: -1202px -1575px;
 }
 .action-15{
     width:120px; 
     height:195px;
+    background-position:-360px -1575px;
 }
 .action-16,
 .action-17{
     width:120px; 
     height:195px;
+    background-position: -1684px -1575px;
 }
 .action-18,
 .action-19,
 .action-20{
     width:120px; 
     height:195px;
+    background-position: -1322px -1575px;
 }
 .action-21,
 .action-22,
 .action-23{
     width:120px; 
     height:195px;
+    background-position: -1562px -1575px;
 }
 .action-24,
 .action-25,
 .action-26{
     width:120px; 
     height:195px;
+    background-position: -1082px -1575px;
 }
 .action-27,
 .action-28,
@@ -287,33 +319,39 @@
 .action-30{
     width:120px; 
     height:195px;
+    background-position: -2525px -1575px;
 }
 .action-31,
 .action-31,
 .action-33{
     width:120px; 
     height:195px;
+    background-position: -2405px -1575px;
 }
 .action-34,
 .action-35{
     width:120px; 
     height:195px;
+    background-position: -2766px -1575px;
 }
 .action-36,
 .action-37,
 .action-38{
     width:120px; 
     height:195px;
+    background-position: -2284px -1575px;
 }
 .action-39,
 .action-40{
     width:120px; 
     height:195px;
+    background-position: -2885px -1575px;
 }
 .action-41,
 .action-42{
     width:120px; 
     height:195px;
+    background-position: -2645px -1575px;
 }
 .action-43,
 .action-44,
@@ -321,6 +359,7 @@
 .action-46{
     width:120px; 
     height:195px;
+    background-position: -2164px -1575px;
 }
 .game-board {
     background-color: #076324;
@@ -329,24 +368,30 @@
 .bluedigger{
     width:120px; 
     height:195px;
+    background-position: 0px -1376px;
 }
-.greendigge{
+.greendigger{
     width:120px; 
     height:195px;
+    background-position: -242px -1376px;
 }
 .profiteer{
     width:120px; 
     height:195px;
+    background-position: -1561px -1376px;
 }
 .geologist{
     width:120px; 
     height:195px;
+    background-position: -1442px -1376px;
 }
 .theboss{
     width:120px; 
     height:195px;
+    background-position: -1321px -1376px;
 }
 .saboteurs{
     width:120px; 
     height:195px;
+    background-position: -1026px -1376px;
 }
