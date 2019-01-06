@@ -17,7 +17,8 @@ dim = 19
 class Board:
     start_x = 5
     start_y = 9    
-
+    crystal_count = 0
+    
     def __init__(self):
         self.reset_visited()
         self.board = [[None for i in range(dim)] for i in range(dim)]

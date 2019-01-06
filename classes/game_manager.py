@@ -45,7 +45,7 @@ class GameManager():
         remove_cards = 10
         for i in range(remove_cards):
             self.deck.draw()
-        self.cards_in_play = len(self.deck)
+        self.cards_in_play = len(self.deck.cards)
         start_cards = 6        
         for i in range(start_cards):
             for player in self.players:
