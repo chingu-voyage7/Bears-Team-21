@@ -13,15 +13,20 @@ class Card:
         
 class PathCard(Card):
 
-    def __init__(self, name, edges):
+    def __init__(self, name, edges, crystal):
         super().__init__(name)
-        self.connections = {-2: [], -1: [], 1: [], 2: []}
+        self.has_stairs = False
+        self.connections = {-2: [], -1: [], 1: [], 2: [], 6:[]}
         self.edges = edges
         for edge in edges:
             if edge[0] < 3:
                 self.connections[edge[0]].append(edge[1])
             if edge[1] < 3:
                 self.connections[edge[1]].append(edge[0])
+            if edge[1] == 6:                
+                self.has_stairs = True
+                self.connections[6].append(edge[0])
+        self.crystal = int(crystal)
         self.set_required()
 
     def rotate(self):
@@ -39,7 +44,7 @@ class PathCard(Card):
 class DoorCard(PathCard):
 
     def __init__(self, name, edges, door):
-        super().__init__(name, edges)
+        super().__init__(name, edges, False)
         self.door = door
 
 class ActionCard(Card):
@@ -76,7 +81,8 @@ class Deck:
                 if name in door: 
                     self.cards.append(DoorCard(name, edges, card['door']))
                 else:
-                    self.cards.append(PathCard(name, edges))
+                    crystal = 'crystal' in card
+                    self.cards.append(PathCard(name, edges, crystal))
             if name.startswith('action'):
                 type = card['type']
                 if 'tools' in card:
@@ -101,15 +107,15 @@ class Deck:
     def concat(self, other):
         self.cards += other.cards
 
-def fuTest():
-    testDeck = Deck('classes/paths.json','action-cards')
-    testDeck.shuffle()
-    pprint(testDeck.getData())
-    print(testDeck.cards_remaining())
-    testDeck.draw()
-    testDeck.draw()
-    testDeck.draw()
-    print(testDeck.cards_remaining())
-    pprint(testDeck.getData())
+#def fuTest():
+#    testDeck = Deck('paths.json','path-cards')
+#    testDeck.shuffle()
+#    pprint(testDeck.getData())
+#    print(testDeck.cards_remaining())
+#    testDeck.draw()
+#    testDeck.draw()
+#    testDeck.draw()
+#    print(testDeck.cards_remaining())
+#    pprint(testDeck.getData())
 
 #fuTest()

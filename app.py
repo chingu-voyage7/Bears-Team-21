@@ -3,8 +3,8 @@ import os, sqlite3
 from flask import Flask, render_template, redirect, url_for, request, session, jsonify, json, make_response
 from flask_socketio import SocketIO, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from classes.socket_module import GameLobbyNs
-from classes.database import add_user, find_user, find_username
+from classes.socket_module import GameLobbyNs, GameRoomNs
+from classes.database import add_user, find_user
 import classes.settings as config
 
 app = Flask(__name__)
@@ -35,7 +35,7 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(id):
-    return User(find_username(id))
+    return User(id)
  
 @app.route('/')
 def index():
@@ -73,7 +73,10 @@ def login(text=''):
 @login_required
 def logout():
     logout_user()
-    return redirect('/')
+    resp = make_response(render_template('index.html', 
+    user=session['username']))
+    resp.set_cookie('endpoint', '', expires=0)
+    return resp
 
 @app.route('/dashboard')
 @login_required
@@ -88,7 +91,8 @@ def game(gamename):
     print(gamename)
     gamename = request.cookies.get('endpoint')
     print(gamename)
-    return render_template('game.html', gamename=gamename)
+    socketio.on_namespace(GameRoomNs('/'+gamename))
+    return make_response(render_template('game.html', gamename=gamename, user=session['username']))
 
 if __name__ == "__main__":
     app.debug = True

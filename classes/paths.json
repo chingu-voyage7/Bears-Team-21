@@ -1,13 +1,14 @@
 {   
     "_card_names": "path cards from 01 to 40 base game, 41 to 70 expansion; action cards 00 to 26 base game, 27 to 47 expansion;",
     "_edges_lists": "edges lists explaination -> N:2, E:1, S:-2, W:-1, dead-end:5, stairs:6",
+    "_actions_type":"reveal (show goal card) - repair( fix broken tool) - damage( break player tool) - remove (remove path card) - theft (at end of round steal 1 gold from player) - handsoff(remeve theft card) - swaphand (exganges players hands) - inspection (show player role card) - swaphats (player chosen discard role and draw new one) - trapped(player cant play path cards , if still trapped end round dont get score) - free (removes trap card)",
     "card-width":120,
     "card-height":195,
-    "setup-cards": [
-        { "name":"path-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] },
-        { "name":"goal-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] },
-        { "name":"goal-01", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] },
-        { "name":"goal-02", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ] }
+    "setup-cards": [        
+        { "name":"goal-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ], "gold": true },
+        { "name":"goal-01", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ], "gold": false },
+        { "name":"goal-02", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ], "gold": false },
+        { "name":"path-00", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1], [1, 6], [-1, 6], [2, 6], [-2, 6] ] }
     ],
     "path-cards": [
         { "name":"path-01", "edges":[ [2, -2]] },
@@ -60,26 +61,26 @@
         { "name":"path-48", "edges":[ [2, 1], [2, 6], [1, 6] ] },
         { "name":"path-49", "edges":[ [1, -2] ] , "door": "green"},
         { "name":"path-50", "edges":[ [1, -1] ] , "door": "green"},
-        { "name":"path-51", "edges":[ [2, -2] ] , "door": "green"},
+        { "name":"path-51", "edges":[ [2, -2], [1, 5] ] , "door": "green"},
         { "name":"path-52", "edges":[ [2, -2] ] , "door": "blue"},
         { "name":"path-53", "edges":[ [1, -1] ] , "door": "blue"},
         { "name":"path-54", "edges":[ [-2, -1] ] , "door": "blue"},
         { "name":"path-55", "edges":[ [2, 1], [-2, 5] ] },
         { "name":"path-56", "edges":[ [2, -2], [1, 5], [-1, 5] ] },
         { "name":"path-57", "edges":[ [2, 5], [1, -1], [-2, 5] ] },
-        { "name":"path-58", "edges":[ [2, -2], [1, 5] ] },
+        { "name":"path-58", "edges":[ [2, -2], [1, 5] ]},
         { "name":"path-59", "edges":[ [2, 5], [1, -2] ] },
         { "name":"path-60", "edges":[ [2, 5], [1, -2] ] },
-        { "name":"path-61", "edges":[ [-1, 5] ] },
-        { "name":"path-62", "edges":[ [-2, 5] ] },
-        { "name":"path-63", "edges":[ [1, -2], [1, -1], [-2, -1] ] },
-        { "name":"path-64", "edges":[ [2, 5], [1, -2], [1, -1], [-2, -1] ] },
-        { "name":"path-65", "edges":[ [2, 1], [2, -2], [1, -2] ] },
-        { "name":"path-66", "edges":[ [2, -2], [2, -1], [1, 5], [-2, -1] ] },
-        { "name":"path-67", "edges":[ [2, 1], [2, -2], [2, -1], [1, -2], [1, -1] ] },
-        { "name":"path-68", "edges":[ [1, -1], [-2, 5] ] },
-        { "name":"path-69", "edges":[ [1, -2], [1, -1], [-2, -1] ] },
-        { "name":"path-70", "edges":[ [1, -2], [1, -1], [-2, -1] ] }
+        { "name":"path-61", "edges":[ [-1, 5] ], "crystal" : true  },
+        { "name":"path-62", "edges":[ [-2, 5] ], "crystal" : true  },
+        { "name":"path-63", "edges":[ [1, -2], [1, -1], [-2, -1] ], "crystal" : true  },
+        { "name":"path-64", "edges":[ [2, 5], [1, -2], [1, -1], [-2, -1] ], "crystal" : true },
+        { "name":"path-65", "edges":[ [2, 1], [2, -2], [1, -2] ], "crystal" : true  },
+        { "name":"path-66", "edges":[ [2, -2], [2, -1], [1, 5], [-2, -1] ], "crystal" : true  },
+        { "name":"path-67", "edges":[ [2, 1], [2, -2], [2, -1], [1, -2], [1, -1] ], "crystal" : true  },
+        { "name":"path-68", "edges":[ [1, -1], [-2, 5] ], "crystal" : true  },
+        { "name":"path-69", "edges":[ [1, -2], [1, -1], [-2, -1] ], "crystal" : true  },
+        { "name":"path-70", "edges":[ [1, -2], [1, -1], [-2, -1] ], "crystal" : true }
     ],
     "action-cards": [
         { "name":"action-00", "type":"reveal" },

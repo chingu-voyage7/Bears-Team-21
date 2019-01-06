@@ -2,6 +2,8 @@ from flask import Flask, render_template, session, request, redirect,url_for
 from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import current_user
 from .settings import *
+from .game_manager import GameManager
+startedGame = {}
 
 class GameLobbyNs(Namespace):
     clients = {}
@@ -130,15 +132,17 @@ class GameLobbyNs(Namespace):
                             playersReady = False
                 break
         if playersReady:
+            GameManager('/'+roomId, self.game_rooms[roomId])
+            startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])
             print("all ready")
-            emit('start_game',{'room':'/'+roomId, 
-            'players': self.game_rooms[roomId]}, room='/'+roomId)
+            emit('start_game',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_leave(self, message):
         print('leaving ' + message['room'])
         leave_room(message['room'])
         join_room('/lobby')
-        self.remove_player_room(current_user.username, message['room'][1:])
+        if message['room'] != '/lobby':
+            self.remove_player_room(current_user.username, message['room'][1:])
         emit('roomsList',{'data': 'Connected', 
         'roomList': self.make_rm_List()},room='/lobby')
         emit('restore_input',{'data': 'Connected', 
@@ -148,3 +152,32 @@ class GameLobbyNs(Namespace):
     def on_send_message(self, message, room, methods=['GET', 'POST']):
         print('got message')
         emit('receiveMessage', message, room=room)
+
+
+
+class GameRoomNs(Namespace):
+    TEST_DATA = {
+        "test_players":["User Player","Opponent 1","Opponent 2"],
+        "test_hand":["path-01","path-02","path-03","path-19","path-20"],
+        "test_role":{"role":"path-02"},
+        "test_board":{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}
+    }
+    def on_connect(self):
+        print("got connection", request.namespace)#startedGame[request.namespace].players
+        emit("update_players", startedGame[request.namespace].playersList(), room=request.sid) # testing, should pass data from gamemanager object
+        emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)#current_user.username
+        emit("update_role", {"role":startedGame[request.namespace].getPlayerRole(current_user.username)}, room=request.sid)
+        emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid)
+        pass
+
+    def on_disconnect(self):
+        print("got disconnection")
+        pass
+
+    def on_my_event(self, data):
+        print("got event")
+        emit('my_response', data)
+
+    def on_send_message(self, message, methods=['GET', 'POST']):
+        print('got message')
+        emit('receiveMessage', message, broadcast=True)

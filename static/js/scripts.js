@@ -1,24 +1,5 @@
 const socket = io.connect('http://' + document.domain + ':' + location.port+'/lobby');
 
-const RESPONSE_EVENTS = [
-    'round_result',
-    'new_round',
-    'score_gold',
-    'show_end_card',
-    'update_counters',
-    'gold_earned',
-    'gold_stolen',
-    'gold_card_earned',
-    'path_card_destroyed',
-    'show_goal_card',
-    'path_card_played',
-    'tool_status_changed',
-    'draw_new_cards',
-    'draw_new_role',
-    'give_cards',
-    'cards_discarded'
-]
-
 info = {}
 
 socket.on('connect', () => {    
@@ -141,15 +122,19 @@ function buildRoomList(message_data){
     document.querySelector('#testP').addEventListener('click', e =>{
         socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
     });
-    document.querySelector('#btn-leave').addEventListener('click', e =>{
+    document.querySelector('#btn-leave').addEventListener('click', leaveRooms);
+    $('.toggle').css('display','block');
+}
+
+function leaveRooms(){
+        var old = info.room
         info.room = "/lobby";
         $('#tab1').click();
         $('#tab2').css('visibility', 'hidden');
-        socket.emit('leave',{'data':"test",'room':message_data['room']})
+        socket.emit('leave',{'data':"test",'room':old})
         setCookie("endpoint", "/lobby", 1);
         $('#event-room').hide();
-    });
-    $('.toggle').css('display','block');
+        console.log("leave btn");
 }
 
 function createGame() {
@@ -173,6 +158,7 @@ socket.on('disconnect', () => {
 });
 
 socket.on('start_game', message_data => {
+    console.log(message_data);
     $(location).attr('href', '/game'+message_data['room']);
 });
 
@@ -215,8 +201,6 @@ function checkCookie() {
 //    socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
 //}, 5000);
 
-
-
 $( document ).ready(function() {
     checkCookie();
     $('.toggle').on('change',()=>{
@@ -244,5 +228,7 @@ $( document ).ready(function() {
         $(e.target.hash).addClass("in active");
         $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
     });
+    $("#leave-room").on("click",  leaveRooms);
+
 });
 

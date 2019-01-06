@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}"> 
     <link rel="stylesheet" href="{{url_for('static', filename='css/cards.css')}}">
     <script type="text/javascript" src="{{url_for('static', filename='js/main.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/game.js')}}"></script>
 </head>
 <body>
     
@@ -20,36 +21,30 @@
         <div class="header clearfix">
           <nav>
             <ul class="nav nav-pills pull-right">
-              <li role="presentation"><a href="{{url_for('dashboard')}}">Leave Game</a></li>
+              <li role="presentation" id="leave-room"><a href="{{url_for('dashboard')}}">Leave Game</a></li>
             </ul>
           </nav>
-          <h3 class="text-muted">Saboteur</h3>
+          <h3 class="text-muted">Saboteur <small id="username">{{user|safe}}</small> <small id="gamename">{{gamename|safe}}</small> </h3>
         </div>
   
-        <div class="jumbotron">
-          <h1>Saboteur The Game</h1>
-          <p class="lead">In Saboteur, each player takes on the role of a gold-digging dwarf or a saboteur who wants to hinder exploration of the gold mines — but each player knows only his own role, so the digging may or may not go as planned!</p>
-        </div>
         <div class="row">
             <div class="col-sm-8">
-                <div class="player-hand well well-sm">
                     <div class="text">
-                        <label class="text-muted">Player Hand</label>
-                    </div>
-                   <div class="card sprite path02"></div>
-                   <div class="card sprite path03"></div>
-                   <div class="card sprite path01"></div>
+                            <label class="text-muted">Player Hand</label> 
+                        </div>
+                <div class="player-hand well well-sm" id="player-hand">
+                    
+                <section class="hand" id="hand">
+                   
+                </section>
                 </div>
             </div>
             <div class="col-sm-4">
-                <div class="player-role well well-sm">
                     <div class="text">
-                        <label class="text-muted">Player Role</label> 
-                    </div>
-                
-                    <div class="icon">
-                    <i class="glyphicon glyphicon-folder-close"></i>
-                    </div>
+                            <label class="text-muted">Player Role</label> 
+                        </div>
+                <div class="player-role well well-sm" id="player-role">
+                    
                 </div>
             </div>
         </div>
@@ -61,79 +56,49 @@
             </div>
         </div>
     
-    <div class="row">
-            <div class="col-sm-3">
-                    <div class="game-opponent well well-sm" style="min-height: 100px;">
-                        <div class="icon">
-                             <i class="glyphicon glyphicon-user"></i>
+        <div class="row" id="opponents">
+            
+        </div>
+        <div class="row" id="chat-row">
+            <div class="col-sm-8">
+                <div class="chatbody" id="chat">
+                    <div class="panel with-nav-tabs panel-primary">
+                        <div class="panel-heading top-bar">
+                            <div class="col-md-2 col-xs-2">
+                                <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
+                            </div>    
+                            <div class="col-md-9 col-xs-9" id="chatTabs">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab1primary" data-toggle="tab" class="nourl" id="tab1">Room</a></li>
+                                </ul>
+                            </div>   
+                            <div class="col-md-1 col-xs-1">
+                                <i class="glyphicon glyphicon-asterisk toggle-chat pull-right">Collapse</i>
+                            </div>
                         </div>
-                        <div class="text">
-                            <label class="text-muted">Game Opponent</label>
+                        <div class="panel-body msg_container_base">
+                            <div class="tab-content">
+                                <div class="tab-pane fade in active" id="tab1primary"></div>
+                                <div class="tab-pane fade" id="tab2primary"></div>
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+                                    <div class="input-group">       
+                                        <input id="btn-input" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." autocomplete="off"/>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" id="btn-chat" ><i class="glyphicon glyphicon-envelope" aria-hidden="true"></i></button>
+                                        </span>
+                                    </div>
                         </div>
                     </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="game-opponent well well-sm" style="min-height: 100px;">
-                    <div class="icon">
-                         <i class="glyphicon glyphicon-user"></i>
-                    </div>
-                    <div class="text">
-                        <label class="text-muted">Game Opponent</label>
-                    </div>
                 </div>
             </div>
-            <div class="col-sm-3">
-                <div class="game-opponent well well-sm" style="min-height: 100px;">
-                    <div class="icon">
-                         <i class="glyphicon glyphicon-user"></i>
-                    </div>
-                    <div class="text">
-                        <label class="text-muted">Game Opponent</label>
-                    </div>
-                </div>
+    
             </div>
-            <div class="col-sm-3">
-                <div class="game-opponent well well-sm" style="min-height: 100px;">
-                    <div class="icon">
-                         <i class="glyphicon glyphicon-user"></i>
-                    </div>
-                    <div class="text">
-                        <label class="text-muted">Game Opponent</label>
-                    </div>
-                </div>
-            </div>
-    </div>
-</div>
+        </div>
         <footer class="footer">
           <p>© 2019 Bear-Team-21.</p>
         </footer>
     </div>
-<script>
-    window.onload = function() {
-        var squarewidth = 120; 
-        var squareheight= 195; 
-        var divMain = document.getElementById('grid');
-        var size = 10;
-        var count = 0;
-        for (var j = 0; j < size; j++) {
-            for (var i = 0; i < size; i++) {
-                var sqr = document.createElement('div'), 
-                coord = {"x":i,"y":j} 
-                sqr.className = 'square'; 
-                count++;
-                sqr.id ="square-"+count;
-                console.log(sqr.id);
-                sqr.style.width = squarewidth + 'px'; 
-                sqr.style.height = squareheight + 'px'; 
-                sqr.style.left = (coord.x * squarewidth) + 'px'; 
-                sqr.style.top = (coord.y * squareheight) + 'px';
-                sqr.addEventListener('click', function(evt) { 
-                    console.log(this); 
-                }); 
-                divMain.appendChild(sqr); 
-            }
-        }
-    };
-</script>
 </body>
 </html>
