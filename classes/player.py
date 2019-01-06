@@ -10,6 +10,9 @@ class Player():
         self.free = True
         self.steal_count = 0
 
+    def __gt__(self, other):
+        return self.gold > other.gold
+
     def set_role(self, role):
         self.role = role
 
@@ -26,7 +29,8 @@ class Player():
         self.tools[tool] = True
 
     def receive_gold(self, amount):
-        self.gold += amount
+        if amount > 0:
+            self.gold += amount
 
     def imprison(self):
         self.free = False

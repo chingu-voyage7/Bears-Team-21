@@ -24,6 +24,7 @@ class Board:
         self.available = []
         self.stairs = []
         self.place_initial_cards()
+        self.crystal_count = 0
 
     def reset_visited(self):
         self.visited = [[False for i in range(dim)] for i in range(dim)]
@@ -43,12 +44,13 @@ class Board:
             self.add_card(card, coords[0], coords[1])        
 
     def remove_card(self, x, y):
+        self.crystal_count -= self.board[x][y].crystal
         self.board[x][y] = None
-        self.find_available_spots(self.start_x, self.start_y, 1)
-        self.find_available_spots(self.start_x, self.start_y, 2)
+        self.find_available_spots(self.start_x, self.start_y, 6)
 
     def add_card(self, card, x, y):
         print('card placed')
+        self.crystal_count += card.crystal
         self.board[x][y] = card
         if card.has_stairs:
             self.stairs.append([x, y])
