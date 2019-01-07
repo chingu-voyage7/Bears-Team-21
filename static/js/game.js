@@ -120,6 +120,13 @@ window.onload = function() {
         data.forEach(function(name) {
             var cardNode = document.createElement("DIV");  
             cardNode.className= "card sprite " + name;
+            cardNode.addEventListener("dblclick", function () {
+                if ($(this).hasClass( "rotate" )){
+                    $(this).removeClass('rotate');
+                } else {
+                    $(this).addClass('rotate');
+                }
+            });
             document.getElementById("hand").appendChild(cardNode);
         });
     })
