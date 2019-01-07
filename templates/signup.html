@@ -14,6 +14,18 @@
 </head>
 <body>
     <div class="container">
+      <div class="header clearfix">
+          <nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" class="active"><a href="#">Home</a></li>
+              <li role="presentation"><a href="#">About</a></li>
+              <li role="presentation"><a href="{{url_for('signup')}}">Sign Up</a></li>
+              <li role="presentation"><a href="{{url_for('login')}}">Log In</a></li>
+              <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+          </nav>
+          <h3 class="text-muted">Saboteur</h3>
+        </div>
         <form action="{{url_for('signup')}}" method='POST' class="form-signin">
           <h2 class="form-signin-heading">Please Sign up</h2>
           <label for="inputUser" class="sr-only">Username</label>
