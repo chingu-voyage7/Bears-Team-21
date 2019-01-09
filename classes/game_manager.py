@@ -60,7 +60,10 @@ class GameManager():
         #handle move logic
         player = self.players[self.current_player]
         if isinstance(card, list):
-            self.discard(player, card)
+            if len(card) == 2 and (not target is None):
+                self.discard_repair(player, card, target)
+            else:
+                self.discard(player, card)
         else:
             card_obj = player.cards[card] 
             if isinstance(card_obj, (PathCard, DoorCard)):
@@ -82,9 +85,18 @@ class GameManager():
         for card in cards:
             player.play_card(card)
             self.cards_in_play -= 1
-        #for card in cards:
-        if len(self.deck.cards): # only draw 1 card, if discard more then one effectively reduce hand
+        for card in cards:
+            if len(self.deck.cards): 
+                player.draw_card(self.deck.draw())
+
+    def discard_repair(self, player, cards, tool):
+        for card in cards:
+            player.play_card(card)
+            self.cards_in_play -= 1
+        if len(self.deck.cards): # only draw 1 card, effectively reduce hand
             player.draw_card(self.deck.draw())
+        print(tool)
+        player.repair_tool(tool)   
 
     def path_played(self, player, card, x, y):
         if player.is_ready():

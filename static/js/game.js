@@ -133,9 +133,16 @@ window.onload = function() {
                 }
             });
             cardNode.addEventListener('click', function(){
-                selected.push(cardNode.index);
+                //selected.push(cardNode.index);
                 console.log('selected ',cardNode.index);
                 //cardNode.className += " red-border";
+                if ($(this).hasClass( "red-border" )){
+                    $(this).removeClass('red-border');
+                    selected = selected.filter(index => index !== cardNode.index)
+                } else {
+                    selected.push(cardNode.index);
+                    $(this).addClass('red-border');
+                }
             });
             document.getElementById("hand").appendChild(cardNode);
         });
@@ -144,7 +151,7 @@ window.onload = function() {
     $('#discard').click(function(){
         selected.forEach(function(i){
             console.log(i);
-            $('#hand .card:nth-child('+i+')').addClass('red-border');
+            //$('#hand .card:nth-child('+i+')').addClass('red-border');
         });
         socket.emit('card_discarded', {'cards':selected.map(function(x) {
             return x - 1;})});
