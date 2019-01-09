@@ -13,23 +13,25 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
 </head>
 <body>
-    <div class="container content">
-        {% include "partials/navbar.html" %}  
-        <form action="{{url_for('login')}}" method='POST' class="form-signin">
-          <h2 class="form-signin-heading">Please Log in</h2>
-          <label for="inputUser" class="sr-only">Username</label>
-          <input type="text" name = "username" id="inputUser" class="form-control" placeholder="Username" required="" autofocus="">
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" name="remember_me" value="False"> Remember me
-            </label>
-          </div>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </form>
-        <p>{{text | safe}}</p>
-    </div> 
-    {% include "partials/footer.html" %} 
+    <div class="main-container">
+      <div class="container">
+          {% include "partials/navbar.html" %}  
+          <form action="{{url_for('login')}}" method='POST' class="form-signin">
+            <h2 class="form-signin-heading">Please Log in</h2>
+            <label for="inputUser" class="sr-only">Username</label>
+            <input type="text" name = "username" id="inputUser" class="form-control" placeholder="Username" required="" autofocus="">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="remember_me" value="False"> Remember me
+              </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          </form>
+          <p>{{text | safe}}</p>
+      </div> 
+      {% include "partials/footer.html" %} 
+    </div>
 </body>
 </html>

@@ -13,7 +13,8 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
 </head>
 <body>
-    <div class="container content">
+  <div class="main-container">
+    <div class="container">
         {% include "partials/navbar.html" %}
         <form action="{{url_for('signup')}}" method='POST' class="form-signin">
           <h2 class="form-signin-heading">Please Sign up</h2>
@@ -26,6 +27,7 @@
         <p>{{text | safe}}</p>
     </div> 
     {% include "partials/footer.html" %}  
+  </div>
 </body>
 </html>
 </html>
