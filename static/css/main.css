@@ -1,12 +1,27 @@
 h1 {
     color: red;
 }
+
+html, body {
+  height: 100%;
+}
+
 body {
     padding-top: 40px;
     padding-bottom: 40px;
     background-color: #eee;
   }
-  
+
+.content {
+    min-height: 100%;
+}
+
+.main {
+  overflow: auto;
+  padding-bottom: 180px;
+  /* must be same height as the footer */
+}
+
 .header,
 .footer {
     padding-right: 15px;
@@ -21,10 +36,14 @@ body {
     margin-bottom: 0;
     line-height: 40px;
 } 
-.footer {
+.footer-dark {
     padding-top: 19px;
-    color: #777;
     border-top: 1px solid #e5e5e5;
+    position: relative;
+    margin-top: -180px;
+    /* negative value of footer height */
+    height: 180px;
+    clear: both;
 }
 .form-signin {
     max-width: 330px;
