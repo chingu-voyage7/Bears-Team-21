@@ -183,8 +183,13 @@ class GameRoomNs(Namespace):
         print('got message')
         emit('receiveMessage', message, broadcast=True)
 
-    def on_card_discarded(self, message, methods=['GET', 'POST']):
-        print('got message', message["cards"])
+    def on_card_discarded(self, message):
+        print('got discarded', message["cards"])
         startedGame[request.namespace].handle_move(message["cards"])
         emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)#current_user.username
         
+    def on_show_goal(self, message):
+        show = startedGame[request.namespace].handle_move(message["cards"],None,None,[message["x"], message["y"]])
+        print ("reveal:", "gold" if show else "nothing")
+        emit("reveal_goal", {"show": show,"x":message["x"], "y" : message["y"]}, room=request.sid)
+        emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)

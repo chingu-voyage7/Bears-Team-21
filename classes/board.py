@@ -129,6 +129,9 @@ class Board:
                     data[str(cell)]= "goal-back" if col.name.startswith( 'goal' ) else col.name
             cell += GRID_UI - len(row)
         return data
+    
+    def getRevealCard(self, x, y):
+        return (self.goal_coords[0] == x) and (self.goal_coords[1] == y)
 
 ###################################################################################
 def fuTestBoard():

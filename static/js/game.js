@@ -4,6 +4,7 @@ var testData = {hand: ["path-01","path-02","path-03","path-19","path-20"], role:
 board:{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, 
 players:["Game Opponent 1","Game Opponent 2","Game Opponent 3","Game Opponent 4"]};
 
+const WIDTH = 19
 
 var socket
 
@@ -13,7 +14,7 @@ window.onload = function() {
     var squarewidth = 120; 
     var squareheight= 195; 
     var divMain = document.getElementById('grid');
-    var size = 19;
+    var size = WIDTH;
     var count = 0;
     var cards = []
     var selected = []
@@ -120,6 +121,7 @@ window.onload = function() {
     socket.on("update_hand", (data)=>{
         document.getElementById("hand").innerHTML = ""
         cards = []
+        selected = [];
         data.forEach(function(name) {
             var cardNode = document.createElement("DIV");  
             cardNode.className= "card sprite " + name;
@@ -151,7 +153,9 @@ window.onload = function() {
     $('#discard').click(function(){
         selected.forEach(function(i){
             console.log(i);
-            //$('#hand .card:nth-child('+i+')').addClass('red-border');
+            if ($('#hand .card:nth-child('+i+')').hasClass( "red-border" )){
+                $('#hand .card:nth-child('+i+')').removeClass('red-border');
+            }
         });
         socket.emit('card_discarded', {'cards':selected.map(function(x) {
             return x - 1;})});
@@ -192,3 +196,17 @@ const RESPONSE_EVENTS = [
 ]
 
 info = {}
+
+function posToCoords(cell){
+    let x = cell % WIDTH;
+    let y = Math.floor(cell / WIDTH);
+    return [x , y]
+}
+
+function testReveal(cell, index){
+    console.log("75: " + posToCoords(75))
+    console.log("113: " + posToCoords(113))
+    console.log("151: " + posToCoords(151))
+    let coords = posToCoords(cell) // To-Do saved switching coords and x -1? need to check
+    socket.emit("show_goal",{"cards": index,"x":coords[1],"y":(coords[0]-1)})
+}

@@ -58,11 +58,17 @@ class GameManager():
 
     def handle_move(self, card, x=None, y=None, target=None):
         #handle move logic
+        result = False # could be used positive or negative outcome of move
+        print("handle move logic",card,x,y,target)
         player = self.players[self.current_player]
         if isinstance(card, list):
             if len(card) == 2 and (not target is None):
-                self.discard_repair(player, card, target)
+                if target == "trapped":
+                    pass #TO-DO just a place holder
+                else:
+                    self.discard_repair(player, card, target)
             else:
+                print ("discard(",card,")")
                 self.discard(player, card)
         else:
             card_obj = player.cards[card] 
@@ -70,7 +76,7 @@ class GameManager():
                 self.path_played(player, 
                 card, x, y)
             elif isinstance(card_obj, (ActionCard, ToolCard)):
-                self.action_played(player, 
+                result = self.action_played(player, 
                 card, target)
         round_over = self.board.check_end() or self.cards_in_play == 0
         if round_over:
@@ -80,9 +86,10 @@ class GameManager():
             self.current_player %= len(self.players)
             self.state = 'wait_for_move'
         print(self.state)
+        return result
     
     def discard(self, player, cards):
-        for card in cards:
+        for card in sorted(cards, reverse=True):
             player.play_card(card)
             self.cards_in_play -= 1
         for card in cards:
@@ -109,9 +116,11 @@ class GameManager():
     def action_played(self, player, card, target=None):        
         card = player.play_card(card)
         self.cards_in_play -= 1
+        print("action card",card.type)
         if card.type == 'reveal': #show goal card
             #emit signal for showing the goal card
-            pass
+            print("action_reveal",target)
+            return self.board.getRevealCard(target[0],target[1])
 
         elif card.type == 'remove':
             target_card = self.board.board[target[0]][target[1]]
