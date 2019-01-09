@@ -15,26 +15,12 @@
 <body>
     
     <div class="container">
-        <div class="header clearfix">
-          <nav>
-            <ul class="nav nav-pills pull-right">
-              <li role="presentation" class="active"><a href="#">Home</a></li>
-              <li role="presentation"><a href="#">About</a></li>
-              <li role="presentation"><a href="{{url_for('signup')}}">Sign Up</a></li>
-              <li role="presentation"><a href="{{url_for('login')}}">Log In</a></li>
-              <li role="presentation"><a href="#">Contact</a></li>
-            </ul>
-          </nav>
-          <h3 class="text-muted">Saboteur</h3>
-        </div>
-  
+        {% include "partials/navbar.html" %}  
         <div class="jumbotron">
-          <h1>Saboteur The Game</h1>
-          <p class="lead">In Saboteur, each player takes on the role of a gold-digging dwarf or a saboteur who wants to hinder exploration of the gold mines — but each player knows only his own role, so the digging may or may not go as planned!</p>
-          <p><a class="btn btn-lg btn-success" href="{{url_for('signup')}}" role="button">Sign up!</a></p>
+            <h1>Saboteur The Game</h1>
+            <p class="lead">In Saboteur, each player takes on the role of a gold-digging dwarf or a saboteur who wants to hinder exploration of the gold mines — but each player knows only his own role, so the digging may or may not go as planned!</p>
+            <p><a class="btn btn-lg btn-success" href="{{url_for('signup')}}" role="button">Sign up!</a></p>
         </div>
-  
-  
         <footer class="footer">
           <p>© 2019 Bear-Team-21.</p>
         </footer>
