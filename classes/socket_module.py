@@ -120,6 +120,7 @@ class GameLobbyNs(Namespace):
                 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
     def on_ready_event(self, message):
+        print("on_ready_event")
         self.player_ready[current_user.username] = message['Toggle']
         playersReady = True
         for roomId in self.game_rooms:
@@ -181,3 +182,9 @@ class GameRoomNs(Namespace):
     def on_send_message(self, message, methods=['GET', 'POST']):
         print('got message')
         emit('receiveMessage', message, broadcast=True)
+
+    def on_card_discarded(self, message, methods=['GET', 'POST']):
+        print('got message', message["cards"])
+        startedGame[request.namespace].handle_move(message["cards"])
+        emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)#current_user.username
+        

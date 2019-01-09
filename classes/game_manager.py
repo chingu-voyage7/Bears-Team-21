@@ -82,9 +82,9 @@ class GameManager():
         for card in cards:
             player.play_card(card)
             self.cards_in_play -= 1
-        for card in cards:
-            if len(self.deck.cards):
-                player.draw_card(self.deck.draw())
+        #for card in cards:
+        if len(self.deck.cards): # only draw 1 card, if discard more then one effectively reduce hand
+            player.draw_card(self.deck.draw())
 
     def path_played(self, player, card, x, y):
         if player.is_ready():

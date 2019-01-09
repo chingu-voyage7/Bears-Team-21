@@ -145,8 +145,10 @@ window.onload = function() {
         selected.forEach(function(i){
             console.log(i);
             $('#hand .card:nth-child('+i+')').addClass('red-border');
-        })
-        selected = []
+        });
+        socket.emit('card_discarded', {'cards':selected.map(function(x) {
+            return x - 1;})});
+        selected = [];
     });
 
     socket.on("update_role", (data)=> {
