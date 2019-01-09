@@ -398,3 +398,7 @@
 .rotate{
     transform: rotate(180deg);
 }
+
+.red-border {
+    border: 2px solid red;
+}

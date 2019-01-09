@@ -15,6 +15,8 @@ window.onload = function() {
     var divMain = document.getElementById('grid');
     var size = 19;
     var count = 0;
+    var cards = []
+    var selected = []
     for (var j = 0; j < size; j++) {
         for (var i = 0; i < size; i++) {
             var sqr = document.createElement('div'), 
@@ -117,9 +119,12 @@ window.onload = function() {
 
     socket.on("update_hand", (data)=>{
         document.getElementById("hand").innerHTML = ""
+        cards = []
         data.forEach(function(name) {
             var cardNode = document.createElement("DIV");  
             cardNode.className= "card sprite " + name;
+            cards.push(name);
+            cardNode.index = cards.length
             cardNode.addEventListener("dblclick", function () {
                 if ($(this).hasClass( "rotate" )){
                     $(this).removeClass('rotate');
@@ -127,9 +132,22 @@ window.onload = function() {
                     $(this).addClass('rotate');
                 }
             });
+            cardNode.addEventListener('click', function(){
+                selected.push(cardNode.index);
+                console.log('selected ',cardNode.index);
+                //cardNode.className += " red-border";
+            });
             document.getElementById("hand").appendChild(cardNode);
         });
     })
+
+    $('#discard').click(function(){
+        selected.forEach(function(i){
+            console.log(i);
+            $('#hand .card:nth-child('+i+')').addClass('red-border');
+        })
+        selected = []
+    });
 
     socket.on("update_role", (data)=> {
         var roleNode = document.createElement("DIV"); 
