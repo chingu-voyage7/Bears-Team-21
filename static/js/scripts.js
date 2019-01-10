@@ -90,6 +90,16 @@ socket.on('my_response', message_data => {
     console.log('server response '+message_data); 
 });
 
+socket.on('room_busy', message_data => {
+    console.log("room_busy "+message_data); 
+    alert("Game already in progress! "+ message_data.room);
+});
+
+socket.on('room_exist', message_data => {
+    console.log("room_exist "+message_data); 
+    alert("Game room name present! "+ message_data.room);
+});
+
 socket.on('restore_input',createLobby);
 
 function createLobby(){
