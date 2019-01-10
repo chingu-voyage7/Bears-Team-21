@@ -151,7 +151,7 @@ class GameLobbyNs(Namespace):
         return redirect('dashboard')
 
     def on_send_message(self, message, room, methods=['GET', 'POST']):
-        print('got message')
+        print('got message ns')
         emit('receiveMessage', message, room=room)
 
 

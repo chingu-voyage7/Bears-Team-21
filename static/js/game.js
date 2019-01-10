@@ -1,4 +1,4 @@
-
+const lobbySocket = io.connect('http://' + document.domain + ':' + location.port+'/lobby');
 
 var testData = {hand: ["path-01","path-02","path-03","path-19","path-20"], role:"path-03", 
 board:{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, 
@@ -39,6 +39,19 @@ window.onload = function() {
         top: 620,
         left: 1090
     });
+    $('#tab2').css('visibility', 'visible');
+    $("a.nourl").click(function(e){
+        e.preventDefault();
+        
+     });
+    $(".nav li").on("click", function(e) {
+        $(".nav li").removeClass("active");
+        $(".tab-pane").removeClass("in active");
+        $(this).addClass("active");
+        $(e.target.hash).addClass("in active");
+        $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
+    });
+
     $(".toggle-chat").click(function () {
         $header = $(this);
         $content = $(".msg_container_base");
@@ -59,11 +72,19 @@ window.onload = function() {
             let user_name = info.username;
             let user_input = $( 'input.chat_input' ).val();
             if (user_input != '')
-                socket.emit('send_message', {
-                user_name : user_name,
-                message : user_input,
-                room: "tab1primary",
-                })
+                if ($(".tab-pane.active")[0].id == "tab2primary") {
+                    socket.emit('send_message', {
+                        user_name : user_name,
+                        message : user_input,
+                        room: "#tab2primary",
+                        })
+                } else {
+                    lobbySocket.emit('send_message', {
+                        user_name : user_name,
+                        message : user_input,
+                        room: "#tab1primary",
+                    }, room="/lobby")
+                }
             $('input.chat_input').val('').focus()
           } )
     });
@@ -92,14 +113,44 @@ window.onload = function() {
                     </div>
                 </div>`;
             //var chatTab = msg.room == "/lobby"? "#tab1primary" : "#tab2primary"
-            console.log(msg.room)
-            $('div #'+msg.room).append(
+            console.log("room msg:"+msg.room)
+            $('div '+msg.room).append(
                 (msg.user_name == $("#username").html() ? base_sent : base_receive)
             );
             $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
         }
     }) 
-    
+    lobbySocket.on('receiveMessage', function(msg) {
+        console.log("lobby msg:"+ msg )
+        if(typeof msg.user_name !== 'undefined') {
+            var base_receive = `<div class="row msg_container base_receive">
+                    <div class="col-md-2 col-xs-2 avatar">
+                        <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
+                    </div>
+                    <div class="col-md-10 col-xs-10">
+                        <div class="messages msg_receive">
+                            <b style="color: #000">${msg.user_name}</b> <p>${msg.message}</p>
+                        </div>
+                    </div>
+                </div>`;
+            var base_sent=`<div class="row msg_container base_sent">
+                    <div class="col-md-10 col-xs-10">
+                        <div class="messages msg_sent">
+                            <b style="color: #000">${msg.user_name}</b> <p>${msg.message}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-xs-2 avatar">
+                        <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
+                    </div>
+                </div>`;
+            //var chatTab = msg.room == "/lobby"? "#tab1primary" : "#tab2primary"
+            console.log(msg.room)
+            $('div '+msg.room).append(
+                (msg.user_name == $("#username").html() ? base_sent : base_receive)
+            );
+            $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
+        }
+    }) 
     socket.on("update_players", players => {
         console.log(players);
         document.getElementById("opponents").innerHTML = ""
