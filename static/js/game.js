@@ -1,5 +1,3 @@
-
-
 var testData = {hand: ["path-01","path-02","path-03","path-19","path-20"], role:"path-03", 
 board:{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, 
 players:["Game Opponent 1","Game Opponent 2","Game Opponent 3","Game Opponent 4"]};
@@ -31,6 +29,10 @@ window.onload = function() {
             sqr.style.top = (coord.y * squareheight) + 'px';
             sqr.addEventListener('click', function(evt) { 
                 console.log(this); 
+                cell = this.id.split('-')[1];
+                if (selected.length == 1){
+                    
+                }
             }); 
             divMain.appendChild(sqr); 
         }
@@ -122,10 +124,11 @@ window.onload = function() {
         document.getElementById("hand").innerHTML = ""
         cards = []
         selected = [];
-        data.forEach(function(name) {
+        data.forEach(function(card) {
             var cardNode = document.createElement("DIV");  
-            cardNode.className= "card sprite " + name;
-            cards.push(name);
+            console.log(card);
+            cardNode.className= "card sprite " + card.name;
+            cards.push(card.name);
             cardNode.index = cards.length
             cardNode.addEventListener("dblclick", function () {
                 if ($(this).hasClass( "rotate" )){
@@ -138,13 +141,15 @@ window.onload = function() {
                 //selected.push(cardNode.index);
                 console.log('selected ',cardNode.index);
                 //cardNode.className += " red-border";
-                if ($(this).hasClass( "red-border" )){
-                    $(this).removeClass('red-border');
-                    selected = selected.filter(index => index !== cardNode.index)
-                } else {
-                    selected.push(cardNode.index);
-                    $(this).addClass('red-border');
-                }
+                if (selected.length < 3) {
+                    if ($(this).hasClass( "red-border" )){
+                        $(this).removeClass('red-border');
+                        selected = selected.filter(index => index !== cardNode.index)
+                    } else {
+                        selected.push(cardNode.index);
+                        $(this).addClass('red-border');                    
+                    }
+                }            
             });
             document.getElementById("hand").appendChild(cardNode);
         });

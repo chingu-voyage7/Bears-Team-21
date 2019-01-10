@@ -165,9 +165,9 @@ class GameRoomNs(Namespace):
     }
     def on_connect(self):
         print("got connection", request.namespace)#startedGame[request.namespace].players
-        emit("update_players", startedGame[request.namespace].playersList(), room=request.sid) # testing, should pass data from gamemanager object
-        emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)#current_user.username
-        emit("update_role", {"role":startedGame[request.namespace].getPlayerRole(current_user.username)}, room=request.sid)
+        emit("update_players", startedGame[request.namespace].players_list(), room=request.sid) # testing, should pass data from gamemanager object
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
+        emit("update_role", {"role":startedGame[request.namespace].get_player_role(current_user.username)}, room=request.sid)
         emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid) #broadcast= True
         pass
 
@@ -186,10 +186,10 @@ class GameRoomNs(Namespace):
     def on_card_discarded(self, message):
         print('got discarded', message["cards"])
         startedGame[request.namespace].handle_move(message["cards"])
-        emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)#current_user.username
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
         
     def on_show_goal(self, message):
         show = startedGame[request.namespace].handle_move(message["cards"],None,None,[message["x"], message["y"]])
         print ("reveal:", "gold" if show else "nothing")
         emit("reveal_goal", {"show": show,"x":message["x"], "y" : message["y"]}, room=request.sid)
-        emit("update_hand", startedGame[request.namespace].playerHandList(current_user.username), room=request.sid)
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)

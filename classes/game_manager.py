@@ -62,9 +62,9 @@ class GameManager():
         print("handle move logic",card,x,y,target)
         player = self.players[self.current_player]
         if isinstance(card, list):
-            if len(card) == 2 and (not target is None):
+            if len(card) == 2 and target is not None:
                 if target == "trapped":
-                    pass #TO-DO just a place holder
+                    player.release()
                 else:
                     self.discard_repair(player, card, target)
             else:
@@ -248,21 +248,21 @@ class GameManager():
         #show buttons
         print(self.state)
 
-    def playersList(self):
+    def players_list(self):
         listPlayers = []
         for player in self.players:
             listPlayers.append(player.name)
         return listPlayers
     
-    def playerHandList(self, name):
+    def player_hand_list(self, name):
         cardsList = []
         for player in self.players:
             if player.name == name:
                 for card in player.cards:
-                    cardsList.append(card.name)
+                    cardsList.append(card.__dict__)
         return cardsList
     
-    def getPlayerRole(self, name):
+    def get_player_role(self, name):
         for player in self.players:
             if player.name == name:
                 return player.role
