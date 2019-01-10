@@ -80,6 +80,10 @@ class GameLobbyNs(Namespace):
 
     def on_create_room(self, data):
         print('create_room' + data['roomId'])
+        print(self.game_rooms.keys())
+        if ((data['roomId']) in self.game_rooms.keys()):
+            emit("room_exist", {"room": data['roomId']}, room=request.sid)
+            return
         roomId = data['roomId']
         self.game_rooms[roomId] = []
         self.on_join_room( data)
@@ -103,6 +107,9 @@ class GameLobbyNs(Namespace):
 
     def on_join_room(self, data):
         print(request.sid + " joining " + data['roomId'])
+        if ("/"+data['roomId'] in startedGame.keys()):
+            emit("room_busy", {"room": data['roomId']}, room=request.sid)
+            return
         emit('roomsList', {'data': 'Connected', 
         'roomList': self.make_rm_List()},room='/lobby')
         roomId = data['roomId']
