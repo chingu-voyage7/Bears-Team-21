@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 const lobbySocket = io.connect('http://' + document.domain + ':' + location.port+'/lobby');
 
->>>>>>> aadcaeb4143c70f79bddb9cfe865c569409660a5
 var testData = {hand: ["path-01","path-02","path-03","path-19","path-20"], role:"path-03", 
 board:{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, 
 players:["Game Opponent 1","Game Opponent 2","Game Opponent 3","Game Opponent 4"]};
@@ -10,6 +7,8 @@ players:["Game Opponent 1","Game Opponent 2","Game Opponent 3","Game Opponent 4"
 const WIDTH = 19
 
 var socket
+var cards = []
+var selected = []
 
 window.onload = function() {
     const gameName = document.getElementById("gamename").firstChild.data;
@@ -19,8 +18,6 @@ window.onload = function() {
     var divMain = document.getElementById('grid');
     var size = WIDTH;
     var count = 0;
-    var cards = []
-    var selected = []
     for (var j = 0; j < size; j++) {
         for (var i = 0; i < size; i++) {
             var sqr = document.createElement('div'), 
@@ -178,14 +175,15 @@ window.onload = function() {
 
     socket.on("update_hand", (data)=>{
         document.getElementById("hand").innerHTML = ""
-        cards = []
+        cards = [];
         selected = [];
         data.forEach(function(card) {
             var cardNode = document.createElement("DIV");  
             console.log(card);
             cardNode.className= "card sprite " + card.name;
-            cards.push(card.name);
-            cardNode.index = cards.length
+            cardNode.type = ("edges" in card ? 'path' : card.type);
+            cards.push(card);
+            cardNode.index = cards.length;
             cardNode.addEventListener("dblclick", function () {
                 if ($(this).hasClass( "rotate" )){
                     $(this).removeClass('rotate');
@@ -200,9 +198,9 @@ window.onload = function() {
                 if (selected.length < 3) {
                     if ($(this).hasClass( "red-border" )){
                         $(this).removeClass('red-border');
-                        selected = selected.filter(index => index !== cardNode.index)
+                        selected = selected.filter(card => card.index !== cardNode.index);
                     } else {
-                        selected.push(cardNode.index);
+                        selected.push(cardNode);
                         $(this).addClass('red-border');                    
                     }
                 }            
@@ -212,14 +210,15 @@ window.onload = function() {
     })
 
     $('#discard').click(function(){
-        selected.forEach(function(i){
+        selected.forEach(function(card){
+            i = card.index;
             console.log(i);
             if ($('#hand .card:nth-child('+i+')').hasClass( "red-border" )){
                 $('#hand .card:nth-child('+i+')').removeClass('red-border');
             }
         });
         socket.emit('card_discarded', {'cards':selected.map(function(x) {
-            return x - 1;})});
+            return x.index - 1;})});
         selected = [];
     });
 
