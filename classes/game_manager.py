@@ -56,12 +56,11 @@ class GameManager():
         self.state = 'wait_for_move'    
         #self.handle_move() #test only    
 
-    def handle_move(self, card_index, x=None, y=None, target=None):
+    def handle_move(self, card, x=None, y=None, target=None):
         #handle move logic
         result = False # could be used positive or negative outcome of move
-        print("handle move logic",card_index,x,y,target)
+        print("handle move logic",card,x,y,target)
         player = self.players[self.current_player]
-        card = player.cards[card_index]
         if isinstance(card, list):
             if len(card) == 2 and target is not None:
                 if target == "trapped":
@@ -130,6 +129,8 @@ class GameManager():
             target_card = self.board.board[target[0]][target[1]]
             if isinstance(target_card, (PathCard, DoorCard)):
                 self.board.remove_card(target[0], target[1])
+                return True
+            return False
 
         elif card.type == 'repair':
             t_player = self.players[target]            

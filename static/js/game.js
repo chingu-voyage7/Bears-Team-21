@@ -27,25 +27,33 @@ window.onload = function() {
             sqr.id ="square-"+count;
             sqr.style.width = squarewidth + 'px'; 
             sqr.style.height = squareheight + 'px'; 
-            sqr.style.left = (coord.x * squarewidth) + 'px'; 
-            sqr.style.top = (coord.y * squareheight) + 'px';
+            sqr.style.left = (coord[0] * squarewidth) + 'px'; 
+            sqr.style.top = (coord[1] * squareheight) + 'px';
             sqr.addEventListener('click', function(evt) { 
                 console.log(this); 
                 cell = this.id.split('-')[1];
                 if (selected.length == 1){
-                    if (selected[0].type == 'path'){
-                        //path card, check if i can place it
-                        available = []; //get data from backend for available spots
-                        flag = false;
-                        for (coords in available){
-                            if (coord[0] == coords[0] && coord[1] == coords[1]){
-                                if (canBePlaced(coord, selected[0].required)){
-                                    placeCard(coord, selected[0].index);                                    
+                    switch(selected[0].type){
+                        case 'path':
+                            //path card, check if i can place it
+                            available = []; //get data from backend for available spots
+                            flag = false;
+                            for (coords in available){
+                                if (coord[0] == coords[0] && coord[1] == coords[1]){
+                                    if (canBePlaced(coord, selected[0].required)){
+                                        placeCard(coord, selected[0].index-1);                                    
+                                    }
+                                    break;
                                 }
-                                break;
                             }
-                        }
-                    }
+                            break;
+
+                        case 'remove':
+                            //send event for removing card
+                            break;
+
+                        case 'reveal':
+                    }                 
                 }
             }); 
             divMain.appendChild(sqr); 
@@ -192,11 +200,14 @@ window.onload = function() {
 
     socket.on("update_hand", (data)=>{
         document.getElementById("hand").innerHTML = ""
+        console.log(data);
         cards = [];
         selected = [];
         data.forEach(function(card) {
             var cardNode = document.createElement("DIV");  
             console.log(card);
+            cardNode.style.width = squarewidth + 'px'; 
+            cardNode.style.height = squareheight + 'px'; 
             cardNode.className= "card sprite " + card.name;
             cardNode.type = ("edges" in card ? 'path' : card.type);
             if (cardNode.type == "path"){
@@ -226,6 +237,7 @@ window.onload = function() {
                 }            
             });
             document.getElementById("hand").appendChild(cardNode);
+            console.log('a')
         });
     })
 
