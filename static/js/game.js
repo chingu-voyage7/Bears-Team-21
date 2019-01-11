@@ -21,7 +21,7 @@ window.onload = function() {
     for (var j = 0; j < size; j++) {
         for (var i = 0; i < size; i++) {
             var sqr = document.createElement('div'), 
-            coord = {"x":i,"y":j} 
+            coord = [i,j]
             sqr.className = 'square'; 
             count++;
             sqr.id ="square-"+count;
@@ -33,12 +33,29 @@ window.onload = function() {
                 console.log(this); 
                 cell = this.id.split('-')[1];
                 if (selected.length == 1){
-                    
+                    if (selected[0].type == 'path'){
+                        //path card, check if i can place it
+                        available = []; //get data from backend for available spots
+                        flag = false;
+                        for (coords in available){
+                            if (coord[0] == coords[0] && coord[1] == coords[1]){
+                                if (canBePlaced(coord, selected[0].required)){
+                                    placeCard(coord, selected[0].index);                                    
+                                }
+                                break;
+                            }
+                        }
+                    }
                 }
             }); 
             divMain.appendChild(sqr); 
         }
     }
+
+    function placeCard(coords, card){
+        //emit handle move for path card
+    }
+
     document.getElementById('grid').scrollBy({
         top: 620,
         left: 1090
@@ -182,6 +199,9 @@ window.onload = function() {
             console.log(card);
             cardNode.className= "card sprite " + card.name;
             cardNode.type = ("edges" in card ? 'path' : card.type);
+            if (cardNode.type == "path"){
+                cardNode.required = card.required;
+            }
             cards.push(card);
             cardNode.index = cards.length;
             cardNode.addEventListener("dblclick", function () {

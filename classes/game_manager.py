@@ -56,37 +56,39 @@ class GameManager():
         self.state = 'wait_for_move'    
         #self.handle_move() #test only    
 
-    def handle_move(self, card, x=None, y=None, target=None):
+    def handle_move(self, card_index, x=None, y=None, target=None):
         #handle move logic
         result = False # could be used positive or negative outcome of move
-        print("handle move logic",card,x,y,target)
+        print("handle move logic",card_index,x,y,target)
         player = self.players[self.current_player]
+        card = player.cards[card_index]
         if isinstance(card, list):
             if len(card) == 2 and target is not None:
                 if target == "trapped":
-                    player.release()
+                    player.release()                    
                 else:
                     self.discard_repair(player, card, target)
             else:
                 print ("discard(",card,")")
                 self.discard(player, card)
+            result = True
         else:
             card_obj = player.cards[card] 
             if isinstance(card_obj, (PathCard, DoorCard)):
-                self.path_played(player, 
+                result = self.path_played(player, 
                 card, x, y)
             elif isinstance(card_obj, (ActionCard, ToolCard)):
                 result = self.action_played(player, 
                 card, target)
-        round_over = self.board.check_end() or self.cards_in_play == 0
-        if round_over:
-            self.state = 'round_over'
-        else:
-            self.current_player += 1 
-            self.current_player %= len(self.players)
-            self.state = 'wait_for_move'
-        print(self.state)
-        return result
+        if result:
+            round_over = self.board.check_end() or self.cards_in_play == 0        
+            if round_over:
+                self.state = 'round_over'
+            else:
+                self.current_player += 1 
+                self.current_player %= len(self.players)
+                self.state = 'wait_for_move'
+            print(self.state)        
     
     def discard(self, player, cards):
         for card in sorted(cards, reverse=True):
@@ -107,11 +109,13 @@ class GameManager():
 
     def path_played(self, player, card, x, y):
         if player.is_ready():
-            card = player.play_card(card)
-            self.cards_in_play -= 1
-            if len(self.deck.cards):
-                player.draw_card(self.deck.draw())
-            return self.board.add_card_check(card, x, y)
+            if self.board.add_card_check(card, x, y):
+                card = player.play_card(card)
+                self.cards_in_play -= 1
+                if len(self.deck.cards):
+                    player.draw_card(self.deck.draw())
+                return True
+        return False
 
     def action_played(self, player, card, target=None):        
         card = player.play_card(card)
