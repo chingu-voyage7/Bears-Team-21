@@ -92,12 +92,22 @@ socket.on('my_response', message_data => {
 
 socket.on('room_busy', message_data => {
     console.log("room_busy "+message_data); 
-    alert("Game already in progress! "+ message_data.room);
+    var node = document.createTextNode("Game already in progress!");
+    var modal = document.getElementById("modal-body");
+    modal.innerHTML="";
+    modal.appendChild(node);
+    document.getElementById("exampleModalLabel").innerText=message_data.room;
+    $('#modalBtn').click();
 });
 
 socket.on('room_exist', message_data => {
     console.log("room_exist "+message_data); 
-    alert("Game room name present! "+ message_data.room);
+    var node = document.createTextNode("Game room name present!");
+    var modal = document.getElementById("modal-body");
+    modal.innerHTML="";
+    modal.appendChild(node);
+    document.getElementById("exampleModalLabel").innerText=message_data.room;
+    $('#modalBtn').click();
 });
 
 socket.on('restore_input',createLobby);

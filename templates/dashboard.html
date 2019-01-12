@@ -10,9 +10,10 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>   
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="{{url_for('static', filename='vendor/bootstrap-toggle.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
-    <script type="text/javascript" src="{{url_for('static', filename='vendor/bootstrap-toggle.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='vendor/bootstrap-toggle.min.js')}}"></script> 
     <script type="text/javascript" src="{{url_for('static', filename='js/scripts.js')}}"></script>
 </head>
 <body>
@@ -89,18 +90,10 @@
         </div>
 
 
+    
+    {% include "partials/modal.html" %} 
     </div>
-
-    </div>
-    <script>
-    //$('#toggle-ready').hide();
-    //document.querySelector('#create_game_room').onclick = createGame;
-    //document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
-    //    event.preventDefault();
-    //    if (event.keyCode === 13) {
-    //      document.getElementById("create_game_room").click();
-    //    }
-    //  });
-    </script>
+    {% include "partials/footer.html" %} 
+</div>
 </body>
 </html>
