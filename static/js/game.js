@@ -57,12 +57,17 @@ window.onload = function() {
 
                         case 'remove':
                             //send event for removing card
-                            
+                            console.log("remove ");
+                            if((this.classList.length > 1) && !(this.classList.contains("path-00") || this.classList.contains("goal-back"))){
+                                removeCard(coord, selected[0].index-1);
+                            }
+                            break;
                         case 'reveal':
                             console.log("reveal ");
                             if (this.classList.contains("goal-back")){
                                 revealCard(coord, selected[0].index-1);
                             }
+                            break;
                     }                 
                 }
             }); 
@@ -72,9 +77,13 @@ window.onload = function() {
 
     function placeCard(coords, card){
         //emit handle move for path card
-        //socket.emit("place_card",{"cards": card,"x":coords[0],"y":(coords[1])}) //to-do check this
         console.log("emit place")
         socket.emit("place_card",{"cards": card,"x":coords[1],"y":coords[0]});
+    }
+    function removeCard(coords, card){
+        //emit handle move for path card
+        console.log("emit remove")
+        socket.emit("remove_card",{"card": card,"x":coords[1],"y":coords[0]});
     }
     function canBePlaced(coords, card){
         return true;
@@ -228,7 +237,7 @@ window.onload = function() {
             console.log(card);
             cardNode.style.width = squarewidth + 'px'; 
             cardNode.style.height = squareheight + 'px'; 
-            cardNode.className= "card sprite " + card.name;
+            cardNode.className= "card sprite " + card.name + (card.rotated ? " rotate" : "");
             cardNode.type = ("edges" in card ? 'path' : card.type);
             if (cardNode.type == "path"){
                 cardNode.required = card.required;
@@ -286,6 +295,9 @@ window.onload = function() {
     })
 
     socket.on("update_board", (data)=> {
+        jQuery('.square').each(function(i, cell) {
+            cell.className = "square";
+        });
         Object.keys(data).forEach(function(key) {
             console.log(key, data[key]);
             document.getElementById("square-"+key).className="square sprite "+data[key].split('.').join(' ');
@@ -312,7 +324,7 @@ window.onload = function() {
         $('#modalBtn').click();
     })
 };
-
+/*
 const RESPONSE_EVENTS = [
     'round_result',
     'new_round',
@@ -331,7 +343,7 @@ const RESPONSE_EVENTS = [
     'give_cards',
     'cards_discarded'
 ]
-
+*/
 info = {}
 
 function posToCoords(cell){
@@ -339,11 +351,11 @@ function posToCoords(cell){
     let y = Math.floor(cell / WIDTH);
     return [x , y]
 }
-
+/*
 function testReveal(cell, index){
     console.log("75: " + posToCoords(75))
     console.log("113: " + posToCoords(113))
     console.log("151: " + posToCoords(151))
     let coords = posToCoords(cell) // To-Do saved switching coords and x -1? need to check
     socket.emit("show_goal",{"cards": index,"x":coords[1],"y":(coords[0]-1)})
-}
+}*/

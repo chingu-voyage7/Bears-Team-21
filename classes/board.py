@@ -46,6 +46,7 @@ class Board:
 
     def remove_card(self, x, y):
         self.crystal_count -= self.board[x][y].crystal
+        print(self.board[x][y])
         self.board[x][y] = None
         self.find_available_spots(self.start_x, self.start_y, 6)
 

@@ -209,5 +209,10 @@ class GameRoomNs(Namespace):
     def on_rotate_card(self, message):
         print ("rotate_card: ",message["card"])
         startedGame[request.namespace].player_rotate_card(current_user.username, message["card"])
-
-        
+    
+    def on_remove_card(self, message):
+        print ("remove_card: ",message["card"])
+        startedGame[request.namespace].handle_move(message["card"],None,None,[message["x"], message["y"]])
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
+        emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid)
+        emit("available_cells", startedGame[request.namespace].board.available, room=request.sid)
