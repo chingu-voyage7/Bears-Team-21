@@ -130,15 +130,14 @@ class GameLobbyNs(Namespace):
         print("on_ready_event")
         self.player_ready[current_user.username] = message['Toggle']
         playersReady = True
-        for roomId in self.game_rooms:
-            if current_user.username in self.game_rooms[roomId]:
-                if len(self.game_rooms[roomId]) < MIN_PLAYER_START:
-                    playersReady = False
-                else:
-                    for player in self.game_rooms[roomId]:
-                        if (self.player_ready[player] == False):
-                            playersReady = False
-                break
+        roomId = message['room'][1:]
+        if current_user.username in self.game_rooms[roomId]:
+            if len(self.game_rooms[roomId]) < MIN_PLAYER_START:
+                playersReady = False
+            else:
+                for player in self.game_rooms[roomId]:
+                    if (self.player_ready[player] == False):
+                        playersReady = False
         if playersReady:
             #GameManager('/'+roomId, self.game_rooms[roomId])
             startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])

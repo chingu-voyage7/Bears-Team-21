@@ -225,7 +225,7 @@ $( document ).ready(function() {
     checkCookie();
     $('.toggle').on('change',()=>{
         console.log("ready toggle");
-        socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
+        socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked, 'room':info.room});
     });
     $(".toggle-chat").click(function () {
         $header = $(this);
