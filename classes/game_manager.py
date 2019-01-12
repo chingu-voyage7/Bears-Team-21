@@ -133,6 +133,7 @@ class GameManager():
 
         elif card.type == 'remove':
             target_card = self.board.board[target[0]][target[1]]
+            print("remove", target_card.name)
             if isinstance(target_card, (PathCard, DoorCard)):
                 self.board.remove_card(target[0], target[1])
                 return True
