@@ -87,13 +87,17 @@ class Board:
         return False
 
     def check_adjacent(self, x, y, required):
-        for direction in required:
+        for direction in [-2, -1, 1, 2]:
             (nx,ny) = set_direction(direction)
             nx += x
             ny += y
-            other = self.board[nx][ny]
-            if other is not None:
-                if not -direction in other.required:
+            other = self.board[nx][ny]            
+            if other is not None:  
+                print("other coords", nx,ny)
+                print("direction", direction)
+                print("other",other.required)
+                print("this", required)              
+                if (-direction in other.required) != (direction in required):
                     return False
         return True
 
