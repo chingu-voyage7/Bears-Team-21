@@ -222,7 +222,9 @@ img {
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
 }
-
+#modalBtn{
+    visibility: hidden;
+}
 @media screen and (min-width: 768px) {
   .header,
   .footer {

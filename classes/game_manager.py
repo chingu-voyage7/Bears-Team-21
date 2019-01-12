@@ -87,7 +87,8 @@ class GameManager():
                 self.current_player += 1 
                 self.current_player %= len(self.players)
                 self.state = 'wait_for_move'
-            print(self.state)        
+            print(self.state)    
+        return result    
     
     def discard(self, player, cards):
         for card in sorted(cards, reverse=True):
@@ -123,7 +124,9 @@ class GameManager():
         if card.type == 'reveal': #show goal card
             #emit signal for showing the goal card
             print("action_reveal",target)
-            return self.board.getRevealCard(target[0],target[1])
+            result = self.board.getRevealCard(target[0],target[1])
+            print(result)
+            return result
 
         elif card.type == 'remove':
             target_card = self.board.board[target[0]][target[1]]

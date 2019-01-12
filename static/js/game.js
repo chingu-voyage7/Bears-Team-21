@@ -29,10 +29,13 @@ window.onload = function() {
             sqr.style.height = squareheight + 'px'; 
             sqr.style.left = (coord[0] * squarewidth) + 'px'; 
             sqr.style.top = (coord[1] * squareheight) + 'px';
+            sqr.setAttribute("x", coord[0]);
+            sqr.setAttribute("y", coord[1]);
             sqr.addEventListener('click', function(evt) { 
                 console.log(this); 
                 cell = this.id.split('-')[1];
                 if (selected.length == 1){
+                    coord = [this.getAttribute("x"),this.getAttribute("y")]
                     switch(selected[0].type){
                         case 'path':
                             //path card, check if i can place it
@@ -50,9 +53,13 @@ window.onload = function() {
 
                         case 'remove':
                             //send event for removing card
-                            break;
-
+                            
                         case 'reveal':
+                            console.log("reveal ");
+                            console.log(this.getAttribute("x"));
+                            if (this.classList.contains("goal-back")){
+                                revealCard(coord, selected[0].index-1);
+                            }
                     }                 
                 }
             }); 
@@ -62,6 +69,12 @@ window.onload = function() {
 
     function placeCard(coords, card){
         //emit handle move for path card
+        socket.emit("place_card",{"card": card,"x":coords[0],"y":(coords[1])})
+    }
+
+    function revealCard(coords, card){
+        console.log("show_goal" + card + ", "+ coords[0] + "-"+ coord[1])
+        socket.emit("show_goal",{"cards": card,"x":coords[1],"y":coords[0]});
     }
 
     document.getElementById('grid').scrollBy({
@@ -265,6 +278,20 @@ window.onload = function() {
             console.log(key, data[key]);
             document.getElementById("square-"+key).className+=" sprite "+data[key];
         });
+    })
+
+    socket.on("reveal_goal", (data)=> {
+        var goalNode = document.createElement("DIV"); 
+        if (data["show"]) {
+            goalNode.className= "card sprite goal-00";
+        } else {
+            goalNode.className= "card sprite goal-01";
+        }
+        var modal = document.getElementById("modal-body");
+        modal.innerHTML="";
+        modal.appendChild(goalNode);
+        document.getElementById("exampleModalLabel").innerText="Destination Revealed";
+        $('#modalBtn').click();
     })
 };
 

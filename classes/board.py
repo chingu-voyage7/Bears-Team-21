@@ -133,7 +133,8 @@ class Board:
         return data
     
     def getRevealCard(self, x, y):
-        return (self.goal_coords[0] == x) and (self.goal_coords[1] == y)
+        print (self.goal_coords[0],":",self.goal_coords[1])
+        return (int(self.goal_coords[0]) ==  int(x)) and (int(self.goal_coords[1]) ==  int(y))
 
 ###################################################################################
 def fuTestBoard():

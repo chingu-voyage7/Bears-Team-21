@@ -176,11 +176,9 @@ class GameRoomNs(Namespace):
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
         emit("update_role", {"role":startedGame[request.namespace].get_player_role(current_user.username)}, room=request.sid)
         emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid) #broadcast= True
-        pass
 
     def on_disconnect(self):
         print("got disconnection")
-        pass
 
     def on_my_event(self, data):
         print("got event")
@@ -200,3 +198,11 @@ class GameRoomNs(Namespace):
         print ("reveal:", "gold" if show else "nothing")
         emit("reveal_goal", {"show": show,"x":message["x"], "y" : message["y"]}, room=request.sid)
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
+
+    def on_place_card(self, message):
+        print ("place_card: ",message["cards"], message["x"], message["y"])
+        startedGame[request.namespace].handle_move(message["cards"], message["x"],message["y"])
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
+        emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid) #broadcast= True
+        
+        
