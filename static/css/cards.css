@@ -13,7 +13,7 @@
 .path-00{
     width:120px; 
     height:195px; 
-    background-position: -645px -973px;
+    background-position: -645px -981px;
 }
 .goal-back{
     width:120px; 
@@ -109,7 +109,7 @@
 .path-41,.path-42{
     width:120px; 
     height:195px; 
-    background-position: -240px 0px;
+    background-position: -240px -2px;
 }
 .path-43{
     width:120px; 
@@ -179,7 +179,7 @@
 .path-56{
     width:120px; 
     height:195px; 
-    background-position: 0px -387px;
+    background-position: -4px -390px;
 }
 .path-57{
     width:120px; 
@@ -240,6 +240,7 @@
 .path-69,.path-70{
     width:120px; 
     height:195px; 
+    background-position: -602px -195px;
 }
 .action-00,
 .action-01,
