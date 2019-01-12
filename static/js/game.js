@@ -226,11 +226,11 @@ window.onload = function() {
                 //selected.push(cardNode.index);
                 console.log('selected ',cardNode.index);
                 //cardNode.className += " red-border";
-                if (selected.length < 3) {
+                if (selected.length <= 3) {
                     if ($(this).hasClass( "red-border" )){
                         $(this).removeClass('red-border');
                         selected = selected.filter(card => card.index !== cardNode.index);
-                    } else {
+                    } else if (selected.length != 3){
                         selected.push(cardNode);
                         $(this).addClass('red-border');                    
                     }
