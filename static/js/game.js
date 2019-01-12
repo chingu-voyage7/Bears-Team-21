@@ -228,7 +228,7 @@ window.onload = function() {
             console.log(card);
             cardNode.style.width = squarewidth + 'px'; 
             cardNode.style.height = squareheight + 'px'; 
-            cardNode.className= "card sprite " + card.name;
+            cardNode.className= "card sprite " + card.name + (card.rotated ? " rotate" : "");
             cardNode.type = ("edges" in card ? 'path' : card.type);
             if (cardNode.type == "path"){
                 cardNode.required = card.required;
