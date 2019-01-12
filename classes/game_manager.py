@@ -108,8 +108,11 @@ class GameManager():
         player.repair_tool(tool)   
 
     def path_played(self, player, card, x, y):
+        print ("path_played(",x,y,")")
         if player.is_ready():
-            if self.board.add_card_check(card, x, y):
+            print("ready")
+            if self.board.add_card_check(player.cards[card], int(x), int(y)):
+                print("check")
                 card = player.play_card(card)
                 self.cards_in_play -= 1
                 if len(self.deck.cards):
@@ -274,4 +277,11 @@ class GameManager():
         for player in self.players:
             if player.name == name:
                 return player.role
+        return ""
+        
+    def player_rotate_card(self, name, card):
+        for player in self.players:
+            if player.name == name:
+                print(name,"rotates",card)
+                return player.cards[card].rotate()
         return ""

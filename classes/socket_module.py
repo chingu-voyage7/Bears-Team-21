@@ -175,6 +175,7 @@ class GameRoomNs(Namespace):
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
         emit("update_role", {"role":startedGame[request.namespace].get_player_role(current_user.username)}, room=request.sid)
         emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid) #broadcast= True
+        emit("available_cells", startedGame[request.namespace].board.available, room=request.sid)
 
     def on_disconnect(self):
         print("got disconnection")
@@ -203,5 +204,10 @@ class GameRoomNs(Namespace):
         startedGame[request.namespace].handle_move(message["cards"], message["x"],message["y"])
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
         emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid) #broadcast= True
-        
+        emit("available_cells", startedGame[request.namespace].board.available, room=request.sid)
+    
+    def on_rotate_card(self, message):
+        print ("rotate_card: ",message["card"])
+        startedGame[request.namespace].player_rotate_card(current_user.username, message["card"])
+
         

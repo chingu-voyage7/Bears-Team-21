@@ -10,6 +10,9 @@ class Card:
 
     def __init__(self, name):
         self.name = name
+        self.rotated = False
+    def rotate(self):
+        self.rotated = not self.rotated
         
 class PathCard(Card):
 
@@ -30,10 +33,13 @@ class PathCard(Card):
         self.set_required()
 
     def rotate(self):
+        super().rotate()
+        print("rotate",self.name)
         c = self.connections
         (c[-2], c[2]) = (c[2], c[-2])
         (c[-1], c[1]) = (c[1], c[-1])
         self.set_required()
+        
 
     def set_required(self):
         self.required = []

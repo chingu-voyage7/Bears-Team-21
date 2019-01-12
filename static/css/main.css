@@ -43,12 +43,8 @@ body {
   position: absolute;
   bottom: 0;
   width: 100%;
- }
-
-.footer {
-    padding: 10px 0 10px 0;
-    background-color: #343a40;
-    width: 100%;   
+  padding: 10px 0 10px 0;
+  background-color: #343a40;  
 }
 
 .form-signin {
@@ -98,6 +94,7 @@ body {
     right: 10px;
     margin-left:10px;
     width: 750px; 
+    z-index: 999;
 }
 .chatbody .panel{
     height: 100%;

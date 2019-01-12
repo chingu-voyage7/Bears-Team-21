@@ -79,7 +79,10 @@ class Board:
         return False
 
     def check_position(self, card, x, y):
+        print(self.available)
+        print([x,y])
         if [x,y] in self.available:
+            print("in available")
             return self.check_adjacent(x, y, card.required)
         return False
 
@@ -128,7 +131,7 @@ class Board:
             for col in row:
                 cell +=1
                 if (col is not None):
-                    data[str(cell)]= "goal-back" if col.name.startswith( 'goal' ) else col.name
+                    data[str(cell)]= "goal-back" if col.name.startswith( 'goal' ) else (col.name if not col.rotated else col.name+".rotate")
             cell += GRID_UI - len(row)
         return data
     

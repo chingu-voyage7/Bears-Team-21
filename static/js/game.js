@@ -9,8 +9,10 @@ const WIDTH = 19
 var socket
 var cards = []
 var selected = []
+var available = []
 
 window.onload = function() {
+    $('footer').css('position', 'relative');
     const gameName = document.getElementById("gamename").firstChild.data;
     socket = io.connect('http://' + document.domain + ':' + location.port+'/' + gameName, { query: 'foo=bar', extra: 'extra'});
     var squarewidth = 120; 
@@ -35,14 +37,16 @@ window.onload = function() {
                 console.log(this); 
                 cell = this.id.split('-')[1];
                 if (selected.length == 1){
-                    coord = [this.getAttribute("x"),this.getAttribute("y")]
+                    coord = [parseInt(this.getAttribute("x")),parseInt(this.getAttribute("y"))]
                     switch(selected[0].type){
                         case 'path':
                             //path card, check if i can place it
-                            available = []; //get data from backend for available spots
+                            //get data from backend for available spots
                             flag = false;
-                            for (coords in available){
-                                if (coord[0] == coords[0] && coord[1] == coords[1]){
+                            for (i = 0; i < available.length; i++){ 
+                                coords = available[i];
+                                console.log(coords);
+                                if (coord[1] == coords[0] && coord[0] == coords[1]){
                                     if (canBePlaced(coord, selected[0].required)){
                                         placeCard(coord, selected[0].index-1);                                    
                                     }
@@ -56,7 +60,6 @@ window.onload = function() {
                             
                         case 'reveal':
                             console.log("reveal ");
-                            console.log(this.getAttribute("x"));
                             if (this.classList.contains("goal-back")){
                                 revealCard(coord, selected[0].index-1);
                             }
@@ -69,9 +72,13 @@ window.onload = function() {
 
     function placeCard(coords, card){
         //emit handle move for path card
-        socket.emit("place_card",{"card": card,"x":coords[0],"y":(coords[1])})
+        //socket.emit("place_card",{"cards": card,"x":coords[0],"y":(coords[1])}) //to-do check this
+        console.log("emit place")
+        socket.emit("place_card",{"cards": card,"x":coords[1],"y":coords[0]});
     }
-
+    function canBePlaced(coords, card){
+        return true;
+    }
     function revealCard(coords, card){
         console.log("show_goal" + card + ", "+ coords[0] + "-"+ coord[1])
         socket.emit("show_goal",{"cards": card,"x":coords[1],"y":coords[0]});
@@ -229,14 +236,19 @@ window.onload = function() {
             cards.push(card);
             cardNode.index = cards.length;
             cardNode.addEventListener("dblclick", function () {
+                if (cards[$(this).index()].name.startsWith('path')){
+                    socket.emit("rotate_card",{"card": $(this).index()});
+                    console.log($(this).index());
+                }
                 if ($(this).hasClass( "rotate" )){
                     $(this).removeClass('rotate');
                 } else {
                     $(this).addClass('rotate');
                 }
             });
-            cardNode.addEventListener('click', function(){
+            cardNode.addEventListener('click', function(e){
                 //selected.push(cardNode.index);
+                e.preventDefault();
                 console.log('selected ',cardNode.index);
                 //cardNode.className += " red-border";
                 if (selected.length <= 3) {
@@ -276,8 +288,14 @@ window.onload = function() {
     socket.on("update_board", (data)=> {
         Object.keys(data).forEach(function(key) {
             console.log(key, data[key]);
-            document.getElementById("square-"+key).className+=" sprite "+data[key];
+            document.getElementById("square-"+key).className+=" sprite "+data[key].split('.').join(' ');
         });
+    })
+    
+    socket.on("available_cells", (data)=> {
+        console.log("available_cells:")
+        console.log(data);
+        available = data;
     })
 
     socket.on("reveal_goal", (data)=> {
