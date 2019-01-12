@@ -288,7 +288,7 @@ window.onload = function() {
     socket.on("update_board", (data)=> {
         Object.keys(data).forEach(function(key) {
             console.log(key, data[key]);
-            document.getElementById("square-"+key).className+=" sprite "+data[key].split('.').join(' ');
+            document.getElementById("square-"+key).className="square sprite "+data[key].split('.').join(' ');
         });
     })
     
