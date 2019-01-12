@@ -1,33 +1,26 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <title>Saboteur</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.1.1/socket.io.js"></script>   
-    <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
-</head>
+<html>          
+    {% include "partials/header.html" %}  
 <body>
-    <div class="container">
-        <form action="{{url_for('login')}}" method='POST' class="form-signin">
-          <h2 class="form-signin-heading">Please Log in</h2>
-          <label for="inputUser" class="sr-only">Username</label>
-          <input type="text" name = "username" id="inputUser" class="form-control" placeholder="Username" required="" autofocus="">
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" name="remember_me" value="False"> Remember me
-            </label>
-          </div>
-          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-        </form>
-        <p>{{text | safe}}</p>
-    </div> 
+    <div class="main-container">
+      <div class="container">
+          {% include "partials/navbar.html" %}  
+          <form action="{{url_for('login')}}" method='POST' class="form-signin">
+            <h2 class="form-signin-heading">Please Log in</h2>
+            <label for="inputUser" class="sr-only">Username</label>
+            <input type="text" name = "username" id="inputUser" class="form-control" placeholder="Username" required="" autofocus="">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" name="remember_me" value="False"> Remember me
+              </label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          </form>
+          <p>{{text | safe}}</p>
+      </div> 
+    {% include "partials/footer.html" %} 
+    </div>
 </body>
 </html>

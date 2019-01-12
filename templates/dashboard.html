@@ -16,25 +16,22 @@
     <script type="text/javascript" src="{{url_for('static', filename='js/scripts.js')}}"></script>
 </head>
 <body>
-
-        <div class="container">
-                <div class="header clearfix">
-                  <nav>
-                    <ul class="nav nav-pills pull-right">
-                      <li role="presentation" id="leave-room"><a href="{{url_for('logout')}}">Log Out</a></li>
-                    </ul>
-                  </nav>
-                  <h3 class="text-muted">Dashboard <small id="username">{{user|safe}}</small> </h3>
-                </div>  
+    <div class="container">
+        <div class="header clearfix">
+          <nav>
+            <ul class="nav nav-pills pull-right">
+              <li role="presentation" id="leave-room"><a href="{{url_for('logout')}}">Log Out</a></li>
+            </ul>
+          </nav>
+          <h3 class="text-muted">Dashboard <small id="username">{{user|safe}}</small> </h3>
+        </div>  
         <div class="row">
-
-            <div class="col-sm-12 gamerooms">
-                    <ul class="list-group">
-                    </ul>
-            </div>
+          <div class="col-sm-12 gamerooms">
+                  <ul class="list-group">
+                  </ul>
+          </div>
         </div>
         <div  class="row" id="list-rooms">
-
         </div>
         <div class="row" id="new-room">
             <div class="col-sm-9" id="new-room">
