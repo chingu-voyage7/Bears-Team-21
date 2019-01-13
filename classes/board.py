@@ -1,5 +1,6 @@
 from .deck import Deck, Card
 from .settings import *
+#from .graphUndirected import Graph, Vertex
 import math
 
 def set_direction(direction):
@@ -18,12 +19,21 @@ class Board:
     start_x = 5
     start_y = 9    
     crystal_count = 0
-    
+    #NUM_CELLS = dim * dim
+    #PAD_NUM = '{0:0'+str(len(str(NUM_CELLS - 1)))+'d}' 
+    #cells = []
+    #startLabel = "104" #starts at 0
+
     def __init__(self):
         self.reset_visited()
         self.board = [[None for i in range(dim)] for i in range(dim)]
         self.available = []
         self.stairs = []
+        #self.graph = Graph()
+        #for n in range(0,self.NUM_CELLS):
+        #    self.cells.append(Vertex(self.nToLabel(n)))
+        #print(self.cells)
+        #self.graph.add_vertices(self.cells)
         self.place_initial_cards()
         self.crystal_count = 0
 
@@ -33,7 +43,8 @@ class Board:
     def place_initial_cards(self):
         setup_deck = Deck('classes/paths.json','setup-cards')
         card = setup_deck.draw()
-        self.add_card(card, self.start_x, self.start_y)        
+        self.add_card(card, self.start_x, self.start_y)   
+        #self.addGraphCard(card, self.coordToPos(self.start_x,self.start_y))     
         setup_deck.shuffle()        
         goals = [[self.start_x + 2, self.start_y + 8],
                  [self.start_x - 2, self.start_y + 8],
@@ -42,7 +53,8 @@ class Board:
             card = setup_deck.draw()
             if card.name == 'goal-00':
                 self.goal_coords = [coords[0], coords[1]] 
-            self.add_card(card, coords[0], coords[1])        
+            self.add_card(card, coords[0], coords[1]) 
+            #self.addGraphCard(card, self.coordToPos( coords[0], coords[1]))       
 
     def remove_card(self, x, y):
         self.crystal_count -= self.board[x][y].crystal
@@ -76,6 +88,7 @@ class Board:
     def add_card_check(self, card, x, y):
         if self.check_position(card, x, y):
             self.add_card(card, x, y)
+            #self.addGraphCard(card, self.coordToPos( x, y))  
             return True
         return False
 
@@ -145,13 +158,92 @@ class Board:
         print (self.goal_coords[0],":",self.goal_coords[1])
         return (int(self.goal_coords[0]) ==  int(x)) and (int(self.goal_coords[1]) ==  int(y))
 
-###################################################################################
-def fuTestBoard():
-    testBoard = Board()
-    testDeck = Deck('classes/paths.json','path-cards')
-    card = testDeck.cards[0]
-    testBoard.add_card_check(card, 6, 10)
-    testBoard.add_card_check(card, 5, 11)
+
+
+####################################################################################
+
+
+    #def find_path(self, start, end, path=[]):
+    #    path = path + [start]
+    #    if start == end:
+    #        return path
+    #    if start not in self.graph.vertices:
+    #        return None
+    #    for node in self.graph.vertices[start]:
+    #        if node not in path:
+    #            newpath = self.find_path(node, end, path)
+    #            if newpath: return newpath
+    #    return None
+#
+    #def cellAtNord(self, n): # check top edge
+    #    return -1 if n < dim else n - dim
+#
+    #def cellAtSud(self, n): # check bottom edge
+    #    return -1 if n > (self.NUM_CELLS - dim) else n + dim
+#
+    #def cellAtEast(self, n): # check right edge
+    #    return -1 if n % dim == 0 else n + 1
+#
+    #def cellAtWest(self, n): # check left edge
+    #    return -1 if ((n + 1) % dim == 0) else n - 1
+#
+    #def nToLabel(self, n):
+    #    return self.PAD_NUM.format(n)
+#
+    #def coordToPos(self, x, y):
+    #    n = y + dim * x #n = x + dim * y
+    #    return self.nToLabel(n)
+#
+    #def posToCoord(self, label):
+    #    i = int(label)
+    #    x = i % dim
+    #    y = i // dim
+    #    return (x,y)
+#
+    #def addGraphCard(self, card, label): # add card no checks, previously done by other methods
+    #    index = int(label)
+    #    print(index)
+    #    start = self.cells[index]
+    #    coords = self.posToCoord(label)
+    #    addedCard = self.board[coords[1]][coords[0]]
+    #    print(addedCard.connections)
+    #    if(len(addedCard.connections[-2]) > 0):
+    #        #for conne in addedCard.connections.keys():
+    #        #    addedCard.connections[conne]
+    #        self.graph.add_edge(start,self.cells[self.cellAtSud(index)])
+    #    if(len(addedCard.connections[2]) > 0):
+    #        self.graph.add_edge(start,self.cells[self.cellAtNord(index)])
+    #    if(len(addedCard.connections[-1]) > 0):
+    #        self.graph.add_edge(start,self.cells[self.cellAtWest(index)])
+    #    if(len(addedCard.connections[1]) > 0):
+    #        self.graph.add_edge(start,self.cells[self.cellAtEast(index)])
+    #    if(self.find_path(self.startLabel,label)):
+    #        print("path-found")
+    #        neighbours = self.nearCells(index, addedCard.connections)
+    #        for node in neighbours:
+    #            if self.board[node[1]][node[0]] is None:
+    #                self.mark_available(node[1],node[0])
+    #    print(str(self.graph.adjacencyList()))
+#
+    #def nearCells(self, index, connects):
+    #    neighbours = []
+    #    if(len(connects[-2]) > 0):
+    #        neighbours.append(self.posToCoord(self.cells[self.cellAtSud(index)].name))
+    #    if(len(connects[2]) > 0):
+    #        neighbours.append(self.posToCoord(self.cells[self.cellAtNord(index)].name))
+    #    if(len(connects[-1]) > 0):    
+    #        neighbours.append(self.posToCoord(self.cells[self.cellAtWest(index)].name))
+    #    if(len(connects[1]) > 0):
+    #        neighbours.append(self.posToCoord(self.cells[self.cellAtEast(index)].name))
+    #    return neighbours
+
+####################################################################################
+#def fuTestBoard():
+    #testBoard = Board()
+    #testDeck = Deck('classes/paths.json','path-cards')
+    #card = testDeck.cards[0]
+    #testBoard.add_card_check(card, 6, 10)
+    #testBoard.add_card_check(card, 5, 11)
     #testDeck.shuffle()
     #card = testDeck.draw()
 
