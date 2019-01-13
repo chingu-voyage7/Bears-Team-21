@@ -123,6 +123,8 @@ class GameManager():
     def action_played(self, player, card, target=None):        
         card = player.play_card(card)
         self.cards_in_play -= 1
+        if len(self.deck.cards):
+                player.draw_card(self.deck.draw())
         print("action card",card.type)
         if card.type == 'reveal': #show goal card
             #emit signal for showing the goal card
