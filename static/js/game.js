@@ -248,11 +248,11 @@ window.onload = function() {
                 if (cards[$(this).index()].name.startsWith('path')){
                     socket.emit("rotate_card",{"card": $(this).index()});
                     console.log($(this).index());
-                }
-                if ($(this).hasClass( "rotate" )){
-                    $(this).removeClass('rotate');
-                } else {
-                    $(this).addClass('rotate');
+                    if ($(this).hasClass( "rotate" )){
+                        $(this).removeClass('rotate');
+                    } else {
+                        $(this).addClass('rotate');
+                    }
                 }
             });
             cardNode.addEventListener('click', function(e){

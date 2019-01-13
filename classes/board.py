@@ -88,6 +88,9 @@ class Board:
     def add_card_check(self, card, x, y):
         if self.check_position(card, x, y):
             self.add_card(card, x, y)
+            for key, value in card.connections.items():
+                if len(value) > 0:
+                    self.find_available_spots(x, y, key)
             #self.addGraphCard(card, self.coordToPos( x, y))  
             return True
         return False

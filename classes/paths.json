@@ -77,7 +77,7 @@
         { "name":"path-64", "edges":[ [2, 5], [1, -2], [1, -1], [-2, -1] ], "crystal" : true },
         { "name":"path-65", "edges":[ [2, 1], [2, -2], [1, -2] ], "crystal" : true  },
         { "name":"path-66", "edges":[ [2, -2], [2, -1], [1, 5], [-2, -1] ], "crystal" : true  },
-        { "name":"path-67", "edges":[ [2, 1], [2, -2], [2, -1], [1, -2], [1, -1] ], "crystal" : true  },
+        { "name":"path-67", "edges":[ [2, 1], [2, -2], [1, -2], [2, -1], [1, -1], [-2,-1] ], "crystal" : true  },
         { "name":"path-68", "edges":[ [1, -1], [-2, 5] ], "crystal" : true  },
         { "name":"path-69", "edges":[ [1, -2], [1, -1], [-2, -1] ], "crystal" : true  },
         { "name":"path-70", "edges":[ [1, -2], [1, -1], [-2, -1] ], "crystal" : true }

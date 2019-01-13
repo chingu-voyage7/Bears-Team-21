@@ -49,7 +49,7 @@ class PathCard(Card):
     def set_required(self):
         self.required = []
         for c in self.connections:
-            if self.connections[c]:
+            if self.connections[c] and c != 6:
                 self.required.append(c)
         print(self.required)
                 
