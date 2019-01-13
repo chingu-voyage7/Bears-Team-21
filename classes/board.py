@@ -3,13 +3,13 @@ from .settings import *
 import math
 
 def set_direction(direction):
-    if direction == -2:
+    if direction == -1:#-2
         return (0,-1)
-    if direction == -1:
+    if direction == 2:#-1
         return (-1,0)
-    if direction == 2:
+    if direction == 1:#1
         return (0,1)
-    if direction == 1:
+    if direction == -2:#-2
         return (1,0)
 
 dim = 19
@@ -97,6 +97,7 @@ class Board:
                 print("other coords", nx,ny)
                 print("direction", direction)
                 print("other",other.required)
+                print(other.name)
                 print("this", required)              
                 if (-direction in other.required) != (direction in required):
                     return False
