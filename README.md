@@ -93,24 +93,24 @@ The cards are of several types:
  
 ### The Dwarf Cards And Their Victory Conditions:
 
-#### Blue and Green Gold-Diggers (4 each)
+#### Blue and Green Gold-Diggers
 
 Both teams try to tunnel their way towards the treasure, but they are in competition.
 A team wins if:
-* a dwarf from that team creates the connection to the treasure and the way there isn‘t blocked by a door of the other color, or;
+* a dwarf from that team creates the connection to the treasure and the way there isn‘t blocked by a door of the other color
 * a dwarf from the other team creates the connection to the treasure, but the way there for his or her own team is blocked by a door of the wrong color
-* Both teams win (along with all other “non-Saboteurs”) if *The Boss*, *The Geologist* or *The Profiteer* creates the connection to the gold and the way there isn‘t blocked by a door of the other color.
+Both teams win (along with all other “non-Saboteurs”) if *The Boss*, *The Geologist* or *The Profiteer* creates the connection to the gold and the way there isn‘t blocked by a door of the other color.
 
-#### The Boss (1 in the game)
+#### The Boss
 
 The Boss builds tunnels for both the *Green and the Blue Team* and wins every time one of the teams wins. When the treasure is split, The Boss always gets one Gold
 Piece less than the other winners.
 
-#### The Profiteer (1 in the game)
+#### The Profiteer
 
 *The Profiteer* always wins, no matter if The Gold-Diggers or The Saboteurs are successful. However, when the treasure is divided, *The Profiteer* gets two fewer Gold Pieces than the others.
 
-#### The Geologist (2 in the game)
+#### The Geologist
 
 *The Geologist* dig at their own expense, so to speak. They aren‘t particularly interested in gold. When the treasure is split, a *Geologist* gets as many Gold Pieces as there are crystals visible in the maze of tunnels. If both *Geologists* are in play, they split the Gold Pieces (rounded down).
 
