@@ -5,7 +5,7 @@ Multiplayer Board Game - Saboteur | Voyage-7 | https://chingu.io/
 
 ## Chingu-Voyage Project Idea
 
-Develop a turn based board game, using JavaScript/socket.io for the front-end and Python/Flask for the back-end. The general idea it’s to build a Tile Game inspired by Saboteur. The web client interface should allow the users to join different rooms and join a Game, each game should allow a minimum of 2 players up to 10. Also there should be the option to play against Bots AI. 
+Develop a turn based board game, using JavaScript/socket.io for the front-end and Python/Flask for the back-end. The general idea it’s to build a Tile Game inspired by Saboteur. The web client interface should allow the users to join different rooms and join a Game, each game should allow a minimum of 2 players up to 10. ~~Also there should be the option to play against Bots AI~~. 
 
 ⚠️ This Project is still a work in progress.
 
@@ -60,46 +60,69 @@ http://127.0.0.1:5000/
 ### Goal
 
 Get as many gold nuggets as possible during the three rounds of the game. In order to do so,
-- if you are a gold digger, you must, in association with other gold diggers, build a path from the 'Start' card to the treasure card which can be found among the three 'End' cards
+- if you are a Gold Digger (Green Team or Blue Team), you must,  build a path from the 'Start' card to the treasure card, among the three 'End' cards.
+- if you are The Boss, you win whenever the Green or the Blue Team wins, but always gets one Gold Piece less than them.
+- if you are The Profiteer, you win when the gold-diggers (Green or Blue) win, and also when The Saboteurs win. However, two Gold Pieces less. 
+- if you are The Geologist for each visible crystal, you receive 1 Gold Piece.
 - if you are a saboteur, you must, in association with other saboteurs, prevent the gold diggers from getting to the treasure. 
 
-Your role (gold digger or saboteur) will be randomly selected at the start of each round.
+Your role will be randomly selected at the start of each round.
 
 ### Rules summary
 
-On your turn, you must click on a card from your hand to select it, then play this card or discard it. You can also rotate a 'Path' card before playing it by clicking the 'rotate' arrow that appears above the card.
+On your turn, you must click on a card from your hand to select it, then play this card or discard it. You can also rotate a 'Path' card before playing it by double clicking it.
 
 The cards are of several types:
-- 'Path' card: you can play this card to extend the maze, provided it is compatible with the cards already in place. To do this, click the location where you want to put the card.
-- 'Sabotage' card: you can break another player's tool of the type indicated. To do this, click the corresponding tool in the target player's panel (under the score). A player with a broken tool cannot play a Path card.
-- 'Repair' card: you can repair your, or another player's, broken tool of the type indicated. To do this, click the corresponding tool in the target player's panel (under the score), or click on the 'Sabotage' card in front of you.
-- 'Map' card: you can play this card on any 'End' card to discover whether or not the treasure lies there (you alone will get the information, other players will see nothing). Just click on the 'End' card that you want to know. Then click on "I have seen it" button at the top.
+- 'Path' card: you can play this card to extend the maze, provided it is compatible with the cards already in place.
+- 'Sabotage' card: you can break another player's tool of the type indicated. A player with a broken tool cannot play a Path card.
+- 'Repair' card: you can repair your, or another player's, broken tool of the type indicated.
+- 'Map' card: you can play this card on any 'End' card to discover whether or not the treasure lies there. 
 - 'Rock fall' card: this card lets you remove any 'Path' card of the maze. Just click on the card you want to remove. 
+- 'Inspection': If you play this, you may look at the dwarf card of any one other player.
+- 'Swap Your Hand': The player who plays this card chooses one other player and exchanges hands with them.
+- 'Theft': You play this on yourself. At the end of the round, you can steal 1 Gold Piece from any one player. You cannot use this card if you are trapped.
+- 'Hands Off': If you play this card, you can remove one Theft card from in front of any player. 
+- 'Swap Your Hats': Choose one player who has to discard their current Dwarf Card.
+- 'Trapped!' Play this on another player. This player is trapped and cannot play any more path cards. When the round ends, they don‘t get any treasure.
 
 ### Cards in play
 
-- 44 'Path' cards
-- 9 'Sabotage' cards (three for each tool)
-- 6 'Repair a tool' cards (two for each tool)
-- 3 'Repair a tool among these two' cards (one for each combination of two tools)
-- 5 'Map' cards (one less than in the box set, as requested by the game author)
-- 3 'Rock fall' cards
-- 28 'Gold' cards
-- 16 with one gold nugget
-- 8 with two gold nuggets
-- 4 with three gold nuggets 
+- 70 'Path' cards
+- 47 'Action' cards
+- 15 'Role' cards
  
-### Roles
+### The Dwarf Cards And Their Victory Conditions:
 
-Roles are randomly selected among a set that depends upon the number of players:
-- with 3 players: 1 saboteur and 3 gold diggers
-- with 4 players: 1 saboteur and 4 gold diggers
-- with 5 players: 2 saboteurs and 4 gold diggers
-- with 6 players: 2 saboteurs and 5 gold diggers
-- with 7 players: 3 saboteurs and 5 gold diggers
-- with 8 players: 3 saboteurs and 6 gold diggers
-- with 9 players: 3 saboteurs and 7 gold diggers
-- with 10 players: 4 saboteurs and 7 gold diggers 
+#### Blue and Green Gold-Diggers (4 each)
+
+Both teams try to tunnel their way towards the treasure, but they are in competition.
+A team wins if:
+* a dwarf from that team creates the connection to the treasure and the way there isn‘t blocked by a door of the other color, or;
+* a dwarf from the other team creates the connection to the treasure, but the way there for his or her own team is blocked by a door of the wrong color
+* Both teams win (along with all other “non-Saboteurs”) if The Boss, The Geologist or The Profiteer creates the connection to the gold and the way there isn‘t blocked by a door of the other color.
+
+#### The Boss (1 in the game)
+
+The Boss builds tunnels for both the Green and the Blue Team and wins every time one of the teams wins. When the treasure is split, The Boss always gets one Gold
+Piece less than the other winners.
+
+#### The Profiteer (1 in the game)
+
+The Profiteer always wins, no matter if The Gold-Diggers or The Saboteurs are successful. However, when the treasure is divided, The Profiteer gets two fewer Gold Pieces than the others.
+
+#### The Geologist (2 in the game)
+
+The Geologist dig at their own expense, so to speak. They aren‘t particularly interested in gold. When the treasure is split, a Geologist gets as many Gold Pieces as there are crystals visible in the maze of tunnels. If both Geologists are in play, they split the Gold Pieces (rounded down).
+
+## Playing the Game
+
+When it is your turn, you have to take one of the four following actions:
+* Place a path card in the tunnel maze.
+* Play an action card.
+* Discard two cards from your hand to remove a card in front of you.
+* Pass and discard 1-3 face-down cards from your hand.
+
+Then your turn is over and it‘s the next player‘s turn.
 
 ## Built With
 
