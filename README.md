@@ -60,7 +60,7 @@ http://127.0.0.1:5000/
 ### Goal
 
 Get as many gold nuggets as possible during the three rounds of the game. In order to do so,
-- if you are a Gold Digger (Green Team or Blue Team), you must,  build a path from the 'Start' card to the treasure card, among the three 'End' cards.
+- if you are a Gold Digger (Green Team or Blue Team), you must,  build a path from the **Start** card to the treasure card, among the three **End** cards.
 - if you are The Boss, you win whenever the Green or the Blue Team wins, but always gets one Gold Piece less than them.
 - if you are The Profiteer, you win when the gold-diggers (Green or Blue) win, and also when The Saboteurs win. However, two Gold Pieces less. 
 - if you are The Geologist for each visible crystal, you receive 1 Gold Piece.
@@ -70,26 +70,26 @@ Your role will be randomly selected at the start of each round.
 
 ### Rules summary
 
-On your turn, you must click on a card from your hand to select it, then play this card or discard it. You can also rotate a 'Path' card before playing it by double clicking it.
+On your turn, you must click on a card from your hand to select it, then play this card or discard it. You can also rotate a **Path** card before playing it by double clicking it.
 
 The cards are of several types:
-- 'Path' card: you can play this card to extend the maze, provided it is compatible with the cards already in place.
-- 'Sabotage' card: you can break another player's tool of the type indicated. A player with a broken tool cannot play a Path card.
-- 'Repair' card: you can repair your, or another player's, broken tool of the type indicated.
-- 'Map' card: you can play this card on any 'End' card to discover whether or not the treasure lies there. 
-- 'Rock fall' card: this card lets you remove any 'Path' card of the maze. Just click on the card you want to remove. 
-- 'Inspection': If you play this, you may look at the dwarf card of any one other player.
-- 'Swap Your Hand': The player who plays this card chooses one other player and exchanges hands with them.
-- 'Theft': You play this on yourself. At the end of the round, you can steal 1 Gold Piece from any one player. You cannot use this card if you are trapped.
-- 'Hands Off': If you play this card, you can remove one Theft card from in front of any player. 
-- 'Swap Your Hats': Choose one player who has to discard their current Dwarf Card.
-- 'Trapped!' Play this on another player. This player is trapped and cannot play any more path cards. When the round ends, they don‘t get any treasure.
+- **Path** card: you can play this card to extend the maze, provided it is compatible with the cards already in place.
+- **Sabotage** card: you can break another player's tool of the type indicated. A player with a broken tool cannot play a Path card.
+- **Repair** card: you can repair your, or another player's, broken tool of the type indicated.
+- **Map** card: you can play this card on any **End** card to discover whether or not the treasure lies there. 
+- **Rock fall** card: this card lets you remove any **Path** card of the maze. Just click on the card you want to remove. 
+- **Inspection**: If you play this, you may look at the dwarf card of any one other player.
+- **Swap Your Hand**: The player who plays this card chooses one other player and exchanges hands with them.
+- **Theft**: You play this on yourself. At the end of the round, you can steal 1 Gold Piece from any one player. You cannot use this card if you are trapped.
+- **Hands Off**: If you play this card, you can remove one Theft card from in front of any player. 
+- **Swap Your Hats**: Choose one player who has to discard their current Dwarf Card.
+- **Trapped!** Play this on another player. This player is trapped and cannot play any more path cards. When the round ends, they don‘t get any treasure.
 
 ### Cards in play
 
-- 70 'Path' cards
-- 47 'Action' cards
-- 15 'Role' cards
+- 70 **Path** cards
+- 47 **Action** cards
+- 15 **Role** cards
  
 ### The Dwarf Cards And Their Victory Conditions:
 
@@ -99,20 +99,20 @@ Both teams try to tunnel their way towards the treasure, but they are in competi
 A team wins if:
 * a dwarf from that team creates the connection to the treasure and the way there isn‘t blocked by a door of the other color, or;
 * a dwarf from the other team creates the connection to the treasure, but the way there for his or her own team is blocked by a door of the wrong color
-* Both teams win (along with all other “non-Saboteurs”) if The Boss, The Geologist or The Profiteer creates the connection to the gold and the way there isn‘t blocked by a door of the other color.
+* Both teams win (along with all other “non-Saboteurs”) if *The Boss*, *The Geologist* or *The Profiteer* creates the connection to the gold and the way there isn‘t blocked by a door of the other color.
 
 #### The Boss (1 in the game)
 
-The Boss builds tunnels for both the Green and the Blue Team and wins every time one of the teams wins. When the treasure is split, The Boss always gets one Gold
+The Boss builds tunnels for both the *Green and the Blue Team* and wins every time one of the teams wins. When the treasure is split, The Boss always gets one Gold
 Piece less than the other winners.
 
 #### The Profiteer (1 in the game)
 
-The Profiteer always wins, no matter if The Gold-Diggers or The Saboteurs are successful. However, when the treasure is divided, The Profiteer gets two fewer Gold Pieces than the others.
+*The Profiteer* always wins, no matter if The Gold-Diggers or The Saboteurs are successful. However, when the treasure is divided, *The Profiteer* gets two fewer Gold Pieces than the others.
 
 #### The Geologist (2 in the game)
 
-The Geologist dig at their own expense, so to speak. They aren‘t particularly interested in gold. When the treasure is split, a Geologist gets as many Gold Pieces as there are crystals visible in the maze of tunnels. If both Geologists are in play, they split the Gold Pieces (rounded down).
+*The Geologist* dig at their own expense, so to speak. They aren‘t particularly interested in gold. When the treasure is split, a *Geologist* gets as many Gold Pieces as there are crystals visible in the maze of tunnels. If both *Geologists* are in play, they split the Gold Pieces (rounded down).
 
 ## Playing the Game
 
