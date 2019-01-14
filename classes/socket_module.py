@@ -216,3 +216,10 @@ class GameRoomNs(Namespace):
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
         emit("update_board", startedGame[request.namespace].board.getBoardData(), room=request.sid)
         emit("available_cells", startedGame[request.namespace].board.available, room=request.sid)
+    
+    def on_inspect_player(self, message):
+        print ("inspect:", message["player"])
+        role = startedGame[request.namespace].handle_move(message["card"],None,None,message["player"])
+        print(role)
+        emit("reveal_role", {"role": role,"player":message["player"]}, room=request.sid)
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)

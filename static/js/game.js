@@ -85,6 +85,11 @@ window.onload = function() {
         console.log("emit remove")
         socket.emit("remove_card",{"card": card,"x":coords[1],"y":coords[0]});
     }
+    function inspectPlayer(player, card){
+        //emit handle move for path card
+        console.log("emit inspect")
+        socket.emit("inspect_player",{"card": card,"player":player});
+    }
     function canBePlaced(coords, card){
         return true;
     }
@@ -212,9 +217,9 @@ window.onload = function() {
     socket.on("update_players", players => {
         console.log(players);
         document.getElementById("opponents").innerHTML = ""
-        players.forEach(function(name) {
+        players.forEach(function(name,i) {
             var opponentNode = `<div class="col-sm-3">
-            <div class="game-opponent well well-sm" style="min-height: 100px;">
+            <div class="game-opponent well well-sm" style="min-height: 100px;" id="player-${i}" name="${name}">
                 <div class="icon">
                      <i class="glyphicon glyphicon-user"></i>
                 </div>
@@ -224,6 +229,30 @@ window.onload = function() {
             </div>
             </div>`;
             document.getElementById("opponents").innerHTML += (opponentNode);
+            $('.game-opponent').each(function (i,div) {
+                console.log(div)
+                div.addEventListener('click', function(evt) { 
+                    player = parseInt(i);
+                    console.log(player);
+                    if (selected.length == 1){
+                        switch(selected[0].type){
+                            case 'handsoff':
+                            case 'swaphats':
+                            case 'trapped':
+                            case 'theft':
+                            case 'damage':
+                            case 'repair':
+                            case 'swaphand':
+                            case 'free':
+                            break;
+                            case 'inspection':
+                                console.log(selected[0].type);
+                                inspectPlayer(player, selected[0].index-1);
+                                break;
+                    }                 
+                }
+                });
+            });
         });
     })
 
@@ -271,7 +300,6 @@ window.onload = function() {
                 }            
             });
             document.getElementById("hand").appendChild(cardNode);
-            console.log('a')
         });
     })
 
@@ -321,6 +349,17 @@ window.onload = function() {
         modal.innerHTML="";
         modal.appendChild(goalNode);
         document.getElementById("exampleModalLabel").innerText="Destination Revealed";
+        $('#modalBtn').click();
+    })
+
+    socket.on("reveal_role", (data)=> {
+        console.log("received inspect");
+        var playerNode = document.createElement("DIV"); 
+        playerNode.className= "card sprite "+ data["role"];
+        var modal = document.getElementById("modal-body");
+        modal.innerHTML="";
+        modal.appendChild(playerNode);
+        document.getElementById("exampleModalLabel").innerText= "Player: " + $("#player-"+data["player"]).attr("name");
         $('#modalBtn').click();
     })
 };

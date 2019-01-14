@@ -173,7 +173,8 @@ class GameManager():
 
         elif card.type == 'inspection':
             #show player role card
-            t_player = self.players[target] 
+            t_player = self.players[target]
+            print(t_player.role) 
             return t_player.role
 
         elif card.type == 'free':
