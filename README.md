@@ -60,11 +60,11 @@ http://127.0.0.1:5000/
 ### Goal
 
 Get as many gold nuggets as possible during the three rounds of the game. In order to do so,
-- if you are a Gold Digger (Green Team or Blue Team), you must,  build a path from the **Start** card to the treasure card, among the three **End** cards.
-- if you are The Boss, you win whenever the Green or the Blue Team wins, but always gets one Gold Piece less than them.
-- if you are The Profiteer, you win when the gold-diggers (Green or Blue) win, and also when The Saboteurs win. However, two Gold Pieces less. 
-- if you are The Geologist for each visible crystal, you receive 1 Gold Piece.
-- if you are a saboteur, you must, in association with other saboteurs, prevent the gold diggers from getting to the treasure. 
+- if you are a **Gold Digger** (*Green Team* or *Blue Team*), you must,  build a path from the **Start** card to the treasure card, among the three **End** cards.
+- if you are **The Boss**, you win whenever the *Green or the Blue Team* wins, but always gets one Gold Piece less than them.
+- if you are **The Profiteer**, you win when the gold-diggers (*Green or Blue*) win, and also when *The Saboteurs* win. However, two Gold Pieces less. 
+- if you are **The Geologist** for each visible crystal, you receive 1 Gold Piece.
+- if you are a **Saboteur**, you must, in association with other saboteurs, prevent the *gold diggers* from getting to the treasure. 
 
 Your role will be randomly selected at the start of each round.
 
