@@ -80,6 +80,11 @@ window.onload = function() {
         }
     }
 
+    function modifyPlayer(player, card){
+        console.log("emit trap")
+        socket.emit('play_action',{'card': card, 'target': player});
+    }
+
     function placeCard(coords, card){
         //emit handle move for path card
         console.log("emit place")
@@ -247,13 +252,15 @@ window.onload = function() {
                         switch(selected[0].type){
                             case 'handsoff':
                             case 'swaphats':
-                            case 'trapped':
+                            case 'trapped':                                
                             case 'theft':
                             case 'damage':
-                            case 'repair':
-                            case 'swaphand':
+                            case 'repair':                            
                             case 'free':
-                            break;
+                                modifyPlayer(player, selected[0].index-1);
+                                break;
+                            case 'swaphand':
+                                break;
                             case 'inspection':
                                 console.log(selected[0].type);
                                 inspectPlayer(player, selected[0].index-1);

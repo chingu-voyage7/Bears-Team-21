@@ -180,9 +180,7 @@ class GameManager():
         elif card.type == 'free':
             t_player = self.players[target]
             t_player.release()   
-
-        if len(self.deck.cards):
-                player.draw_card(self.deck.draw())
+            
         return True #placeholder
 
     def round_over(self):

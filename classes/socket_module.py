@@ -197,7 +197,7 @@ class GameRoomNs(Namespace):
         self.active_player(request.sid)
 
     def on_show_goal(self, message):
-        show = startedGame[request.namespace].handle_move(message["cards"],None,None,[message["x"], message["y"]])
+        show = startedGame[request.namespace].handle_move(message["cards"],target=[message["x"], message["y"]])
         print ("reveal:", show)
         emit("reveal_goal", {"show": show,"x":message["x"], "y" : message["y"]}, room=request.sid)
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
@@ -217,7 +217,7 @@ class GameRoomNs(Namespace):
     
     def on_remove_card(self, message):
         print ("remove_card: ",message["card"])
-        startedGame[request.namespace].handle_move(message["card"],None,None,[message["x"], message["y"]])
+        startedGame[request.namespace].handle_move(message["card"],target=[message["x"], message["y"]])
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
         emit("update_board", startedGame[request.namespace].board.getBoardData(), broadcast= True)
         emit("available_cells", startedGame[request.namespace].board.available, broadcast= True)
@@ -225,9 +225,16 @@ class GameRoomNs(Namespace):
 
     def on_inspect_player(self, message):
         print ("inspect:", message["player"])
-        role = startedGame[request.namespace].handle_move(message["card"],None,None,message["player"])
+        role = startedGame[request.namespace].handle_move(message["card"],target=message["player"])
         print(role)
         emit("reveal_role", {"role": role,"player":message["player"]}, room=request.sid)
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
+        self.active_player(request.sid)
+
+    def on_play_action(self, message):
+        print("action")
+        startedGame[request.namespace].handle_move(message["card"],target=message['target'])
+        emit("update_players", startedGame[request.namespace].players_list(), broadcast=True)
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
         self.active_player(request.sid)
 
