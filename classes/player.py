@@ -9,9 +9,13 @@ class Player():
         self.gold = 0
         self.free = True
         self.steal = False
+        self.sid = ""
 
     def __gt__(self, other):
         return self.gold > other.gold
+
+    def set_sid(self, sid):
+        self.sid = sid
 
     def set_role(self, role):
         self.role = role

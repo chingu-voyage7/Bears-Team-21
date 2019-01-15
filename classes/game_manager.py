@@ -289,3 +289,14 @@ class GameManager():
                 print(name,"rotates",card)
                 return player.cards[card].rotate()
         return ""
+
+    def set_player_sid(self, name, sid):
+        for player in self.players:
+            if player.name == name:
+                print(name,"->",sid)
+                return player.set_sid(sid)
+        return ""
+    
+    def get_current_player(self):
+        turn_pl = self.players[self.current_player]
+        return [turn_pl.sid, turn_pl.name]

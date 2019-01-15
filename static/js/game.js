@@ -4,12 +4,13 @@ var testData = {hand: ["path-01","path-02","path-03","path-19","path-20"], role:
 board:{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, 
 players:["Game Opponent 1","Game Opponent 2","Game Opponent 3","Game Opponent 4"]};
 
-const WIDTH = 19
+const WIDTH = 19;
 
-var socket
-var cards = []
-var selected = []
-var available = []
+var socket;
+var cards = [];
+var selected = [];
+var available = [];
+var active_player = false;
 
 window.onload = function() {
     $('footer').css('position', 'relative');
@@ -34,6 +35,10 @@ window.onload = function() {
             sqr.setAttribute("x", coord[0]);
             sqr.setAttribute("y", coord[1]);
             sqr.addEventListener('click', function(evt) { 
+                if (active_player == false) {
+                    console.log("not my turn");
+                    return;
+                }
                 console.log(this); 
                 cell = this.id.split('-')[1];
                 if (selected.length == 1){
@@ -232,6 +237,10 @@ window.onload = function() {
             $('.game-opponent').each(function (i,div) {
                 console.log(div)
                 div.addEventListener('click', function(evt) { 
+                    if (active_player == false) {
+                        console.log("not my turn");
+                        return;
+                    }
                     player = parseInt(i);
                     console.log(player);
                     if (selected.length == 1){
@@ -304,6 +313,10 @@ window.onload = function() {
     })
 
     $('#discard').click(function(){
+        if (active_player == false) {
+            console.log("not my turn");
+            return;
+        }
         selected.forEach(function(card){
             i = card.index;
             console.log(i);
@@ -320,6 +333,12 @@ window.onload = function() {
         var roleNode = document.createElement("DIV"); 
         roleNode.className= "card sprite " + data["role"];
         document.getElementById("player-role").appendChild(roleNode);
+    })
+    
+    socket.on("wait_for_player", (data)=> {
+        console.log(data["active"]);
+        active_player = data["active"];
+        $("#player-active").text(data["active"] == 1 ? "It's your turn!" : "Waiting for "+ data["player"]);
     })
 
     socket.on("update_board", (data)=> {
@@ -340,7 +359,7 @@ window.onload = function() {
 
     socket.on("reveal_goal", (data)=> {
         var goalNode = document.createElement("DIV"); 
-        if (data["show"]) {
+        if (data["show"] == "gold") {
             goalNode.className= "card sprite goal-00";
         } else {
             goalNode.className= "card sprite goal-01";

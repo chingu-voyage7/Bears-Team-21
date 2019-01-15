@@ -159,7 +159,7 @@ class Board:
     
     def getRevealCard(self, x, y):
         print (self.goal_coords[0],":",self.goal_coords[1])
-        return (int(self.goal_coords[0]) ==  int(x)) and (int(self.goal_coords[1]) ==  int(y))
+        return "gold" if (int(self.goal_coords[0]) ==  int(x)) and (int(self.goal_coords[1]) ==  int(y)) else "none"
 
 
 
