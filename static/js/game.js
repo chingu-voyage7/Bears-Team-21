@@ -360,8 +360,12 @@ window.onload = function() {
     
     socket.on("available_cells", (data)=> {
         console.log("available_cells:")
-        console.log(data);
-        available = data;
+        console.log(data);//available
+        available = data; //(y,x)
+        available.forEach(function(coords) {
+            console.log(coordsToPos(coords[0],coords[1])+1)
+            $("#square-"+(coordsToPos(coords[0],coords[1])+1)).addClass("available")
+        });
     })
 
     socket.on("reveal_goal", (data)=> {
@@ -415,6 +419,10 @@ function posToCoords(cell){
     let x = cell % WIDTH;
     let y = Math.floor(cell / WIDTH);
     return [x , y]
+}
+function coordsToPos(x, y){
+    n = y + WIDTH * x 
+    return n
 }
 /*
 function testReveal(cell, index){

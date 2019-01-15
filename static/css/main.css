@@ -213,11 +213,16 @@ img {
     position: relative;
 }
 .square{
-    border: black;
-    border-style: dashed;
     position: absolute;
 }
-
+.square.sprite{
+    border: black;
+    border-style: dashed;
+}
+.available{
+    border: red;
+    border-style: dashed;
+}
 .hand {
     min-width: 100%;
     overflow-x: auto;
