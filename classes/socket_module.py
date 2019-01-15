@@ -54,7 +54,7 @@ class GameLobbyNs(Namespace):
 
     def add_player(self, userId, roomId):
         self.game_rooms[roomId].append(userId)
-        self.player_ready[userId]= {userId: False}
+        self.player_ready[userId]= False
         emit('roomsList', {'data': 'Connected', 
         'roomList': self.make_rm_List()},room='/lobby')
 
@@ -122,7 +122,7 @@ class GameLobbyNs(Namespace):
             emit('join_room',{'room':'/'+roomId, 
             'players': self.game_rooms[roomId]}, room='/'+roomId)
         elif roomId != '/lobby':
-            if (current_user.username in self.game_rooms[roomId]): #need it for refrersh page load
+            if  ((roomId in self.game_rooms) and (current_user.username in self.game_rooms[roomId])): #need it for refrersh page load
                 emit('join_room',{'room':'/'+roomId, 
                 'players': self.game_rooms[roomId]}, room='/'+roomId)
 
@@ -131,15 +131,10 @@ class GameLobbyNs(Namespace):
         self.player_ready[current_user.username] = message['Toggle']
         playersReady = True
         roomId = message['room'][1:]
-        if current_user.username in self.game_rooms[roomId]:
-            if len(self.game_rooms[roomId]) < MIN_PLAYER_START:
+        for player in self.game_rooms[roomId]:
+            if (self.player_ready[player] == False):
                 playersReady = False
-            else:
-                for player in self.game_rooms[roomId]:
-                    if (self.player_ready[player] == False):
-                        playersReady = False
         if playersReady:
-            #GameManager('/'+roomId, self.game_rooms[roomId])
             startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])
             print("all ready")
             emit('start_game',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
