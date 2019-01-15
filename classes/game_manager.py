@@ -262,9 +262,15 @@ class GameManager():
         print(self.state)
 
     def players_list(self):
-        listPlayers = []
+        listPlayers = {}
         for player in self.players:
-            listPlayers.append(player.name)
+            icons = []
+            icons.append("pickaxe_on" if(player.tools['pickaxe']) else "pickaxe_off")
+            icons.append("light_on" if(player.tools['lamp']) else "light_off")
+            icons.append("cart_on" if(player.tools['lamp']) else "cart_off")
+            icons.append("trapped_off" if(player.free) else "trapped_on")
+            icons.append("theft_on" if(player.steal) else "theft_off")
+            listPlayers[player.name] = icons
         return listPlayers
     
     def player_hand_list(self, name):

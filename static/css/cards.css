@@ -1,3 +1,37 @@
+.tools {
+    width: 40px;
+    height: 40px;
+}
+.pickaxe_on {
+    background: url("../imgs/tools_on.png") 0 -0px;
+}
+.pickaxe_off {
+    background: url("../imgs/tools_off.png") 0 -0px;
+}
+.light_on {
+    background: url("../imgs/tools_on.png") 0 -40px;
+}
+.light_off {
+    background: url("../imgs/tools_off.png") 0 -40px;
+}
+.cart_on {
+    background: url("../imgs/tools_on.png") 0 -80px;
+}
+.cart_off {
+    background: url("../imgs/tools_off.png") 0 -80px;
+}
+.trapped_off {
+    background: url("../imgs/tools_on.png") 0 -120px;
+}
+.trapped_on {
+    background: url("../imgs/tools_off.png") 0 -120px;
+}
+.theft_on {
+    background: url("../imgs/tools_on.png") 0 -160px;
+}
+.theft_off {
+    background: url("../imgs/tools_off.png") 0 -160px;
+}
 
 .card {
     display: inline-table;
@@ -114,7 +148,7 @@
 .path-43{
     width:120px; 
     height:195px; 
-    background-position: 0px 0px;
+    background-position: -11px -1px;
 }
 .path-44{
     width:120px; 

@@ -224,9 +224,10 @@ window.onload = function() {
             $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
         }
     }) 
-    socket.on("update_players", players => {
-        console.log(players);
+    socket.on("update_players", data => {
+        console.log(data);
         document.getElementById("opponents").innerHTML = ""
+        var players = Object.keys(data);
         players.forEach(function(name,i) {
             var opponentNode = `<div class="col-sm-3">
             <div class="game-opponent well well-sm" style="min-height: 100px;" id="player-${i}" name="${name}">
@@ -236,8 +237,13 @@ window.onload = function() {
                 <div class="text">
                     <label class="text-muted">${name}</label>
                 </div>
-            </div>
-            </div>`;
+                <div class="row">
+                    <div class="col-sm-1"></div>`;
+            data[name].forEach(function(icon) {
+                console.log(icon);
+                opponentNode += `<div class="col-sm-2 tools ${icon}"></div>`
+            });        
+            opponentNode += `<div class="col-sm-1"></div></div></div></div>`;
             document.getElementById("opponents").innerHTML += (opponentNode);
             $('.game-opponent').each(function (i,div) {
                 console.log(div)

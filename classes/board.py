@@ -71,7 +71,7 @@ class Board:
         if [x, y] in self.available:
             self.available.remove([x, y])
         if not card.name.startswith('goal'):
-            self.available = []
+            #self.available = []
             self.reset_visited()
             self.find_available_spots(self.start_x, self.start_y, 6)
             for stair in self.stairs:
