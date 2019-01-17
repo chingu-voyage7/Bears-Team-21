@@ -187,10 +187,28 @@ class Board:
                 if newpath: return newpath
         return None
 
-    def brute_find_path(self, start, end):
+    def shortest_path(self, start, end):
+        queue = [(start,[start])]
+        visited = set()
+        while queue:
+            vertex, path = queue.pop(0)
+            visited.add(vertex)
+            for node in self.graph.vertices[vertex]:
+                if node == end:
+                    return path + [end]
+                else:
+                    if node not in visited:
+                        visited.add(node)
+                        queue.append((node, path + [node]))
+        return None
+
+    def brute_find_path(self, start, end, shrtst_pth = True):
         for keyStart in ["N","S","W","E"]:
             for keyEnd in ["N","S","W","E"]:
-                path = self.find_path(start + keyStart, end + keyEnd)
+                if (shrtst_pth):
+                    path = self.shortest_path(start + keyStart, end + keyEnd)
+                else:
+                    path = self.find_path(start + keyStart, end + keyEnd)
                 if path is not None:
                     return path
         return None
