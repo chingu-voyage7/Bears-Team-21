@@ -148,5 +148,8 @@
         { "name":"role-13", "type":"saboteurs" },
         { "name":"role-14", "type":"saboteurs" },
         { "name":"role-15", "type":"saboteurs" }
+    ],
+    "excluded-cards":[
+        
     ]
 }
