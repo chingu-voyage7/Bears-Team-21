@@ -156,7 +156,7 @@ class Board:
                 cell +=1
                 if (col is not None):
                     if(col.name.startswith( 'goal' )):
-                        print(self.brute_find_path(self.startLabel,self.nToLabel(cell))) # actually just need to check if someone connected to it, without all this
+                        # actually just need to check if someone connected to it, without all this
                         data[str(cell)]= "goal-back" if(self.brute_find_path(self.startLabel,self.nToLabel(cell)) is None) else col.name 
                     else:
                         data[str(cell)]= col.name if not col.rotated else col.name+".rotate"
