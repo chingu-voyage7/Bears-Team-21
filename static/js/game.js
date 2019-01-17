@@ -83,22 +83,26 @@ window.onload = function() {
     function modifyPlayer(player, card){
         console.log("emit trap")
         socket.emit('play_action',{'card': card, 'target': player});
+        active_player = false;
     }
 
     function placeCard(coords, card){
         //emit handle move for path card
         console.log("emit place")
         socket.emit("place_card",{"cards": card,"x":coords[1],"y":coords[0]});
+        active_player = false;
     }
     function removeCard(coords, card){
         //emit handle move for path card
         console.log("emit remove")
         socket.emit("remove_card",{"card": card,"x":coords[1],"y":coords[0]});
+        active_player = false;
     }
     function inspectPlayer(player, card){
         //emit handle move for path card
         console.log("emit inspect")
         socket.emit("inspect_player",{"card": card,"player":player});
+        active_player = false;
     }
     function canBePlaced(coords, card){
         return true;
@@ -106,6 +110,7 @@ window.onload = function() {
     function revealCard(coords, card){
         console.log("show_goal" + card + ", "+ coords[0] + "-"+ coord[1])
         socket.emit("show_goal",{"cards": card,"x":coords[1],"y":coords[0]});
+        active_player = false;
     }
 
     document.getElementById('grid').scrollBy({
@@ -339,6 +344,7 @@ window.onload = function() {
         });
         socket.emit('card_discarded', {'cards':selected.map(function(x) {
             return x.index - 1;})});
+        active_player = false;
         selected = [];
     });
 

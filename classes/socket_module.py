@@ -234,7 +234,9 @@ class GameRoomNs(Namespace):
         self.active_player(request.sid)
 
     def active_player(self, sid):
-        current_player = startedGame[request.namespace].get_current_player()
-        #active = 1 if(sid == current_player[0]) else 0
-        emit("wait_for_player", {"active" : 0, "player":current_player[1]}, broadcast= True)
-        emit("wait_for_player", {"active" : 1, "player":current_player[1]}, room=current_player[0])
+        if startedGame[request.namespace].state != "round_over":
+            current_player = startedGame[request.namespace].get_current_player()
+            emit("wait_for_player", {"active" : 0, "player":current_player[1]}, broadcast= True)
+            emit("wait_for_player", {"active" : 1, "player":current_player[1]}, room=current_player[0])
+        else: 
+            emit("round_over", {"data" : "to do"}, broadcast= True)
