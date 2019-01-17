@@ -153,7 +153,10 @@ class Board:
             for col in row:
                 cell +=1
                 if (col is not None):
-                    data[str(cell)]= "goal-back" if col.name.startswith( 'goal' ) else (col.name if not col.rotated else col.name+".rotate")
+                    if(col.name.startswith( 'goal' )):
+                        data[str(cell)]= "goal-back" if(not self.visited[cell//dim][(cell-1) % dim]) else col.name 
+                    else:
+                        data[str(cell)]= col.name if not col.rotated else col.name+".rotate"
             cell += GRID_UI - len(row)
         return data
     
