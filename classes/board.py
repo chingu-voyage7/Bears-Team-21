@@ -29,11 +29,6 @@ class Board:
         self.board = [[None for i in range(dim)] for i in range(dim)]
         self.available = []
         self.stairs = []
-        #self.graph = Graph()
-        #for n in range(0,self.NUM_CELLS):
-        #    self.cells.append(Vertex(self.nToLabel(n)))
-        #print(self.cells)
-        #self.graph.add_vertices(self.cells)
         self.place_initial_cards()
         self.crystal_count = 0
 
@@ -43,8 +38,7 @@ class Board:
     def place_initial_cards(self):
         setup_deck = Deck('classes/paths.json','setup-cards')
         card = setup_deck.draw()
-        self.add_card(card, self.start_x, self.start_y)   
-        #self.addGraphCard(card, self.coordToPos(self.start_x,self.start_y))     
+        self.add_card(card, self.start_x, self.start_y)        
         setup_deck.shuffle()        
         goals = [[self.start_x + 2, self.start_y + 8],
                  [self.start_x - 2, self.start_y + 8],
@@ -53,13 +47,13 @@ class Board:
             card = setup_deck.draw()
             if card.name == 'goal-00':
                 self.goal_coords = [coords[0], coords[1]] 
-            self.add_card(card, coords[0], coords[1]) 
-            #self.addGraphCard(card, self.coordToPos( coords[0], coords[1]))       
+            self.add_card(card, coords[0], coords[1])     
 
     def remove_card(self, x, y):
         self.crystal_count -= self.board[x][y].crystal
         print(self.board[x][y])
         self.board[x][y] = None
+        self.available = []
         self.find_available_spots(self.start_x, self.start_y, 6)
 
     def add_card(self, card, x, y):
@@ -71,7 +65,7 @@ class Board:
         if [x, y] in self.available:
             self.available.remove([x, y])
         if not card.name.startswith('goal'):
-            #self.available = []
+            self.available = []
             self.reset_visited()
             self.find_available_spots(self.start_x, self.start_y, 6)
             for stair in self.stairs:
@@ -88,10 +82,6 @@ class Board:
     def add_card_check(self, card, x, y):
         if self.check_position(card, x, y):
             self.add_card(card, x, y)
-            for key, value in card.connections.items():
-                if len(value) > 0:
-                    self.find_available_spots(x, y, key)
-            #self.addGraphCard(card, self.coordToPos( x, y))  
             return True
         return False
 
