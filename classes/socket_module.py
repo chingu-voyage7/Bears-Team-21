@@ -230,7 +230,8 @@ class GameRoomNs(Namespace):
         print("action")
         startedGame[request.namespace].handle_move(message["card"],target=message['target'])
         emit("update_players", startedGame[request.namespace].players_list(), broadcast=True)
-        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
+        #emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
+        self.all_update_hand()
         self.active_player(request.sid)
 
     def active_player(self, sid):
@@ -240,3 +241,8 @@ class GameRoomNs(Namespace):
             emit("wait_for_player", {"active" : 1, "player":current_player[1]}, room=current_player[0])
         else: 
             emit("round_over", {"data" : "to do"}, broadcast= True)
+
+    def all_update_hand(self):
+        for player in startedGame[request.namespace].players:
+            print(player.sid)
+            emit("update_hand", startedGame[request.namespace].player_hand_list(player.name), room=player.sid)

@@ -268,9 +268,8 @@ window.onload = function() {
                             case 'damage':
                             case 'repair':                            
                             case 'free':
-                                modifyPlayer(player, selected[0].index-1);
-                                break;
                             case 'swaphand':
+                                modifyPlayer(player, selected[0].index-1);
                                 break;
                             case 'inspection':
                                 console.log(selected[0].type);

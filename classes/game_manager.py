@@ -152,11 +152,12 @@ class GameManager():
                 t_player.break_tool(tool)                
 
         elif card.type == 'theft':
-            player.steal = True
+            if player.free:
+                player.steal = True
 
         elif card.type == 'handsoff':
             t_player = self.players[target]
-            target.steal = False
+            t_player.steal = False
 
         elif card.type == 'swaphats':
             #change role
@@ -169,7 +170,7 @@ class GameManager():
         elif card.type == 'swaphand': #modify this to ID
             t_player = self.players[target] 
             (player.cards, t_player.cards) = (t_player.cards, player.cards)
-            #other draws card
+            t_player.draw_card(self.deck.draw())
 
         elif card.type == 'inspection':
             #show player role card
