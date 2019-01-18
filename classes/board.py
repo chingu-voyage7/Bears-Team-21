@@ -1,6 +1,5 @@
 from .deck import Deck, Card
 from .settings import *
-#from .graphUndirected import Graph, Vertex
 import math
 
 def set_direction(direction):
@@ -33,7 +32,8 @@ class Board:
         self.crystal_count = 0
 
     def reset_visited(self):
-        self.visited = [[False for i in range(dim)] for i in range(dim)]
+        visit = {-2: False, -1: False, 1: False, 2: False, 6: False}
+        self.visited = [[dict(visit) for i in range(dim)] for i in range(dim)]
 
     def place_initial_cards(self):
         setup_deck = Deck('classes/paths.json','setup-cards')
@@ -47,13 +47,14 @@ class Board:
             card = setup_deck.draw()
             if card.name == 'goal-00':
                 self.goal_coords = [coords[0], coords[1]] 
-            self.add_card(card, coords[0], coords[1])     
+            self.add_card(card, coords[0], coords[1])    
 
     def remove_card(self, x, y):
         self.crystal_count -= self.board[x][y].crystal
         print(self.board[x][y])
         self.board[x][y] = None
         self.available = []
+        self.reset_visited()
         self.find_available_spots(self.start_x, self.start_y, 6)
 
     def add_card(self, card, x, y):
@@ -71,7 +72,7 @@ class Board:
             for stair in self.stairs:
                 x = stair[0]
                 y = stair[1]
-                if not self.visited[x][y]:
+                if True not in self.visited[x][y].values():
                     self.find_available_spots(x, y, 6)
         print(self.available)
 
@@ -109,10 +110,8 @@ class Board:
                     return False
         return True
 
-    def check_visited(self, x1, y1, x2, y2):
-        if x2 is not None:
-            return self.visited[x1][y1] and self.visited[x2][y2]
-        return False
+    def check_visited(self, x, y, direction):
+        return self.visited[x][y][direction] 
 
     def find_available_spots(self, x, y, direction,
     px = None, py = None, door = None):       
@@ -120,8 +119,8 @@ class Board:
         if door is not None and hasattr(self.board[x][y], door):
             flag = self.board[x][y].door == door
         if flag:
-            if not self.check_visited(x, y, px, py):
-                self.visited[x][y] = True            
+            if not self.check_visited(x, y, direction):
+                self.visited[x][y][direction] = True            
                 for d in self.board[x][y].connections[direction]:
                     if d < 4:
                         (nx,ny) = set_direction(d)                
@@ -134,7 +133,8 @@ class Board:
                             self.find_available_spots(nx, ny, -d, x, y, door)
 
     def check_end(self):
-        return self.visited[self.goal_coords[0]][self.goal_coords[1]]
+        coords = self.goal_coords
+        return True in self.visited[coords[0]][coords[1]].values()
     
     def getBoardData(self):
         cell = 0
@@ -144,7 +144,7 @@ class Board:
                 cell +=1
                 if (col is not None):
                     if(col.name.startswith( 'goal' )):
-                        data[str(cell)]= "goal-back" if(not self.visited[cell//dim][(cell-1) % dim]) else col.name 
+                        data[str(cell)]= "goal-back" if(True not in self.visited[cell//dim][(cell-1) % dim].values()) else col.name 
                     else:
                         data[str(cell)]= col.name if not col.rotated else col.name+".rotate"
             cell += GRID_UI - len(row)
