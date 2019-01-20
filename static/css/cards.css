@@ -1,3 +1,12 @@
+.gold { 
+    background:url("../imgs/gold.png") left top; 
+    width:20px; 
+    height:20px;
+    display: block;
+    float: left;
+    padding: 0px 10px 0px 10px;
+}
+
 .grid.square{
     zoom:0.75;
     -moz-transform:scale(0.75);

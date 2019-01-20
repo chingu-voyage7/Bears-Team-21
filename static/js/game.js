@@ -237,12 +237,10 @@ window.onload = function() {
         players.forEach(function(name,i) {
             var opponentNode = `<div class="col-sm-3">
             <div class="game-opponent well well-sm" style="min-height: 100px;" id="player-${i}" name="${name}">
-                <div class="icon">
-                     <i class="glyphicon glyphicon-user"></i>
+                <div class="row text-center">
+                    <label>${name}</label>
                 </div>
-                <div class="text">
-                    <label class="text-muted">${name} - ${data[name][data[name].length-1]}</label>
-                </div>
+                
                 <div class="row">
                     <div class="col-sm-1"></div>`;
             data[name].forEach(function(icon) {
@@ -251,7 +249,12 @@ window.onload = function() {
                     opponentNode += `<div class="col-sm-2 tools ${icon}"></div>`
                 }
             });        
-            opponentNode += `<div class="col-sm-1"></div></div></div></div>`;
+            opponentNode += `<div class="col-sm-1"></div></div><div class="row-fluid">
+            <span>
+            <div style="float: left;"><span class="gold"></span></div>
+            <small>${data[name][data[name].length-1]}</small>
+            </span>
+        </div></div></div>`;
             document.getElementById("opponents").innerHTML += (opponentNode);
             $('.game-opponent').each(function (i,div) {
                 console.log(div)
