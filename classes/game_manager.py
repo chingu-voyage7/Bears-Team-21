@@ -10,6 +10,7 @@ class GameManager():
         self.players = [Player(name) for name in player_list]
         self.start_game() #testing
         self.start_round()    
+        self.round_scores = {}
         #self.state_listener()
 
     def state_listener(self):
@@ -28,6 +29,7 @@ class GameManager():
 
     def start_game(self):
         self.rounds = 0
+        self.round_scores = {}
         print('move to start_round')
         self.state = 'start_round'
         
@@ -228,20 +230,28 @@ class GameManager():
         winnings = 6 - winners_count
         if winnings < 1:
             winnings = 1
-        
+
+        self.round_scores = {}
+
         for player in self.players:
             if player.role == 'bluedigger' and blue_won:
                 player.receive_gold(winnings)
+                self.round_scores[player.name] = winnings
             elif player.role == 'greendigger' and green_won:
                 player.receive_gold(winnings)
+                self.round_scores[player.name] = winnings
             elif player.role == 'theboss' and boss_won:
                 player.receive_gold(winnings - 1)
+                self.round_scores[player.name] = winnings - 1
             elif player.role == 'profiteer':
                 player.receive_gold(winnings - 2)
+                self.round_scores[player.name] = winnings - 2
             elif player.role == 'saboteur':
                 player.receive_gold(winnings)
+                self.round_scores[player.name] = winnings
             elif player.role == 'geologist':
                 player.receive_gold(geologist_gold)
+                self.round_scores[player.name] = geologist_gold
 
         for player in self.players:
             player.reset()
@@ -251,6 +261,7 @@ class GameManager():
         else:
             self.state = 'start_round'
         print(self.state)
+        return(self.round_scores)
     
     def game_over(self):
         winners = []

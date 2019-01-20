@@ -240,7 +240,8 @@ class GameRoomNs(Namespace):
             emit("wait_for_player", {"active" : 0, "player":current_player[1]}, broadcast= True)
             emit("wait_for_player", {"active" : 1, "player":current_player[1]}, room=current_player[0])
         else: 
-            emit("round_over", {"data" : "to do"}, broadcast= True)
+            scores = startedGame[request.namespace].round_over()
+            emit("round_over", sorted(scores.iteritems(), key=lambda kv: (-kv[1], kv[0]), reversed = True), broadcast= True)
 
     def all_update_hand(self):
         for player in startedGame[request.namespace].players:

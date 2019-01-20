@@ -408,27 +408,26 @@ window.onload = function() {
         document.getElementById("exampleModalLabel").innerText= "Player: " + $("#player-"+data["player"]).attr("name");
         $('#modalBtn').click();
     })
+
+    socket.on("round_over", (data)=> {
+        //var playerScore = document.createElement("DIV"); 
+        print(data)
+        var modal = document.getElementById("modal-body");
+        var htmlScores = `<div class="leaderboard">
+            <ol>`
+        Object.keys(data).forEach(function(key) {
+            htmlScores += `<li>
+                    <mark>${key}</mark>
+                    <small>${data[key]}</small>
+                </li>`;
+        });
+        htmlScores += "</ol></div>"
+        modal.innerHTML=htmlScores;
+        document.getElementById("exampleModalLabel").innerText="Round Scores";
+        $('#modalBtn').click();
+    })
 };
 
-function leaderboard(data){
-    var playerScore = document.createElement("DIV"); 
-    var modal = document.getElementById("modal-body");
-    var htmlScores = `<div class="leaderboard">
-        <h1>
-          Round Scores
-        </h1>
-        <ol>`
-    Object.keys(data).forEach(function(player) {
-        htmlScores += `<li>
-                <mark>${player["name"]}</mark>
-                <small>${player["score"]}</small>
-            </li>`;
-    });
-    htmlScores += "</ol></div>"
-    modal.innerHTML=htmlScores;
-    document.getElementById("exampleModalLabel").innerText="Round Scores";
-    $('#modalBtn').click();
-}
 
 /*
 const RESPONSE_EVENTS = [
