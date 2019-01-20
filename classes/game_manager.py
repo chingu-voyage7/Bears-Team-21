@@ -11,21 +11,22 @@ class GameManager():
         self.start_game() #testing
         self.start_round()    
         self.round_scores = {}
+        self.winners = []
         #self.state_listener()
 
     def state_listener(self):
-        while True:          
-            if self.prev_state != self.state:
-                self.prev_state = self.state
-                print('checking')
-                if self.state == 'start_game':
-                    self.start_game()
-                elif self.state == 'start_round':
-                    self.start_round()                
-                elif self.state == 'round_over':
-                    self.round_over()
-                elif self.state == 'game_over':
-                    self.game_over()                                             
+        #while True:          
+        if self.prev_state != self.state:
+            self.prev_state = self.state
+            print('checking')
+            if self.state == 'start_game':
+                self.start_game()
+            elif self.state == 'start_round':
+                self.start_round()                
+            elif self.state == 'round_over':
+                self.round_over()
+            elif self.state == 'game_over':
+                self.game_over()                                             
 
     def start_game(self):
         self.rounds = 0
@@ -64,9 +65,9 @@ class GameManager():
         print("handle move logic",card,x,y,target)
         player = self.players[self.current_player]
         if isinstance(card, list):
-            if len(card) == 2 and target is not None:
-                if target == "trapped":
-                    player.release()                    
+            if len(card) == 2:
+                if not player.free:
+                    self.discard_release(player, card)                 
                 else:
                     self.discard_repair(player, card, target)
             else:
@@ -101,13 +102,26 @@ class GameManager():
                 player.draw_card(self.deck.draw())
 
     def discard_repair(self, player, cards, tool):
-        for card in cards:
+        for card in sorted(cards, reverse=True):
             player.play_card(card)
             self.cards_in_play -= 1
         if len(self.deck.cards): # only draw 1 card, effectively reduce hand
             player.draw_card(self.deck.draw())
-        print(tool)
-        player.repair_tool(tool)   
+        for tool, status in player.tools.items():
+            if not status:
+                player.repair_tool(tool)
+                return True  #try repair a tool 
+        if len(self.deck.cards): # draw second card since nothing repaired
+            player.draw_card(self.deck.draw())
+        return False
+
+    def discard_release(self, player, cards):
+        for card in sorted(cards, reverse=True):
+            player.play_card(card)
+            self.cards_in_play -= 1
+        player.release() 
+        if len(self.deck.cards): 
+            player.draw_card(self.deck.draw())  
 
     def path_played(self, player, card, x, y):
         print ("path_played(",x,y,")")
@@ -146,12 +160,16 @@ class GameManager():
         elif card.type == 'repair':
             t_player = self.players[target]            
             for tool in card.tools:
-                t_player.repair_tool(tool)                
-
+                if not t_player.tools[tool]:
+                    t_player.repair_tool(tool)  
+                    return True              
+        #either one of the tools shown, but not both. 
         elif card.type == 'damage':
-            t_player = self.players[target]           
+            t_player = self.players[target]          
             for tool in card.tools:
-                t_player.break_tool(tool)                
+                if t_player.tools[tool]:
+                    t_player.break_tool(tool)    
+                    return True            
 
         elif card.type == 'theft':
             if player.free:
@@ -162,17 +180,18 @@ class GameManager():
             t_player.steal = False
 
         elif card.type == 'swaphats':
-            #change role
-            player.set_role(self.roles.draw().type)
+            t_player = self.players[target]
+            t_player.set_role(self.roles.draw().type)
 
         elif card.type == 'trapped':
             t_player = self.players[target] 
             t_player.imprison()
 
         elif card.type == 'swaphand': #modify this to ID
-            t_player = self.players[target] 
-            (player.cards, t_player.cards) = (t_player.cards, player.cards)
-            t_player.draw_card(self.deck.draw())
+            if not self.current_player == target:
+                t_player = self.players[target] 
+                (player.cards, t_player.cards) = (t_player.cards, player.cards)
+                t_player.draw_card(self.deck.draw())
 
         elif card.type == 'inspection':
             #show player role card
@@ -199,6 +218,8 @@ class GameManager():
         green_connected = self.board.check_end()
 
         last_player = self.players[self.current_player].role
+        blue_won = None
+        green_won = None
         #blue won
         if last_player in ['bluedigger', 'theboss', 'geologist', 'profiteer']:
             blue_won = blue_connected
@@ -264,12 +285,12 @@ class GameManager():
         return(self.round_scores)
     
     def game_over(self):
-        winners = []
+        self.winners = []
         max_gold = max(self.players).gold
         for player in self.players:
             if player.gold == max_gold:
-                winners.append(player)
-        print('winners =', winners)
+                self.winners.append(player)
+        print('winners =', self.winners)
         #show buttons
         print(self.state)
 
@@ -278,9 +299,9 @@ class GameManager():
         for player in self.players:
             icons = []
             icons.append("pickaxe_on" if(player.tools['pickaxe']) else "pickaxe_off")
-            icons.append("light_on" if(player.tools['lamp']) else "light_off")
-            icons.append("cart_on" if(player.tools['lamp']) else "cart_off")
-            icons.append("trapped_off" if(player.free) else "trapped_on")
+            icons.append("light_on" if(player.tools['light']) else "light_off")
+            icons.append("cart_on" if(player.tools['cart']) else "cart_off")
+            icons.append("trapped_on" if(player.free) else "trapped_off")
             icons.append("theft_on" if(player.steal) else "theft_off")
             icons.append("Gold Nudgets: " + str(player.gold))
             listPlayers[player.name] = icons

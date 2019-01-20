@@ -165,14 +165,14 @@ class GameRoomNs(Namespace):
         "test_board":{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}
     }
     def on_connect(self):
-        print("got connection", request.namespace)#startedGame[request.namespace].players
-        emit("update_players", startedGame[request.namespace].players_list(), room=request.sid) # testing, should pass data from gamemanager object
-        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
+        print("got connection", request.namespace)
+        emit("update_players", startedGame[request.namespace].players_list(), room=request.sid)
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
         emit("update_role", {"role":startedGame[request.namespace].get_player_role(current_user.username)}, room=request.sid)
         emit("update_board", startedGame[request.namespace].board.getBoardData(), broadcast= True)
         emit("available_cells", startedGame[request.namespace].board.available, broadcast= True)
         startedGame[request.namespace].set_player_sid(current_user.username, request.sid)
-        self.active_player(request.sid)
+        self.active_player(request.sid, request.namespace)
 
     def on_disconnect(self):
         print("got disconnection")
@@ -187,24 +187,24 @@ class GameRoomNs(Namespace):
 
     def on_card_discarded(self, message):
         print('got discarded', message["cards"])
-        startedGame[request.namespace].handle_move(message["cards"])
-        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
-        self.active_player(request.sid)
+        startedGame[request.namespace].handle_move(card=message["cards"])
+        self.all_update_hand(request.namespace)
+        self.active_player(request.sid, request.namespace)
 
     def on_show_goal(self, message):
         show = startedGame[request.namespace].handle_move(message["cards"],target=[message["x"], message["y"]])
         print ("reveal:", show)
         emit("reveal_goal", {"show": show,"x":message["x"], "y" : message["y"]}, room=request.sid)
-        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
-        self.active_player(request.sid)
+        self.all_update_hand(request.namespace)
+        self.active_player(request.sid, request.namespace)
 
     def on_place_card(self, message):
         print ("place_card: ",message["cards"], message["x"], message["y"])
         startedGame[request.namespace].handle_move(message["cards"], message["x"],message["y"])
-        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)#current_user.username
         emit("update_board", startedGame[request.namespace].board.getBoardData(),broadcast= True)
         emit("available_cells", startedGame[request.namespace].board.available, broadcast= True)
-        self.active_player(request.sid)
+        self.all_update_hand(request.namespace)
+        self.active_player(request.sid, request.namespace)
 
     def on_rotate_card(self, message):
         print ("rotate_card: ",message["card"])
@@ -213,37 +213,47 @@ class GameRoomNs(Namespace):
     def on_remove_card(self, message):
         print ("remove_card: ",message["card"])
         startedGame[request.namespace].handle_move(message["card"],target=[message["x"], message["y"]])
-        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
         emit("update_board", startedGame[request.namespace].board.getBoardData(), broadcast= True)
         emit("available_cells", startedGame[request.namespace].board.available, broadcast= True)
-        self.active_player(request.sid)
+        self.all_update_hand(request.namespace)
+        self.active_player(request.sid, request.namespace)
 
     def on_inspect_player(self, message):
         print ("inspect:", message["player"])
         role = startedGame[request.namespace].handle_move(message["card"],target=message["player"])
         print(role)
         emit("reveal_role", {"role": role,"player":message["player"]}, room=request.sid)
-        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
-        self.active_player(request.sid)
+        self.all_update_hand(request.namespace)
+        self.active_player(request.sid, request.namespace)
 
     def on_play_action(self, message):
         print("action")
         startedGame[request.namespace].handle_move(message["card"],target=message['target'])
-        emit("update_players", startedGame[request.namespace].players_list(), broadcast=True)
-        #emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
-        self.all_update_hand()
-        self.active_player(request.sid)
+        self.all_update_hand(request.namespace)
+        self.active_player(request.sid, request.namespace)
 
-    def active_player(self, sid):
-        if startedGame[request.namespace].state != "round_over":
-            current_player = startedGame[request.namespace].get_current_player()
-            emit("wait_for_player", {"active" : 0, "player":current_player[1]}, broadcast= True)
-            emit("wait_for_player", {"active" : 1, "player":current_player[1]}, room=current_player[0])
-        else: 
-            scores = startedGame[request.namespace].round_over()
-            emit("round_over", sorted(scores.iteritems(), key=lambda kv: (-kv[1], kv[0]), reversed = True), broadcast= True)
+    def active_player(self, sid, ns):
+        current_player = startedGame[ns].get_current_player()
+        emit("wait_for_player", {"active" : 0, "player":current_player[1]}, broadcast= True)
+        emit("wait_for_player", {"active" : 1, "player":current_player[1]}, room=current_player[0])
+        if startedGame[ns].state == "round_over": 
+            scores = startedGame[ns].round_over()
+            emit("round_over", sorted(scores.items(), key=lambda kv: kv[1], reverse = True), broadcast= True)
+        #startedGame[ns].state_listener()
+        if startedGame[ns].state == "start_round":
+            startedGame[ns].start_round()
+            emit("update_board", startedGame[ns].board.getBoardData(), broadcast= True)
+            emit("available_cells", startedGame[request.namespace].board.available, broadcast= True)
+            for player in startedGame[ns].players:
+                emit("update_hand", startedGame[ns].player_hand_list(player.name), room=player.sid)
+                emit("update_role", {"role":startedGame[ns].get_player_role(player.name)}, room=player.sid)
+        elif startedGame[ns].state == "game_over":
+            startedGame[ns].game_over()
+            emit("game_over", startedGame[ns].winners, broadcast= True)
 
-    def all_update_hand(self):
-        for player in startedGame[request.namespace].players:
+    def all_update_hand(self, ns):
+        for player in startedGame[ns].players:
             print(player.sid)
-            emit("update_hand", startedGame[request.namespace].player_hand_list(player.name), room=player.sid)
+            emit("update_hand", startedGame[ns].player_hand_list(player.name), room=player.sid)
+            emit("update_role", {"role":startedGame[ns].get_player_role(player.name)}, room=player.sid)
+        emit("update_players", startedGame[ns].players_list(), broadcast=True)

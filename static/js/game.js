@@ -240,7 +240,6 @@ window.onload = function() {
                 <div class="row text-center">
                     <label>${name}</label>
                 </div>
-                
                 <div class="row">
                     <div class="col-sm-1"></div>`;
             data[name].forEach(function(icon) {
@@ -250,11 +249,11 @@ window.onload = function() {
                 }
             });        
             opponentNode += `<div class="col-sm-1"></div></div><div class="row-fluid">
-            <span>
-            <div style="float: left;"><span class="gold"></span></div>
-            <small>${data[name][data[name].length-1]}</small>
-            </span>
-        </div></div></div>`;
+                    <span>
+                        <div style="float: left;"><span class="gold"></span></div>
+                        <small>${data[name][data[name].length-1]}</small>
+                    </span>
+                </div></div></div>`;
             document.getElementById("opponents").innerHTML += (opponentNode);
             $('.game-opponent').each(function (i,div) {
                 console.log(div)
@@ -356,7 +355,11 @@ window.onload = function() {
     socket.on("update_role", (data)=> {
         var roleNode = document.createElement("DIV"); 
         roleNode.className= "card sprite " + data["role"];
-        document.getElementById("player-role").appendChild(roleNode);
+        var roleContainer = document.getElementById("player-role");
+        while (roleContainer.firstChild) {
+            roleContainer.removeChild(roleContainer.firstChild);
+        }
+        roleContainer.appendChild(roleNode);
     })
     
     socket.on("wait_for_player", (data)=> {
@@ -414,21 +417,34 @@ window.onload = function() {
 
     socket.on("round_over", (data)=> {
         //var playerScore = document.createElement("DIV"); 
-        print(data)
+        console.log(data)
         var modal = document.getElementById("modal-body");
         var htmlScores = `<div class="leaderboard">
             <ol>`
-        Object.keys(data).forEach(function(key) {
+        Object.keys(data).forEach(function(current,idx) {
             htmlScores += `<li>
-                    <mark>${key}</mark>
-                    <small>${data[key]}</small>
-                </li>`;
+                    <mark>${data[current][0]}</mark>
+                    <small>${data[current][1]}</small>
+                    </li>`;
         });
         htmlScores += "</ol></div>"
         modal.innerHTML=htmlScores;
         document.getElementById("exampleModalLabel").innerText="Round Scores";
         $('#modalBtn').click();
     })
+    socket.on("game_over", (data)=> {
+        console.log(data)
+        var modal = document.getElementById("modal-body");
+        var htmlScores = `<div class="leaderboard"><ol>`
+        Object.keys(data).forEach(function(current) {
+            htmlScores += `<li><label>${data[current]}</label></li>`;
+        });
+        htmlScores += "</ol></div>"
+        modal.innerHTML=htmlScores;
+        document.getElementById("exampleModalLabel").innerText="Game Over! - Winners:";
+        $('#modalBtn').click();
+    })
+    
 };
 
 

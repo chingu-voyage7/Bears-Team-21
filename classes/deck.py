@@ -34,14 +34,12 @@ class PathCard(Card):
 
     def rotate(self):
         super().rotate()
-        print("before rotate",self.connections)
         c = self.connections
         (c[-2], c[2]) = (c[2], c[-2])
         (c[-1], c[1]) = (c[1], c[-1])
         for key, value in c.items():
             c[key] = list(map(self.rotateConnecs, c[key]))
         self.set_required()
-        print("after rotate",self.connections)
 
     def rotateConnecs(self,n):
         return n*-1 if -2 <= n <= 2 else n

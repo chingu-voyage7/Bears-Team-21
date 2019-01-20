@@ -2,7 +2,7 @@ class Player():
     def __init__(self, name):
         self.name = name
         self.tools = {'pickaxe': True,
-                      'lamp': True,
+                      'light': True,
                       'cart': True}
         self.cards = []
         self.role = ''
@@ -52,7 +52,7 @@ class Player():
 
     def reset(self):
         self.tools = {'pickaxe': True,
-                      'lamp': True,
+                      'light': True,
                       'cart': True}
         self.cards = []
         self.role = ''
