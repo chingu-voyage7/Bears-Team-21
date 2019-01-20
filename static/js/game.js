@@ -241,13 +241,15 @@ window.onload = function() {
                      <i class="glyphicon glyphicon-user"></i>
                 </div>
                 <div class="text">
-                    <label class="text-muted">${name}</label>
+                    <label class="text-muted">${name} - ${data[name][data[name].length-1]}</label>
                 </div>
                 <div class="row">
                     <div class="col-sm-1"></div>`;
             data[name].forEach(function(icon) {
                 console.log(icon);
-                opponentNode += `<div class="col-sm-2 tools ${icon}"></div>`
+                if (!icon.startsWith("Gold")){
+                    opponentNode += `<div class="col-sm-2 tools ${icon}"></div>`
+                }
             });        
             opponentNode += `<div class="col-sm-1"></div></div></div></div>`;
             document.getElementById("opponents").innerHTML += (opponentNode);
@@ -368,7 +370,7 @@ window.onload = function() {
             console.log(key, data[key]);
             var card_square = document.getElementById("square-"+key);
             card_square.className="square sprite "+data[key].split('.').join(' ');
-            //card_square.style.transform = `scale(${CELL_ZOOM})`;
+            //card_square.style.transform = (card_square.className.includes("rotate")? `rotate(180) ` : "") + `scale(${CELL_ZOOM})`;
         });
     })
     
@@ -407,6 +409,27 @@ window.onload = function() {
         $('#modalBtn').click();
     })
 };
+
+function leaderboard(data){
+    var playerScore = document.createElement("DIV"); 
+    var modal = document.getElementById("modal-body");
+    var htmlScores = `<div class="leaderboard">
+        <h1>
+          Round Scores
+        </h1>
+        <ol>`
+    Object.keys(data).forEach(function(player) {
+        htmlScores += `<li>
+                <mark>${player["name"]}</mark>
+                <small>${player["score"]}</small>
+            </li>`;
+    });
+    htmlScores += "</ol></div>"
+    modal.innerHTML=htmlScores;
+    document.getElementById("exampleModalLabel").innerText="Round Scores";
+    $('#modalBtn').click();
+}
+
 /*
 const RESPONSE_EVENTS = [
     'round_result',

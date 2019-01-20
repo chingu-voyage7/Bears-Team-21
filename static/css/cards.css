@@ -438,7 +438,9 @@
 .rotate{
     transform: rotate(180deg);
 }
-
+.rotate_sc{
+    transform: scale(0.75) rotate(180deg) !important;
+}
 .red-border {
     border: 2px solid red;
 }

@@ -146,7 +146,7 @@ class Board:
                     if(col.name.startswith( 'goal' )):
                         data[str(cell)]= "goal-back" if(True not in self.visited[cell//dim][(cell-1) % dim].values()) else col.name 
                     else:
-                        data[str(cell)]= col.name if not col.rotated else col.name+".rotate"
+                        data[str(cell)]= col.name if not col.rotated else col.name+".rotate_sc"
             cell += GRID_UI - len(row)
         return data
     
