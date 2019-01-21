@@ -65,34 +65,39 @@ class GameManager():
         result = False # could be used positive or negative outcome of move
         print("handle move logic",card,x,y,target)
         player = self.players[self.current_player]
-        if isinstance(card, list):
-            if len(card) == 2:
-                if not player.free:
-                    self.discard_release(player, card)                 
+        try:
+            if isinstance(card, list):
+                if len(card) == 2:
+                    if not player.free:
+                        self.discard_release(player, card)                 
+                    else:
+                        self.discard_repair(player, card, target)
                 else:
-                    self.discard_repair(player, card, target)
+                    print ("discard(",card,")")
+                    self.discard(player, card)
+                result = True
             else:
-                print ("discard(",card,")")
-                self.discard(player, card)
-            result = True
-        else:
-            card_obj = player.cards[card] 
-            if isinstance(card_obj, (PathCard, DoorCard)):
-                result = self.path_played(player, 
-                card, x, y)
-            elif isinstance(card_obj, (ActionCard, ToolCard)):
-                result = self.action_played(player, 
-                card, target)
-        if result:
-            round_over = self.board.check_end() or self.cards_in_play == 0        
-            if round_over:
-                self.state = 'round_over'
-            else:
-                self.current_player += 1 
-                self.current_player %= len(self.players)
-                self.state = 'wait_for_move'
-            print(self.state)    
-        return result    
+                card_obj = player.cards[card] 
+                if isinstance(card_obj, (PathCard, DoorCard)):
+                    result = self.path_played(player, 
+                    card, x, y)
+                elif isinstance(card_obj, (ActionCard, ToolCard)):
+                    result = self.action_played(player, 
+                    card, target)
+            if result:
+                round_over = self.board.check_end() or self.cards_in_play == 0        
+                if round_over:
+                    self.state = 'round_over'
+                else:
+                    self.current_player += 1 
+                    self.current_player %= len(self.players)
+                    self.state = 'wait_for_move'
+                print(self.state)   
+            return result  
+        except Exception as exception:
+            print(exception)
+            return False    
+        
     
     def discard(self, player, cards):
         for card in sorted(cards, reverse=True):
@@ -223,8 +228,8 @@ class GameManager():
         green_connected = self.board.check_end()
 
         last_player = self.players[self.current_player].role
-        blue_won = None
-        green_won = None
+        blue_won = False
+        green_won = False
         #blue won
         if last_player in ['bluedigger', 'theboss', 'geologist', 'profiteer']:
             blue_won = blue_connected
@@ -243,15 +248,15 @@ class GameManager():
         winners_count = 0
         for player in self.players:
             if player.role == 'bluedigger':
-                winners_count += blue_won
+                winners_count += int(blue_won)
             elif player.role == 'greendigger':
-                winners_count += green_won
+                winners_count += int(green_won)
             elif player.role == 'theboss':
-                winners_count += boss_won
+                winners_count += int(boss_won)
             elif player.role == 'profiteer':
                 winners_count += 1
             elif player.role == 'saboteur':
-                winners_count += saboteur_won
+                winners_count += int(saboteur_won)
 
         winnings = sub_one(6,winners_count)
 
@@ -279,7 +284,7 @@ class GameManager():
 
         for player in sorted(self.players, key=self.get_gold):
             if player.free and player.steal: # from poorest steal to richest
-                player.receive_gold(self.next_rich_player(player).lose_gold)
+                player.receive_gold(self.next_rich_player(player).lose_gold())
 
         for player in self.players:
             player.reset()

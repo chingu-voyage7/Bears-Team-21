@@ -6,7 +6,7 @@ socket.on('connect', () => {
     info.username = $("#username").html();
     info.room = "/lobby";
     console.log(`Websocket ${info.username} connected!`);
-    //socket.emit('join', '/home?');
+
     $( 'form' ).on( 'submit', function( e ) {
         console.log("info",info);
         e.preventDefault()
@@ -59,7 +59,6 @@ socket.on('roomsList',(rmData)=>{
 
     console.log(rmData);
     
-    //setCookie("rooms-list", JSON.stringify(rmData), 1);
     $('.toggle').css('display','none');
     let roomListContainer = document.querySelector('.gamerooms');
     roomListContainer.innerHTML = '<ul class="list-group"></ul>';
@@ -113,7 +112,7 @@ socket.on('room_exist', message_data => {
 socket.on('restore_input',createLobby);
 
 function createLobby(){
-    $('#new-room').show();//.innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button class="btn btn-warning" id="create_game_room">Create Game</button></div>`;
+    $('#new-room').show();
     document.querySelector('#create_game_room').onclick = createGame;
     document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
         event.preventDefault();
@@ -137,11 +136,9 @@ function buildRoomList(message_data){
         <h3>${message_data['players']}</h3>
     </div>
     </div>`;
-
-
-    document.querySelector('#testP').addEventListener('click', e =>{
-        socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
-    });
+    //document.querySelector('#testP').addEventListener('click', e =>{
+    //    socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
+    //});
     document.querySelector('#btn-leave').addEventListener('click', leaveRooms);
     $('.toggle').css('display','block');
 }
@@ -216,10 +213,6 @@ function checkCookie() {
     
 } 
 
-//setInterval(function() {
-//   if($('.toggle').css('display') == 'none' ) return;
-//    socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
-//}, 5000);
 
 $( document ).ready(function() {
     checkCookie();

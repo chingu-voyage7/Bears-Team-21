@@ -191,7 +191,7 @@ window.onload = function() {
                         <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
                     </div>
                 </div>`;
-            //var chatTab = msg.room == "/lobby"? "#tab1primary" : "#tab2primary"
+            
             console.log("room msg:"+msg.room)
             $('div '+msg.room).append(
                 (msg.user_name == $("#username").html() ? base_sent : base_receive)
@@ -433,6 +433,7 @@ window.onload = function() {
         $('#modalBtn').click();
     })
     socket.on("game_over", (data)=> {
+        console.log("game over")
         console.log(data)
         var modal = document.getElementById("modal-body");
         var htmlScores = `<div class="leaderboard"><ol>`
@@ -447,27 +448,6 @@ window.onload = function() {
     
 };
 
-
-/*
-const RESPONSE_EVENTS = [
-    'round_result',
-    'new_round',
-    'score_gold',
-    'show_end_card',
-    'update_counters',
-    'gold_earned',
-    'gold_stolen',
-    'gold_card_earned',
-    'path_card_destroyed',
-    'show_goal_card',
-    'path_card_played',
-    'tool_status_changed',
-    'draw_new_cards',
-    'draw_new_role',
-    'give_cards',
-    'cards_discarded'
-]
-*/
 info = {}
 
 function posToCoords(cell){
@@ -479,11 +459,3 @@ function coordsToPos(x, y){
     n = y + WIDTH * x 
     return n
 }
-/*
-function testReveal(cell, index){
-    console.log("75: " + posToCoords(75))
-    console.log("113: " + posToCoords(113))
-    console.log("151: " + posToCoords(151))
-    let coords = posToCoords(cell) // To-Do saved switching coords and x -1? need to check
-    socket.emit("show_goal",{"cards": index,"x":coords[1],"y":(coords[0]-1)})
-}*/

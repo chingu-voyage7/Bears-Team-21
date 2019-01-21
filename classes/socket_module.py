@@ -7,28 +7,8 @@ startedGame = {}
 
 class GameLobbyNs(Namespace):
     clients = {}
-    game_rooms = {'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
-
-    player_ready = {"Jhon":False,"Alex":True,"Alice":False,"Bob":True,"Ted":True,"Max":False}
-
-    RESPONSE_EVENTS = [
-        'round_result',
-        'new_round',
-        'score_gold',
-        'show_end_card',
-        'update_counters',
-        'gold_earned',
-        'gold_stolen',
-        'gold_card_earned',
-        'path_card_destroyed',
-        'show_goal_card',
-        'path_card_played',
-        'tool_status_changed',
-        'draw_new_cards',
-        'draw_new_role',
-        'give_cards',
-        'cards_discarded'
-    ]
+    game_rooms = {}#{'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
+    player_ready = {}#{"Jhon":False,"Alex":True,"Alice":False,"Bob":True,"Ted":True,"Max":False}
 
     def make_rm_List(self):
         roomList = {}
@@ -250,6 +230,7 @@ class GameRoomNs(Namespace):
         elif startedGame[ns].state == "game_over":
             startedGame[ns].game_over()
             emit("game_over", startedGame[ns].winners, broadcast= True)
+        emit("update_players", startedGame[ns].players_list(), broadcast=True)
 
     def all_update_hand(self, ns):
         for player in startedGame[ns].players:
