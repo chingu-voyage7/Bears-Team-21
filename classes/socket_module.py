@@ -214,8 +214,10 @@ class GameRoomNs(Namespace):
 
     def active_player(self, sid, ns):
         current_player = startedGame[ns].get_current_player()
-        emit("wait_for_player", {"active" : 0, "player":current_player[1]}, broadcast= True)
-        emit("wait_for_player", {"active" : 1, "player":current_player[1]}, room=current_player[0])
+        nround = startedGame[ns].rounds
+        ncards = len(startedGame[ns].deck.cards)
+        emit("wait_for_player", {"active" : 0, "player":current_player[1], "round": nround, "deck": ncards}, broadcast= True)
+        emit("wait_for_player", {"active" : 1, "player":current_player[1], "round": nround, "deck": ncards}, room=current_player[0])
         if startedGame[ns].state == "round_over": 
             scores = startedGame[ns].round_over()
             emit("round_over", sorted(scores.items(), key=lambda kv: kv[1], reverse = True), broadcast= True)

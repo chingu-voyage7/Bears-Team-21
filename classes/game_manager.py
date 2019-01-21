@@ -324,7 +324,8 @@ class GameManager():
             icons.append("cart_on" if(player.tools['cart']) else "cart_off")
             icons.append("trapped_on" if(player.free) else "trapped_off")
             icons.append("theft_on" if(player.steal) else "theft_off")
-            icons.append("Gold Nudgets: " + str(player.gold))
+            icons.append("Gold Nudgets:  " + str(player.gold))
+            icons.append("Cards in Hand: " + str(len(player.cards)))
             listPlayers[player.name] = icons
         return listPlayers
     

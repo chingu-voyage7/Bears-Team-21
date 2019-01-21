@@ -244,16 +244,23 @@ window.onload = function() {
                     <div class="col-sm-1"></div>`;
             data[name].forEach(function(icon) {
                 console.log(icon);
-                if (!icon.startsWith("Gold")){
+                if (!icon.startsWith("Gold") && !icon.startsWith("Cards")){
                     opponentNode += `<div class="col-sm-2 tools ${icon}"></div>`
                 }
             });        
             opponentNode += `<div class="col-sm-1"></div></div><div class="row-fluid">
                     <span>
                         <div style="float: left;"><span class="gold"></span></div>
+                        <small>${data[name][data[name].length-2]}</small>
+                    </span>
+                </div>
+                <div class="row-fluid">
+                    <span>
+                        <div style="float: left;"><span class="back-small"></span></div>
                         <small>${data[name][data[name].length-1]}</small>
                     </span>
-                </div></div></div>`;
+                </div>
+                </div></div>`;
             document.getElementById("opponents").innerHTML += (opponentNode);
             $('.game-opponent').each(function (i,div) {
                 console.log(div)
@@ -365,7 +372,8 @@ window.onload = function() {
     socket.on("wait_for_player", (data)=> {
         console.log(data["active"]);
         active_player = data["active"];
-        $("#player-active").text(data["active"] == 1 ? "It's your turn!" : "Waiting for "+ data["player"]);
+        $("#player-active").text("Round: " + data["round"] + " - " + data["active"] == 1 ? "It's your turn!" : "Waiting for "+ data["player"]);
+        $("#deck-cards").text(data["deck"]);
     })
 
     socket.on("update_board", (data)=> {
@@ -444,6 +452,7 @@ window.onload = function() {
         modal.innerHTML=htmlScores;
         document.getElementById("exampleModalLabel").innerText="Game Over! - Winners:";
         $('#modalBtn').click();
+        $("#player-active").text("Game Over! Winners: " + data["player"].join(" "));
     })
     
 };
