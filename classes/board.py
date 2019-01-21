@@ -99,15 +99,18 @@ class Board:
             (nx,ny) = set_direction(direction)
             nx += x
             ny += y
-            other = self.board[nx][ny]            
-            if other is not None:  
-                print("other coords", nx,ny)
-                print("direction", direction)
-                print("other",other.required)
-                print(other.name)
-                print("this", required)              
-                if (-direction in other.required) != (direction in required):
-                    return False
+            try:
+                other = self.board[nx][ny]            
+                if other is not None:  
+                    print("other coords", nx,ny)
+                    print("direction", direction)
+                    print("other",other.required)
+                    print(other.name)
+                    print("this", required)              
+                    if (-direction in other.required) != (direction in required):
+                        return False
+            except IndexError as error:
+                print("reached board bounds")
         return True
 
     def check_visited(self, x, y, direction):

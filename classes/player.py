@@ -35,6 +35,12 @@ class Player():
     def receive_gold(self, amount):
         if amount > 0:
             self.gold += amount
+    
+    def lose_gold(self):
+        if self.gold > 0:
+            self.gold -= 1
+            return 1
+        return 0
 
     def imprison(self):
         self.free = False

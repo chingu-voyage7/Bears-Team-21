@@ -5,10 +5,8 @@ info = {}
 socket.on('connect', () => {    
     info.username = $("#username").html();
     info.room = "/lobby";
-    console.log(`Websocket ${info.username} connected!`);
-    //socket.emit('join', '/home?');
+
     $( 'form' ).on( 'submit', function( e ) {
-        console.log("info",info);
         e.preventDefault()
         let user_name = info.username;
         let user_input = $( 'input.chat_input' ).val();
@@ -23,7 +21,6 @@ socket.on('connect', () => {
 });
 
 socket.on('receiveMessage', function(msg) {
-    console.log( msg )
     if(typeof msg.user_name !== 'undefined') {
         var base_receive = `<div class="row msg_container base_receive">
                 <div class="col-md-2 col-xs-2 avatar">
@@ -45,8 +42,6 @@ socket.on('receiveMessage', function(msg) {
                     <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
                 </div>
             </div>`;
-        //var chatTab = msg.room == "/lobby"? "#tab1primary" : "#tab2primary"
-        console.log(msg.room)
         $('div '+msg.room).append(
             (msg.user_name == $("#username").html() ? base_sent : base_receive)
         );
@@ -56,10 +51,7 @@ socket.on('receiveMessage', function(msg) {
 
 socket.on('roomsList',(rmData)=>{
     if (info.room != "/lobby") return;
-
-    console.log(rmData);
     
-    //setCookie("rooms-list", JSON.stringify(rmData), 1);
     $('.toggle').css('display','none');
     let roomListContainer = document.querySelector('.gamerooms');
     roomListContainer.innerHTML = '<ul class="list-group"></ul>';
@@ -72,7 +64,6 @@ socket.on('roomsList',(rmData)=>{
     Array.from(document.getElementsByClassName('room')).forEach(room=>{
         room.addEventListener('click', e =>{
             const endpoint = room.getAttribute('ns');
-            console.log("selecting: " + endpoint);
             joinGame(endpoint)
             setCookie("endpoint", endpoint, 1);
         })
@@ -82,16 +73,10 @@ socket.on('roomsList',(rmData)=>{
 
 socket.on('join_room', message_data => {
     info.room = message_data.room;
-    console.log("join_room "+message_data); 
     buildRoomList(message_data);
 });
 
-socket.on('my_response', message_data => {
-    console.log('server response '+message_data); 
-});
-
 socket.on('room_busy', message_data => {
-    console.log("room_busy "+message_data); 
     var node = document.createTextNode("Game already in progress!");
     var modal = document.getElementById("modal-body");
     modal.innerHTML="";
@@ -101,7 +86,6 @@ socket.on('room_busy', message_data => {
 });
 
 socket.on('room_exist', message_data => {
-    console.log("room_exist "+message_data); 
     var node = document.createTextNode("Game room name present!");
     var modal = document.getElementById("modal-body");
     modal.innerHTML="";
@@ -113,7 +97,7 @@ socket.on('room_exist', message_data => {
 socket.on('restore_input',createLobby);
 
 function createLobby(){
-    $('#new-room').show();//.innerHTML=`<div class="col-sm-8"><input id="lbl-new-room" type="text" placeholder="Enter Room Name" /></div><div class="col-sm-4 roomsbtn"><button class="btn btn-warning" id="create_game_room">Create Game</button></div>`;
+    $('#new-room').show();
     document.querySelector('#create_game_room').onclick = createGame;
     document.querySelector('#lbl-new-room').addEventListener("keyup", function(event) {
         event.preventDefault();
@@ -137,11 +121,9 @@ function buildRoomList(message_data){
         <h3>${message_data['players']}</h3>
     </div>
     </div>`;
-
-
-    document.querySelector('#testP').addEventListener('click', e =>{
-        socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
-    });
+    //document.querySelector('#testP').addEventListener('click', e =>{
+    //    socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
+    //});
     document.querySelector('#btn-leave').addEventListener('click', leaveRooms);
     $('.toggle').css('display','block');
 }
@@ -154,23 +136,19 @@ function leaveRooms(){
         socket.emit('leave',{'data':"test",'room':old})
         setCookie("endpoint", "/lobby", 1);
         $('#event-room').hide();
-        console.log("leave btn");
 }
 
 function createGame() {
     const endpoint = document.querySelector('#lbl-new-room').value;
-    console.log('Creating game...' + endpoint);
     socket.emit('create_room', {STUFF: "TO-BE DEFINED", roomId: endpoint, userId: info.username});
     setCookie("endpoint", endpoint, 1);
 }
 
 function joinGame(endpoint) {
-    console.log('Joining game...' + endpoint);
     socket.emit('join_room', {roomId: endpoint, userId: info.username});
 }
 
 socket.on('disconnect', () => {
-    console.log(`Websocket ${info.username} disconnected!`);
     if (document.querySelector('#toggle-ready').checked){
         document.querySelector('.toggle').click();
     };
@@ -178,7 +156,6 @@ socket.on('disconnect', () => {
 });
 
 socket.on('start_game', message_data => {
-    console.log(message_data);
     $(location).attr('href', '/game'+message_data['room']);
 });
 
@@ -206,25 +183,14 @@ function getCookie(cname) {
 
 function checkCookie() {
     var endpoint = getCookie("endpoint");
-
     if (endpoint != "") {
-        console.log("cookie-check" + endpoint);
         joinGame(endpoint)
-    } else {
-        console.log("cookie-check" + endpoint);
     }
-    
 } 
-
-//setInterval(function() {
-//   if($('.toggle').css('display') == 'none' ) return;
-//    socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked});
-//}, 5000);
 
 $( document ).ready(function() {
     checkCookie();
     $('.toggle').on('change',()=>{
-        console.log("ready toggle");
         socket.emit('ready_event', {'Toggle':document.querySelector('#toggle-ready').checked, 'room':info.room});
     });
     $(".toggle-chat").click(function () {
@@ -238,9 +204,8 @@ $( document ).ready(function() {
     });
     $("a.nourl").click(function(e){
         e.preventDefault();
-        
      });
-    //$('#tab2').hide();
+     
     $(".nav li").on("click", function(e) {
         $(".nav li").removeClass("active");
         $(".tab-pane").removeClass("in active");

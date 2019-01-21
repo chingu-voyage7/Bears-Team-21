@@ -6,7 +6,19 @@
     float: left;
     padding: 0px 10px 0px 10px;
 }
-
+.back{
+    background:url("../imgs/back.png") left top; 
+    width:40px; 
+    height:40px;
+    padding: 0px 5px 0px 15px;
+}
+.back-small{
+    background:url("../imgs/back-sm.png") left top; 
+    widows: 20px; 
+    height:20px;
+    padding: 0px 10px 0px 10px;
+    display: inline-block;
+}
 .grid.square{
     zoom:0.75;
     -moz-transform:scale(0.75);

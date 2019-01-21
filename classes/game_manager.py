@@ -1,6 +1,7 @@
 from .player import Player
 from .deck import Deck, ActionCard, DoorCard, PathCard, RoleCard, ToolCard
 from .board import Board
+from .utility import sub_one
 
 class GameManager():
     def __init__(self,room,player_list):
@@ -64,34 +65,39 @@ class GameManager():
         result = False # could be used positive or negative outcome of move
         print("handle move logic",card,x,y,target)
         player = self.players[self.current_player]
-        if isinstance(card, list):
-            if len(card) == 2:
-                if not player.free:
-                    self.discard_release(player, card)                 
+        try:
+            if isinstance(card, list):
+                if len(card) == 2:
+                    if not player.free:
+                        self.discard_release(player, card)                 
+                    else:
+                        self.discard_repair(player, card, target)
                 else:
-                    self.discard_repair(player, card, target)
+                    print ("discard(",card,")")
+                    self.discard(player, card)
+                result = True
             else:
-                print ("discard(",card,")")
-                self.discard(player, card)
-            result = True
-        else:
-            card_obj = player.cards[card] 
-            if isinstance(card_obj, (PathCard, DoorCard)):
-                result = self.path_played(player, 
-                card, x, y)
-            elif isinstance(card_obj, (ActionCard, ToolCard)):
-                result = self.action_played(player, 
-                card, target)
-        if result:
-            round_over = self.board.check_end() or self.cards_in_play == 0        
-            if round_over:
-                self.state = 'round_over'
-            else:
-                self.current_player += 1 
-                self.current_player %= len(self.players)
-                self.state = 'wait_for_move'
-            print(self.state)    
-        return result    
+                card_obj = player.cards[card] 
+                if isinstance(card_obj, (PathCard, DoorCard)):
+                    result = self.path_played(player, 
+                    card, x, y)
+                elif isinstance(card_obj, (ActionCard, ToolCard)):
+                    result = self.action_played(player, 
+                    card, target)
+            if result:
+                round_over = self.board.check_end() or self.cards_in_play == 0        
+                if round_over:
+                    self.state = 'round_over'
+                else:
+                    self.current_player += 1 
+                    self.current_player %= len(self.players)
+                    self.state = 'wait_for_move'
+                print(self.state)   
+            return result  
+        except Exception as exception:
+            print(exception)
+            return False    
+        
     
     def discard(self, player, cards):
         for card in sorted(cards, reverse=True):
@@ -207,6 +213,10 @@ class GameManager():
 
     def round_over(self):
         #split winnings
+        # If there is a path with a blue and green door, 
+        # the boss is the only player who can win through this path
+        boss_won = self.board.check_end()
+        
         self.board.reset_visited()
         self.board.find_available_spots(self.board.start_x, 
         self.board.start_y, 6, door='blue')
@@ -218,8 +228,8 @@ class GameManager():
         green_connected = self.board.check_end()
 
         last_player = self.players[self.current_player].role
-        blue_won = None
-        green_won = None
+        blue_won = False
+        green_won = False
         #blue won
         if last_player in ['bluedigger', 'theboss', 'geologist', 'profiteer']:
             blue_won = blue_connected
@@ -231,26 +241,24 @@ class GameManager():
         elif last_player == 'bluedigger':
             green_won = not blue_connected
 
-        boss_won = blue_won or green_won
+        #boss_won = blue_won or green_won #boss wins if there's a path, even if no gold-diggers receive gold
         saboteur_won = not boss_won
         geologist_gold = self.board.crystal_count
 
         winners_count = 0
         for player in self.players:
             if player.role == 'bluedigger':
-                winners_count += blue_won
+                winners_count += int(blue_won)
             elif player.role == 'greendigger':
-                winners_count += green_won
+                winners_count += int(green_won)
             elif player.role == 'theboss':
-                winners_count += boss_won
+                winners_count += int(boss_won)
             elif player.role == 'profiteer':
                 winners_count += 1
             elif player.role == 'saboteur':
-                winners_count += saboteur_won
+                winners_count += int(saboteur_won)
 
-        winnings = 6 - winners_count
-        if winnings < 1:
-            winnings = 1
+        winnings = sub_one(6,winners_count)
 
         self.round_scores = {}
 
@@ -262,17 +270,21 @@ class GameManager():
                 player.receive_gold(winnings)
                 self.round_scores[player.name] = winnings
             elif player.role == 'theboss' and boss_won:
-                player.receive_gold(winnings - 1)
-                self.round_scores[player.name] = winnings - 1
+                player.receive_gold(sub_one(winnings,1))
+                self.round_scores[player.name] = sub_one(winnings,1)
             elif player.role == 'profiteer':
-                player.receive_gold(winnings - 2)
-                self.round_scores[player.name] = winnings - 2
+                player.receive_gold(sub_one(winnings, 2))
+                self.round_scores[player.name] = sub_one(winnings,2)
             elif player.role == 'saboteur':
                 player.receive_gold(winnings)
                 self.round_scores[player.name] = winnings
             elif player.role == 'geologist':
                 player.receive_gold(geologist_gold)
                 self.round_scores[player.name] = geologist_gold
+
+        for player in sorted(self.players, key=self.get_gold):
+            if player.free and player.steal: # from poorest steal to richest
+                player.receive_gold(self.next_rich_player(player).lose_gold())
 
         for player in self.players:
             player.reset()
@@ -284,12 +296,21 @@ class GameManager():
         print(self.state)
         return(self.round_scores)
     
+    def get_gold(self, player):
+        return player.gold
+
+    def next_rich_player(self, notMe):
+        for player in sorted(self.players, key=self.get_gold, reverse = True):
+            if player.name != notMe.name:
+                return player
+        return notMe
+
     def game_over(self):
         self.winners = []
         max_gold = max(self.players).gold
         for player in self.players:
             if player.gold == max_gold:
-                self.winners.append(player)
+                self.winners.append(player.name)
         print('winners =', self.winners)
         #show buttons
         print(self.state)
@@ -303,7 +324,8 @@ class GameManager():
             icons.append("cart_on" if(player.tools['cart']) else "cart_off")
             icons.append("trapped_on" if(player.free) else "trapped_off")
             icons.append("theft_on" if(player.steal) else "theft_off")
-            icons.append("Gold Nudgets: " + str(player.gold))
+            icons.append("Gold Nudgets:  " + str(player.gold))
+            icons.append("Cards in Hand: " + str(len(player.cards)))
             listPlayers[player.name] = icons
         return listPlayers
     
