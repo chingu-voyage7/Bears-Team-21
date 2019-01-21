@@ -207,6 +207,10 @@ class GameManager():
 
     def round_over(self):
         #split winnings
+        # If there is a path with a blue and green door, 
+        # the boss is the only player who can win through this path
+        boss_won = self.board.check_end()
+        
         self.board.reset_visited()
         self.board.find_available_spots(self.board.start_x, 
         self.board.start_y, 6, door='blue')
@@ -231,7 +235,7 @@ class GameManager():
         elif last_player == 'bluedigger':
             green_won = not blue_connected
 
-        boss_won = blue_won or green_won
+        #boss_won = blue_won or green_won #boss wins if there's a path, even if no gold-diggers receive gold
         saboteur_won = not boss_won
         geologist_gold = self.board.crystal_count
 

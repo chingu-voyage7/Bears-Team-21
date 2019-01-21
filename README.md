@@ -96,14 +96,14 @@ The cards are of several types:
 #### Blue and Green Gold-Diggers
 
 Both teams try to tunnel their way towards the treasure, but they are in competition.
-A team wins if:
+*A team wins* if:
 * a dwarf from that team creates the connection to the treasure and the way there isn‘t blocked by a door of the other color
 * a dwarf from the other team creates the connection to the treasure, but the way there for his or her own team is blocked by a door of the wrong color
-Both teams win (along with all other “non-Saboteurs”) if *The Boss*, *The Geologist* or *The Profiteer* creates the connection to the gold and the way there isn‘t blocked by a door of the other color.
+* *Both teams win* (along with all other “non-Saboteurs”) if *The Boss*, *The Geologist* or *The Profiteer* creates the connection to the gold and the way there isn‘t blocked by a door of the other color.
 
 #### The Boss
 
-The Boss builds tunnels for both the *Green and the Blue Team* and wins every time one of the teams wins. When the treasure is split, The Boss always gets one Gold
+The Boss builds tunnels for both the *Green and the Blue Team* and wins if there's a path to the treasure. When the treasure is split, The Boss always gets one Gold
 Piece less than the other winners.
 
 #### The Profiteer
@@ -113,6 +113,10 @@ Piece less than the other winners.
 #### The Geologist
 
 *The Geologist* dig at their own expense, so to speak. They aren‘t particularly interested in gold. When the treasure is split, a *Geologist* gets as many Gold Pieces as there are crystals visible in the maze of tunnels. If both *Geologists* are in play, they split the Gold Pieces (rounded down).
+
+#### The Saboteur
+
+*The saboteurs* have won the round if the goal card with the treasure wasn't reached.
 
 ## Playing the Game
 
@@ -131,7 +135,10 @@ Then your turn is over and it‘s the next player‘s turn.
 
 ## Authors
 
-See the list of [contributors](https://github.com/chingu-voyage7/Bears-Team-21/graphs/contributors) who participated in this project.
+* **Salvatore Ventrone** - [Ventrosky](https://github.com/Ventrosky)
+* **Mihajlo Krsmanović** - [rektix](https://github.com/rektix)
+
+See also the list of [contributors](https://github.com/chingu-voyage7/Bears-Team-21/graphs/contributors) who participated in this project.
 
 ## License
 
