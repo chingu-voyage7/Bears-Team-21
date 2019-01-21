@@ -1,6 +1,7 @@
 from .player import Player
 from .deck import Deck, ActionCard, DoorCard, PathCard, RoleCard, ToolCard
 from .board import Board
+from .utility import sub_one
 
 class GameManager():
     def __init__(self,room,player_list):
@@ -252,9 +253,7 @@ class GameManager():
             elif player.role == 'saboteur':
                 winners_count += saboteur_won
 
-        winnings = 6 - winners_count
-        if winnings < 1:
-            winnings = 1
+        winnings = sub_one(6,winners_count)
 
         self.round_scores = {}
 
@@ -266,17 +265,21 @@ class GameManager():
                 player.receive_gold(winnings)
                 self.round_scores[player.name] = winnings
             elif player.role == 'theboss' and boss_won:
-                player.receive_gold(winnings - 1)
-                self.round_scores[player.name] = winnings - 1
+                player.receive_gold(sub_one(winnings,1))
+                self.round_scores[player.name] = sub_one(winnings,1)
             elif player.role == 'profiteer':
-                player.receive_gold(winnings - 2)
-                self.round_scores[player.name] = winnings - 2
+                player.receive_gold(sub_one(winnings, 2))
+                self.round_scores[player.name] = sub_one(winnings,2)
             elif player.role == 'saboteur':
                 player.receive_gold(winnings)
                 self.round_scores[player.name] = winnings
             elif player.role == 'geologist':
                 player.receive_gold(geologist_gold)
                 self.round_scores[player.name] = geologist_gold
+
+        for player in sorted(self.players, key=self.get_gold):
+            if player.free and player.steal: # from poorest steal to richest
+                player.receive_gold(self.next_rich_player(player).lose_gold)
 
         for player in self.players:
             player.reset()
@@ -288,6 +291,15 @@ class GameManager():
         print(self.state)
         return(self.round_scores)
     
+    def get_gold(self, player):
+        return player.gold
+
+    def next_rich_player(self, notMe):
+        for player in sorted(self.players, key=self.get_gold, reverse = True):
+            if player.name != notMe.name:
+                return player
+        return notMe
+
     def game_over(self):
         self.winners = []
         max_gold = max(self.players).gold
