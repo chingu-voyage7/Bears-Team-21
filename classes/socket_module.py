@@ -214,7 +214,7 @@ class GameRoomNs(Namespace):
 
     def active_player(self, sid, ns):
         current_player = startedGame[ns].get_current_player()
-        nround = startedGame[ns].rounds
+        nround = startedGame[ns].rounds + 1
         ncards = len(startedGame[ns].deck.cards)
         emit("wait_for_player", {"active" : 0, "player":current_player[1], "round": nround, "deck": ncards}, broadcast= True)
         emit("wait_for_player", {"active" : 1, "player":current_player[1], "round": nround, "deck": ncards}, room=current_player[0])

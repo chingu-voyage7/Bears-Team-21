@@ -37,10 +37,8 @@ window.onload = function() {
             sqr.style.transform = `scale(${CELL_ZOOM})`;
             sqr.addEventListener('click', function(evt) { 
                 if (active_player == false) {
-                    console.log("not my turn");
                     return;
                 }
-                console.log(this); 
                 cell = this.id.split('-')[1];
                 if (selected.length == 1){
                     coord = [parseInt(this.getAttribute("x")),parseInt(this.getAttribute("y"))]
@@ -51,7 +49,6 @@ window.onload = function() {
                             flag = false;
                             for (i = 0; i < available.length; i++){ 
                                 coords = available[i];
-                                console.log(coords);
                                 if (coord[1] == coords[0] && coord[0] == coords[1]){
                                     if (canBePlaced(coord, selected[0].required)){
                                         placeCard(coord, selected[0].index-1);                                    
@@ -60,16 +57,12 @@ window.onload = function() {
                                 }
                             }
                             break;
-
                         case 'remove':
-                            //send event for removing card
-                            console.log("remove ");
                             if((this.classList.length > 1) && !(this.classList.contains("path-00") || this.classList.contains("goal-back"))){
                                 removeCard(coord, selected[0].index-1);
                             }
                             break;
                         case 'reveal':
-                            console.log("reveal ");
                             if (this.classList.contains("goal-back")){
                                 revealCard(coord, selected[0].index-1);
                             }
@@ -82,26 +75,22 @@ window.onload = function() {
     }
 
     function modifyPlayer(player, card){
-        console.log("emit trap")
         socket.emit('play_action',{'card': card, 'target': player});
         active_player = false;
     }
 
     function placeCard(coords, card){
         //emit handle move for path card
-        console.log("emit place")
         socket.emit("place_card",{"cards": card,"x":coords[1],"y":coords[0]});
         active_player = false;
     }
     function removeCard(coords, card){
         //emit handle move for path card
-        console.log("emit remove")
         socket.emit("remove_card",{"card": card,"x":coords[1],"y":coords[0]});
         active_player = false;
     }
     function inspectPlayer(player, card){
         //emit handle move for path card
-        console.log("emit inspect")
         socket.emit("inspect_player",{"card": card,"player":player});
         active_player = false;
     }
@@ -109,7 +98,6 @@ window.onload = function() {
         return true;
     }
     function revealCard(coords, card){
-        console.log("show_goal" + card + ", "+ coords[0] + "-"+ coord[1])
         socket.emit("show_goal",{"cards": card,"x":coords[1],"y":coords[0]});
         active_player = false;
     }
@@ -144,9 +132,7 @@ window.onload = function() {
     socket.on('connect', () => {    
         info.username = $("#username").html();
         info.room =  $("#gamename").html();
-        console.log(`Websocket ${info.username} connected!`);
         $( '#btn-chat' ).on( 'click', function( e ) {
-            console.log("info",info);
             e.preventDefault()
             let user_name = info.username;
             let user_input = $( 'input.chat_input' ).val();
@@ -169,7 +155,6 @@ window.onload = function() {
     });
 
     socket.on('receiveMessage', function(msg) {
-        console.log( msg )
         if(typeof msg.user_name !== 'undefined') {
             var base_receive = `<div class="row msg_container base_receive">
                     <div class="col-md-2 col-xs-2 avatar">
@@ -191,8 +176,6 @@ window.onload = function() {
                         <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
                     </div>
                 </div>`;
-            
-            console.log("room msg:"+msg.room)
             $('div '+msg.room).append(
                 (msg.user_name == $("#username").html() ? base_sent : base_receive)
             );
@@ -200,7 +183,6 @@ window.onload = function() {
         }
     }) 
     lobbySocket.on('receiveMessage', function(msg) {
-        console.log("lobby msg:"+ msg )
         if(typeof msg.user_name !== 'undefined') {
             var base_receive = `<div class="row msg_container base_receive">
                     <div class="col-md-2 col-xs-2 avatar">
@@ -222,8 +204,6 @@ window.onload = function() {
                         <img src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" class=" img-responsive ">
                     </div>
                 </div>`;
-            //var chatTab = msg.room == "/lobby"? "#tab1primary" : "#tab2primary"
-            console.log(msg.room)
             $('div '+msg.room).append(
                 (msg.user_name == $("#username").html() ? base_sent : base_receive)
             );
@@ -231,7 +211,6 @@ window.onload = function() {
         }
     }) 
     socket.on("update_players", data => {
-        console.log(data);
         document.getElementById("opponents").innerHTML = ""
         var players = Object.keys(data);
         players.forEach(function(name,i) {
@@ -243,7 +222,6 @@ window.onload = function() {
                 <div class="row">
                     <div class="col-sm-1"></div>`;
             data[name].forEach(function(icon) {
-                console.log(icon);
                 if (!icon.startsWith("Gold") && !icon.startsWith("Cards")){
                     opponentNode += `<div class="col-sm-2 tools ${icon}"></div>`
                 }
@@ -263,14 +241,11 @@ window.onload = function() {
                 </div></div>`;
             document.getElementById("opponents").innerHTML += (opponentNode);
             $('.game-opponent').each(function (i,div) {
-                console.log(div)
                 div.addEventListener('click', function(evt) { 
                     if (active_player == false) {
-                        console.log("not my turn");
                         return;
                     }
                     player = parseInt(i);
-                    console.log(player);
                     if (selected.length == 1){
                         switch(selected[0].type){
                             case 'handsoff':
@@ -284,7 +259,6 @@ window.onload = function() {
                                 modifyPlayer(player, selected[0].index-1);
                                 break;
                             case 'inspection':
-                                console.log(selected[0].type);
                                 inspectPlayer(player, selected[0].index-1);
                                 break;
                     }                 
@@ -295,13 +269,11 @@ window.onload = function() {
     })
 
     socket.on("update_hand", (data)=>{
-        document.getElementById("hand").innerHTML = ""
-        console.log(data);
+        document.getElementById("hand").innerHTML = "";
         cards = [];
         selected = [];
         data.forEach(function(card) {
             var cardNode = document.createElement("DIV");  
-            console.log(card);
             cardNode.style.width = squarewidth + 'px'; 
             cardNode.style.height = squareheight + 'px'; 
             cardNode.className= "card sprite " + card.name + (card.rotated ? " rotate" : "");
@@ -314,7 +286,6 @@ window.onload = function() {
             cardNode.addEventListener("dblclick", function () {
                 if (cards[$(this).index()].name.startsWith('path')){
                     socket.emit("rotate_card",{"card": $(this).index()});
-                    console.log($(this).index());
                     if ($(this).hasClass( "rotate" )){
                         $(this).removeClass('rotate');
                     } else {
@@ -323,10 +294,7 @@ window.onload = function() {
                 }
             });
             cardNode.addEventListener('click', function(e){
-                //selected.push(cardNode.index);
                 e.preventDefault();
-                console.log('selected ',cardNode.index);
-                //cardNode.className += " red-border";
                 if (selected.length <= 3) {
                     if ($(this).hasClass( "red-border" )){
                         $(this).removeClass('red-border');
@@ -343,12 +311,10 @@ window.onload = function() {
 
     $('#discard').click(function(){
         if (active_player == false) {
-            console.log("not my turn");
             return;
         }
         selected.forEach(function(card){
             i = card.index;
-            console.log(i);
             if ($('#hand .card:nth-child('+i+')').hasClass( "red-border" )){
                 $('#hand .card:nth-child('+i+')').removeClass('red-border');
             }
@@ -370,9 +336,8 @@ window.onload = function() {
     })
     
     socket.on("wait_for_player", (data)=> {
-        console.log(data["active"]);
         active_player = data["active"];
-        $("#player-active").text("Round: " + data["round"] + " - " + data["active"] == 1 ? "It's your turn!" : "Waiting for "+ data["player"]);
+        $("#player-active").text("Round: " + data["round"] + " - " + (data["active"] == 1 ? "It's your turn!" : "Waiting for "+ data["player"]));
         $("#deck-cards").text(data["deck"]);
     })
 
@@ -381,7 +346,6 @@ window.onload = function() {
             cell.className = "square";
         });
         Object.keys(data).forEach(function(key) {
-            console.log(key, data[key]);
             var card_square = document.getElementById("square-"+key);
             card_square.className="square sprite "+data[key].split('.').join(' ');
             //card_square.style.transform = (card_square.className.includes("rotate")? `rotate(180) ` : "") + `scale(${CELL_ZOOM})`;
@@ -389,12 +353,9 @@ window.onload = function() {
     })
     
     socket.on("available_cells", (data)=> {
-        console.log("available_cells:")
-        console.log(data);//available
         available = data; //(y,x)
         available.forEach(function(coords) {
-            console.log(coordsToPos(coords[0],coords[1])+1)
-            $("#square-"+(coordsToPos(coords[0],coords[1])+1)).addClass("available")
+            $("#square-"+(coordsToPos(coords[0],coords[1])+1)).addClass("available");
         });
     })
 
@@ -413,7 +374,6 @@ window.onload = function() {
     })
 
     socket.on("reveal_role", (data)=> {
-        console.log("received inspect");
         var playerNode = document.createElement("DIV"); 
         playerNode.className= "card sprite "+ data["role"];
         var modal = document.getElementById("modal-body");
@@ -423,12 +383,9 @@ window.onload = function() {
         $('#modalBtn').click();
     })
 
-    socket.on("round_over", (data)=> {
-        //var playerScore = document.createElement("DIV"); 
-        console.log(data)
+    socket.on("round_over", (data)=> { 
         var modal = document.getElementById("modal-body");
-        var htmlScores = `<div class="leaderboard">
-            <ol>`
+        var htmlScores = `<div class="leaderboard"><ol>`;
         Object.keys(data).forEach(function(current,idx) {
             htmlScores += `<li>
                     <mark>${data[current][0]}</mark>
@@ -441,18 +398,7 @@ window.onload = function() {
         $('#modalBtn').click();
     })
     socket.on("game_over", (data)=> {
-        console.log("game over")
-        console.log(data)
-        var modal = document.getElementById("modal-body");
-        var htmlScores = `<div class="leaderboard"><ol>`
-        Object.keys(data).forEach(function(current) {
-            htmlScores += `<li><label>${data[current]}</label></li>`;
-        });
-        htmlScores += "</ol></div>"
-        modal.innerHTML=htmlScores;
-        document.getElementById("exampleModalLabel").innerText="Game Over! - Winners:";
-        $('#modalBtn').click();
-        $("#player-active").text("Game Over! Winners: " + data["player"].join(" "));
+        $("#player-active").text("Game Over! Winners: " + data.join(" "));
     })
     
 };

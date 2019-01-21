@@ -310,7 +310,7 @@ class GameManager():
         max_gold = max(self.players).gold
         for player in self.players:
             if player.gold == max_gold:
-                self.winners.append(player)
+                self.winners.append(player.name)
         print('winners =', self.winners)
         #show buttons
         print(self.state)
