@@ -80,7 +80,7 @@ The cards are of several types:
 - **Rock fall** card: this card lets you remove any **Path** card of the maze. Just click on the card you want to remove. 
 - **Inspection**: If you play this, you may look at the dwarf card of any one other player.
 - **Swap Your Hand**: The player who plays this card chooses one other player and exchanges hands with them.
-- **Theft**: You play this on yourself. At the end of the round, you can steal 1 Gold Piece from any one player. You cannot use this card if you are trapped.
+- **Theft**: You play this on yourself. At the end of the round, you will steal 1 Gold Piece from the player with most gold. You cannot use this card if you are trapped.
 - **Hands Off**: If you play this card, you can remove one Theft card from in front of any player. 
 - **Swap Your Hats**: Choose one player who has to discard their current Dwarf Card.
 - **Trapped!** Play this on another player. This player is trapped and cannot play any more path cards. When the round ends, they don‘t get any treasure.
