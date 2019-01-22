@@ -148,6 +148,8 @@ class GameRoomNs(Namespace):
         "test_role":{"role":"path-02"},
         "test_board":{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}
     }
+    last_log = ""
+
     def on_connect(self):
         print("got connection", request.namespace)
         emit("update_players", startedGame[request.namespace].players_list(), room=request.sid)
@@ -217,6 +219,7 @@ class GameRoomNs(Namespace):
         self.active_player(request.sid, request.namespace)
 
     def active_player(self, sid, ns):
+        self.broadcastGameLog(startedGame[ns].log_message)
         current_player = startedGame[ns].get_current_player()
         nround = startedGame[ns].rounds + 1
         ncards = len(startedGame[ns].deck.cards)
@@ -224,8 +227,8 @@ class GameRoomNs(Namespace):
         emit("wait_for_player", {"active" : 1, "player":current_player[1], "round": nround, "deck": ncards}, room=current_player[0])
         if startedGame[ns].state == "round_over": 
             scores = startedGame[ns].round_over()
+            self.broadcastGameLog(startedGame[ns].log_message)
             emit("round_over", sorted(scores.items(), key=lambda kv: kv[1], reverse = True), broadcast= True)
-        #startedGame[ns].state_listener()
         if startedGame[ns].state == "start_round":
             startedGame[ns].start_round()
             emit("update_board", startedGame[ns].board.getBoardData(), broadcast= True)
@@ -233,10 +236,12 @@ class GameRoomNs(Namespace):
             for player in startedGame[ns].players:
                 emit("update_hand", startedGame[ns].player_hand_list(player.name), room=player.sid)
                 emit("update_role", {"role":startedGame[ns].get_player_role(player.name)}, room=player.sid)
+            self.broadcastGameLog(startedGame[ns].log_message)
         elif startedGame[ns].state == "game_over":
             startedGame[ns].game_over()
             emit("game_over", startedGame[ns].winners, broadcast= True)
-        emit("update_players", startedGame[ns].players_list(), broadcast=True)
+            self.broadcastGameLog(startedGame[ns].log_message)
+        emit("update_players", startedGame[ns].players_list(), broadcast=True) 
 
     def all_update_hand(self, ns):
         for player in startedGame[ns].players:
@@ -244,3 +249,8 @@ class GameRoomNs(Namespace):
             emit("update_hand", startedGame[ns].player_hand_list(player.name), room=player.sid)
             emit("update_role", {"role":startedGame[ns].get_player_role(player.name)}, room=player.sid)
         emit("update_players", startedGame[ns].players_list(), broadcast=True)
+
+    def broadcastGameLog(self, message):
+        if (message != self.last_log):
+            emit('game_message', {'message':message}, broadcast=True)
+            self.last_log = message

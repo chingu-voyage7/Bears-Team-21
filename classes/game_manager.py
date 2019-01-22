@@ -13,6 +13,7 @@ class GameManager():
         self.start_round()    
         self.round_scores = {}
         self.winners = []
+        self.log_message = 'Starting Game!'
         #self.state_listener()
 
     def state_listener(self):
@@ -36,7 +37,7 @@ class GameManager():
         self.state = 'start_round'
         
     def start_round(self):
-        print('round started')
+        self.log_message = 'Round started!'
         #create decks
         self.deck = Deck('classes\paths.json','path-cards')
         self.deck.concat(Deck('classes\paths.json', 'action-cards'))
@@ -75,6 +76,7 @@ class GameManager():
                 else:
                     print ("discard(",card,")")
                     self.discard(player, card)
+                self.log_message = player.name + " discards cards"
                 result = True
             else:
                 card_obj = player.cards[card] 
@@ -139,6 +141,7 @@ class GameManager():
                 self.cards_in_play -= 1
                 if len(self.deck.cards):
                     player.draw_card(self.deck.draw())
+                self.log_message = player.name + " plays a path card"
                 return True
         return False
 
@@ -153,6 +156,7 @@ class GameManager():
             print("action_reveal",target)
             result = self.board.getRevealCard(target[0],target[1])
             print(result)
+            self.log_message = player.name + " reveals a destination "
             return result
 
         elif card.type == 'remove':
@@ -160,6 +164,7 @@ class GameManager():
             print("remove", target_card.name)
             if isinstance(target_card, (PathCard, DoorCard)):
                 self.board.remove_card(target[0], target[1])
+                self.log_message = player.name + " removes a 'Path Card'"
                 return True
             return False
 
@@ -168,6 +173,7 @@ class GameManager():
             for tool in card.tools:
                 if not t_player.tools[tool]:
                     t_player.repair_tool(tool)  
+                    self.log_message = player.name + " plays 'Repair' on " + tool +" tool"
                     return True              
         #either one of the tools shown, but not both. 
         elif card.type == 'damage':
@@ -175,39 +181,47 @@ class GameManager():
             for tool in card.tools:
                 if t_player.tools[tool]:
                     t_player.break_tool(tool)    
+                    self.log_message = player.name + " 'Break' on " + t_player.name +"'s "+ tool +"tool"
                     return True            
 
         elif card.type == 'theft':
             if player.free:
                 player.steal = True
+                self.log_message = player.name + " plays 'Theft' on self"
 
         elif card.type == 'handsoff':
             t_player = self.players[target]
             t_player.steal = False
+            self.log_message = player.name + " plays 'Hands Off' on " + t_player.name
 
         elif card.type == 'swaphats':
             t_player = self.players[target]
             t_player.set_role(self.roles.draw().type)
+            self.log_message = player.name + " plays 'Swap Your Hats' on " + t_player.name
 
         elif card.type == 'trapped':
             t_player = self.players[target] 
             t_player.imprison()
+            self.log_message = player.name + " plays 'Trapped!' on " + t_player.name
 
         elif card.type == 'swaphand': #modify this to ID
             if not self.current_player == target:
                 t_player = self.players[target] 
                 (player.cards, t_player.cards) = (t_player.cards, player.cards)
                 t_player.draw_card(self.deck.draw())
+                self.log_message = player.name + " plays 'Swap Your Hats' on " + t_player.name
 
         elif card.type == 'inspection':
             #show player role card
             t_player = self.players[target]
             print(t_player.role) 
+            self.log_message = player.name + " plays 'Inspection' on " + t_player.name
             return t_player.role
 
         elif card.type == 'free':
             t_player = self.players[target]
             t_player.release()   
+            self.log_message = player.name + " plays 'Free at last!' on " + t_player.name
             
         return True #placeholder
 
@@ -294,6 +308,7 @@ class GameManager():
         else:
             self.state = 'start_round'
         print(self.state)
+        self.log_message = "Round Scores: " + ', '.join(" %s: %s, " % tup for tup in sorted(self.round_scores.items(), key=lambda kv: kv[1], reverse = True))
         return(self.round_scores)
     
     def get_gold(self, player):
@@ -312,7 +327,7 @@ class GameManager():
             if player.gold == max_gold:
                 self.winners.append(player.name)
         print('winners =', self.winners)
-        #show buttons
+        self.log_message = "Game Winners: " + ', '.join(self.winners)
         print(self.state)
 
     def players_list(self):

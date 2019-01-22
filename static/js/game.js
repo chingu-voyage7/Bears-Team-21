@@ -423,6 +423,18 @@ window.onload = function() {
         sleft = el.scrollLeft;
         document.addEventListener('mousemove', draggingFunction);
     });
+
+    socket.on('game_message', function(msg) {
+            var base_receive = `<div class="row msg_container base_receive">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="messages msg_receive">
+                            <b style="color: #000">Game Log</b> <p>${msg.message}</p>
+                        </div>
+                    </div>
+                </div>`;
+            $('div #tab2primary').append(base_receive);
+            $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
+    }) 
 };
 
 info = {}
