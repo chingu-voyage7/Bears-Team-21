@@ -63,6 +63,7 @@
     display: inline-table;
     border-radius:5px;
     margin-left: 5px !important;
+    transform: scale(0.9);
 }
 
 .sprite {
@@ -458,7 +459,7 @@
     background-position: -960px -1376px;
 }
 .rotate{
-    transform: rotate(180deg);
+    transform: scale(0.9) rotate(180deg);
 }
 .rotate_sc{
     transform: scale(0.75) rotate(180deg) !important;

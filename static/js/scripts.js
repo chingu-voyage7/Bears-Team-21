@@ -119,7 +119,7 @@ function buildRoomList(message_data){
     <div class="container" id="joinedDiv">
     <div class="row ">
     	<div class="col-md-12"> 
-    	        <h2 class="section-title ">Joined Room: ${message_data['room']}</h2>
+    	        <h3 class="section-title ">Joined Room: ${message_data['room']}</h3>
     	        <h4 class="section-subtitle">Waiting for all players to be Ready!</h4>
     	</div></div>
     <div class="border"></div>
