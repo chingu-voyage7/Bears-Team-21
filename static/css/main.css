@@ -10,6 +10,11 @@ h1 {
     color: red;
 }
 
+.game-opponent .row {
+    margin-right: -15px;
+    margin-left: -15px; 
+}
+
 html, body {
   height: 100%;
   position: relative; 
