@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect,url_for
+from flask import Flask, render_template, session, request, redirect,url_for, make_response
 from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import current_user
 from .settings import *
@@ -7,8 +7,8 @@ startedGame = {}
 
 class GameLobbyNs(Namespace):
     clients = {}
-    game_rooms = {}#{'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
-    player_ready = {}#{"Jhon":False,"Alex":True,"Alice":False,"Bob":True,"Ted":True,"Max":False}
+    game_rooms = {'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
+    player_ready = {"Jhon":False,"Alex":True,"Alice":False,"Bob":True,"Ted":True,"Max":False}
 
     def make_rm_List(self):
         roomList = {}
@@ -24,26 +24,26 @@ class GameLobbyNs(Namespace):
         if (userId) in self.game_rooms[roomId]:
             self.game_rooms[roomId].remove(current_user.username)
             emit('roomsList', {'data': 'Connected',
-            'roomList': self.make_rm_List()},room='/lobby')
+            'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def remove_player(self, userId):
         for key in self.game_rooms:
             self.remove_player_room(userId, key)
         emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def add_player(self, userId, roomId):
         self.game_rooms[roomId].append(userId)
         self.player_ready[userId]= False
         emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def on_connect(self):
         self.clients[current_user.username] = session['username']
         join_room('/lobby')
         print('/room joined ')#+ session['username']
         emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def on_disconnect(self):
         self.remove_player(request.sid)
@@ -68,7 +68,7 @@ class GameLobbyNs(Namespace):
         self.game_rooms[roomId] = []
         self.on_join_room( data)
         emit('roomsList',{'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def on_my_event(self, message):
         emit('my_response', {'data': message['data']})
@@ -88,10 +88,14 @@ class GameLobbyNs(Namespace):
     def on_join_room(self, data):
         print(request.sid + " joining " + data['roomId'])
         if ("/"+data['roomId'] in startedGame.keys()):
-            emit("room_busy", {"room": data['roomId']}, room=request.sid)
+            if ((current_user.username in startedGame["/"+data['roomId']].players_list().keys()) and data['auto'] != "auto"):
+                emit("room_rejoin", {"room": "/"+data['roomId']}, room=request.sid)
+                return 
+            else:    
+                emit("room_busy", {"room": data['roomId']}, room=request.sid)
             return
         emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
         roomId = data['roomId']
         #leave_room('/lobby')
         join_room('/'+roomId)
@@ -126,7 +130,7 @@ class GameLobbyNs(Namespace):
         if message['room'] != '/lobby':
             self.remove_player_room(current_user.username, message['room'][1:])
         emit('roomsList',{'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
         emit('restore_input',{'data': 'Connected', 
         'roomList': self.make_rm_List()},room=request.sid)
         return redirect('dashboard')
@@ -144,6 +148,8 @@ class GameRoomNs(Namespace):
         "test_role":{"role":"path-02"},
         "test_board":{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}
     }
+    last_log = ""
+
     def on_connect(self):
         print("got connection", request.namespace)
         emit("update_players", startedGame[request.namespace].players_list(), room=request.sid)
@@ -213,6 +219,7 @@ class GameRoomNs(Namespace):
         self.active_player(request.sid, request.namespace)
 
     def active_player(self, sid, ns):
+        self.broadcastGameLog(startedGame[ns].log_message)
         current_player = startedGame[ns].get_current_player()
         nround = startedGame[ns].rounds + 1
         ncards = len(startedGame[ns].deck.cards)
@@ -220,8 +227,8 @@ class GameRoomNs(Namespace):
         emit("wait_for_player", {"active" : 1, "player":current_player[1], "round": nround, "deck": ncards}, room=current_player[0])
         if startedGame[ns].state == "round_over": 
             scores = startedGame[ns].round_over()
+            self.broadcastGameLog(startedGame[ns].log_message)
             emit("round_over", sorted(scores.items(), key=lambda kv: kv[1], reverse = True), broadcast= True)
-        #startedGame[ns].state_listener()
         if startedGame[ns].state == "start_round":
             startedGame[ns].start_round()
             emit("update_board", startedGame[ns].board.getBoardData(), broadcast= True)
@@ -229,10 +236,12 @@ class GameRoomNs(Namespace):
             for player in startedGame[ns].players:
                 emit("update_hand", startedGame[ns].player_hand_list(player.name), room=player.sid)
                 emit("update_role", {"role":startedGame[ns].get_player_role(player.name)}, room=player.sid)
+            self.broadcastGameLog(startedGame[ns].log_message)
         elif startedGame[ns].state == "game_over":
             startedGame[ns].game_over()
             emit("game_over", startedGame[ns].winners, broadcast= True)
-        emit("update_players", startedGame[ns].players_list(), broadcast=True)
+            self.broadcastGameLog(startedGame[ns].log_message)
+        emit("update_players", startedGame[ns].players_list(), broadcast=True) 
 
     def all_update_hand(self, ns):
         for player in startedGame[ns].players:
@@ -240,3 +249,8 @@ class GameRoomNs(Namespace):
             emit("update_hand", startedGame[ns].player_hand_list(player.name), room=player.sid)
             emit("update_role", {"role":startedGame[ns].get_player_role(player.name)}, room=player.sid)
         emit("update_players", startedGame[ns].players_list(), broadcast=True)
+
+    def broadcastGameLog(self, message):
+        if (message != self.last_log):
+            emit('game_message', {'message':message}, broadcast=True)
+            self.last_log = message

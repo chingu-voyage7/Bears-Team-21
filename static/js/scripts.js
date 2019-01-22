@@ -58,7 +58,8 @@ socket.on('roomsList',(rmData)=>{
     let roomListDiv = document.querySelector('.list-group');
     roomListDiv.innerHTML = "";
     Object.keys(rmData['roomList']).forEach(room => {
-        roomListDiv.innerHTML += `<li class="list-group-item room" ns="${room}">${room} - Players ${rmData['roomList'][room]}/10</li>`;
+        var color = rmData['started'].includes("/"+room) ? "red" : "green";
+        roomListDiv.innerHTML += `<li class="list-group-item room" ns="${room}">${room} - Players ${rmData['roomList'][room]}/10 <span class="dot  pull-right ${color}"></span></li>`;
     });
 
     Array.from(document.getElementsByClassName('room')).forEach(room=>{
@@ -114,16 +115,30 @@ function buildRoomList(message_data){
     $('#new-room').hide();
     $('#event-room').show();
     $('#tab2').css('visibility', 'visible');
-    //document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
-    document.querySelector('.gamerooms').innerHTML=`<div class="row">
+    //.substr(1)
+    var players = `<div class="row">
     <div class="container" id="joinedDiv">
-        <h2>Joined Room: ${message_data['room']}</h2>
-        <h3>${message_data['players']}</h3>
-    </div>
-    </div>`;
-    //document.querySelector('#testP').addEventListener('click', e =>{
-    //    socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
-    //});
+    <div class="row ">
+    	<div class="col-md-12"> 
+    	        <h3 class="section-title ">Joined Room: ${message_data['room']}</h3>
+    	        <h4 class="section-subtitle">Waiting for all players to be Ready!</h4>
+    	</div></div>
+    <div class="border"></div>
+    <div class="row">`;
+   
+    for (var i=0; i< message_data["players"].length; i++){
+    players += `<div class="profile-header-container  col-md-2">   
+            <div class="profile-header-img">
+                <img class="img-circle" src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" />
+                <div class="player-label-container">
+                    <span class="label label-default player-label">${message_data['players'][i]}</span>
+                </div>
+            </div>
+        </div> `;
+   }
+   players += `</div></div></div>`;
+   document.querySelector('.gamerooms').innerHTML= players;
+
     document.querySelector('#btn-leave').addEventListener('click', leaveRooms);
     $('.toggle').css('display','block');
 }
@@ -144,8 +159,8 @@ function createGame() {
     setCookie("endpoint", endpoint, 1);
 }
 
-function joinGame(endpoint) {
-    socket.emit('join_room', {roomId: endpoint, userId: info.username});
+function joinGame(endpoint, isauto = "NO") {
+    socket.emit('join_room', {roomId: endpoint, userId: info.username, auto: isauto});
 }
 
 socket.on('disconnect', () => {
@@ -156,6 +171,10 @@ socket.on('disconnect', () => {
 });
 
 socket.on('start_game', message_data => {
+    $(location).attr('href', '/game'+message_data['room']);
+});
+
+socket.on('room_rejoin', message_data => {
     $(location).attr('href', '/game'+message_data['room']);
 });
 
@@ -184,7 +203,7 @@ function getCookie(cname) {
 function checkCookie() {
     var endpoint = getCookie("endpoint");
     if (endpoint != "") {
-        joinGame(endpoint)
+        joinGame(endpoint, "auto")
     }
 } 
 

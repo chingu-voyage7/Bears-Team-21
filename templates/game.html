@@ -17,7 +17,7 @@
 </head>
 <body>
     
-    <div class="container content">
+    <div class="container-fluid content">
         <div class="header clearfix">
           <nav>
             <ul class="nav nav-pills pull-right">
@@ -35,38 +35,41 @@
             </div>
         </div>    
         <div class="row">
-            <div class="col-sm-10">
-                    <div class="text">
-                            <label class="text-muted">Player Hand</label> 
+                <div class="col-sm-9">
+                        <div class="text">
+                                <label class="text-muted">Player Hand</label> 
+                            </div>
+                    <div class="player-hand well well-sm" id="player-hand">
+                        
+                    <section class="hand" id="hand">
+                       
+                    </section>
+                    <button id="discard" class="btn btn-danger">Discard</button>
+                    </div>
+                </div>
+                <div class="col-sm-3 text-center">
+                        <div class="text">
+                                <label class="text-muted">Player Role</label> 
+                            </div>
+                    <div class="player-role well well-sm" id="player-role">
+                        
+                    </div>
+                </div>
+            </div>
+        <div class="row">
+            <div class="col-sm-9">
+                <div class="row">    
+                    <div class="col-sm-12">
+                        <div class="game-board well well-sm" id="grid">
+        
                         </div>
-                <div class="player-hand well well-sm" id="player-hand">
-                    
-                <section class="hand" id="hand">
-                   
-                </section>
-                <button id="discard" class="btn btn-danger">Discard</button>
+                    </div>
                 </div>
             </div>
-            <div class="col-sm-2">
-                    <div class="text">
-                            <label class="text-muted">Player Role</label> 
-                        </div>
-                <div class="player-role well well-sm" id="player-role">
-                    
-                </div>
+            <div class="col-sm-3" id="opponents">
             </div>
         </div>
-        <div class="row">    
-            <div class="col-sm-12">
-                <div class="game-board well well-sm" id="grid">
-
-                </div>
-            </div>
-        </div>
-    
-        <div class="row" id="opponents">
-            
-        </div>
+        
         <div class="chatbody" id="chat">
             <div class="panel with-nav-tabs panel-primary">
                 <div class="panel-heading top-bar">
@@ -75,8 +78,8 @@
                     </div>    
                     <div class="col-md-9 col-xs-9" id="chatTabs">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab1primary" data-toggle="tab" class="nourl" id="tab1">Lobby</a></li>
-                            <li><a href="#tab2primary" data-toggle="tab" class="nourl" id="tab2">Room</a></li>
+                            <li><a href="#tab1primary" data-toggle="tab" class="nourl" id="tab1">Lobby</a></li>
+                            <li class="active"><a href="#tab2primary" data-toggle="tab" class="nourl" id="tab2">Room</a></li>
                         </ul>
                     </div>   
                     <div class="col-md-1 col-xs-1">
@@ -85,8 +88,8 @@
                 </div>
                 <div class="panel-body msg_container_base">
                     <div class="tab-content">
-                        <div class="tab-pane fade in active" id="tab1primary"></div>
-                        <div class="tab-pane fade" id="tab2primary"></div>
+                        <div class="tab-pane fade" id="tab1primary"></div>
+                        <div class="tab-pane fade in active" id="tab2primary"></div>
                     </div>
                 </div>
                 <div class="panel-footer">

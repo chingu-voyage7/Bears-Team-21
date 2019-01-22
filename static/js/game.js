@@ -1,5 +1,5 @@
 const lobbySocket = io.connect('http://' + document.domain + ':' + location.port+'/lobby');
-
+var sx = 0, sy = 0, stop = 0, sleft = 0;
 var testData = {hand: ["path-01","path-02","path-03","path-19","path-20"], role:"path-03", 
 board:{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}, 
 players:["Game Opponent 1","Game Opponent 2","Game Opponent 3","Game Opponent 4"]};
@@ -214,19 +214,25 @@ window.onload = function() {
         document.getElementById("opponents").innerHTML = ""
         var players = Object.keys(data);
         players.forEach(function(name,i) {
-            var opponentNode = `<div class="col-sm-3">
+            var opponentNode = `<div class="col-sm-12">
             <div class="game-opponent well well-sm" style="min-height: 100px;" id="player-${i}" name="${name}">
                 <div class="row text-center">
                     <label>${name}</label>
                 </div>
-                <div class="row">
-                    <div class="col-sm-1"></div>`;
+                <div class="row"><div class="col-sm-1"></div>`;
+                    //<div class="col-sm-1"></div>`;
+            var count = 0;
             data[name].forEach(function(icon) {
+                count += 1;
                 if (!icon.startsWith("Gold") && !icon.startsWith("Cards")){
                     opponentNode += `<div class="col-sm-2 tools ${icon}"></div>`
                 }
+                //if (count%3 == 0){
+                //    opponentNode +='<div class="col-sm-2"></div></div><div class="row"><div class="col-sm-1"></div>';
+                //}
             });        
-            opponentNode += `<div class="col-sm-1"></div></div><div class="row-fluid">
+            //opponentNode += `<div class="col-sm-1"></div>
+            opponentNode += `</div><div class="row-fluid">
                     <span>
                         <div style="float: left;"><span class="gold"></span></div>
                         <small>${data[name][data[name].length-2]}</small>
@@ -400,7 +406,35 @@ window.onload = function() {
     socket.on("game_over", (data)=> {
         $("#player-active").text("Game Over! Winners: " + data.join(" "));
     })
-    
+
+    let el = document.querySelector(".game-board");
+    let draggingFunction = (e) => {
+        document.addEventListener('mouseup', () => {
+            document.removeEventListener("mousemove", draggingFunction);
+        });
+        el.scrollLeft = sleft - e.pageX + sx;
+        el.scrollTop = stop - e.pageY + sy;
+    };
+    el.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+        sy = e.pageY;
+        sx = e.pageX;
+        stop = el.scrollTop;
+        sleft = el.scrollLeft;
+        document.addEventListener('mousemove', draggingFunction);
+    });
+
+    socket.on('game_message', function(msg) {
+            var base_receive = `<div class="row msg_container base_receive">
+                    <div class="col-md-12 col-xs-12">
+                        <div class="messages msg_receive">
+                            <b style="color: #000">Game Log</b> <p>${msg.message}</p>
+                        </div>
+                    </div>
+                </div>`;
+            $('div #tab2primary').append(base_receive);
+            $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
+    }) 
 };
 
 info = {}
@@ -414,3 +448,6 @@ function coordsToPos(x, y){
     n = y + WIDTH * x 
     return n
 }
+
+
+
