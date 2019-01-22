@@ -114,16 +114,23 @@ function buildRoomList(message_data){
     $('#new-room').hide();
     $('#event-room').show();
     $('#tab2').css('visibility', 'visible');
-    //document.querySelector('.gamerooms').innerHTML=`<p>Joined Room: ${message_data['room']}</p><p>${message_data['players']}</p>`;
-    document.querySelector('.gamerooms').innerHTML=`<div class="row">
-    <div class="container" id="joinedDiv">
-        <h2>Joined Room: ${message_data['room']}</h2>
-        <h3>${message_data['players']}</h3>
-    </div>
-    </div>`;
-    //document.querySelector('#testP').addEventListener('click', e =>{
-    //    socket.emit('my_room_event',{'data':"test",'room':message_data['room']})
-    //});
+    //.substr(1)
+    var players = `<div class="row">
+    <div class="container" id="joinedDiv"><h2>Joined Room: ${message_data['room']}</h2><div class="row">`
+   
+    for (var i=0; i< message_data["players"].length; i++){
+    players += `<div class="profile-header-container  col-md-3">   
+            <div class="profile-header-img">
+                <img class="img-circle" src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" />
+                <div class="player-label-container">
+                    <span class="label label-default player-label">${message_data['players']}</span>
+                </div>
+            </div>
+        </div> `;
+   }
+   players += `</div></div></div>`;
+   document.querySelector('.gamerooms').innerHTML= players;
+
     document.querySelector('#btn-leave').addEventListener('click', leaveRooms);
     $('.toggle').css('display','block');
 }

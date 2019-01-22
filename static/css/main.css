@@ -271,6 +271,31 @@ img {
   }
 }
 
+.profile-header-container{
+    margin: 0 auto;
+    text-align: center;
+}
+.profile-header-img {
+    padding: 54px;
+}
+.profile-header-img > img.img-circle {
+    width: 120px;
+    height: 120px;
+    border: 2px solid#337ab7;
+    margin: 0 auto;
+}
+.profile-header {
+    margin-top: 43px;
+}
+.player-label-container {
+    margin-top: -19px;
+    text-align: center;
+}
+.label.label-default.player-label {
+    background-color:#337ab7;
+    padding: 5px 10px 5px 10px;
+    border-radius: 27px;
+}
 
 .with-nav-tabs.panel-primary .nav-tabs > li > a,
 .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
