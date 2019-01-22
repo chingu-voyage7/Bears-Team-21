@@ -1,4 +1,4 @@
-from flask import Flask, render_template, session, request, redirect,url_for
+from flask import Flask, render_template, session, request, redirect,url_for, make_response
 from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import current_user
 from .settings import *
@@ -88,7 +88,11 @@ class GameLobbyNs(Namespace):
     def on_join_room(self, data):
         print(request.sid + " joining " + data['roomId'])
         if ("/"+data['roomId'] in startedGame.keys()):
-            emit("room_busy", {"room": data['roomId']}, room=request.sid)
+            if ((current_user.username in startedGame["/"+data['roomId']].players_list().keys()) and data['auto'] != "auto"):
+                emit("room_rejoin", {"room": "/"+data['roomId']}, room=request.sid)
+                return 
+            else:    
+                emit("room_busy", {"room": data['roomId']}, room=request.sid)
             return
         emit('roomsList', {'data': 'Connected', 
         'roomList': self.make_rm_List()},room='/lobby')

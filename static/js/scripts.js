@@ -158,8 +158,8 @@ function createGame() {
     setCookie("endpoint", endpoint, 1);
 }
 
-function joinGame(endpoint) {
-    socket.emit('join_room', {roomId: endpoint, userId: info.username});
+function joinGame(endpoint, isauto = "NO") {
+    socket.emit('join_room', {roomId: endpoint, userId: info.username, auto: isauto});
 }
 
 socket.on('disconnect', () => {
@@ -170,6 +170,10 @@ socket.on('disconnect', () => {
 });
 
 socket.on('start_game', message_data => {
+    $(location).attr('href', '/game'+message_data['room']);
+});
+
+socket.on('room_rejoin', message_data => {
     $(location).attr('href', '/game'+message_data['room']);
 });
 
@@ -198,7 +202,7 @@ function getCookie(cname) {
 function checkCookie() {
     var endpoint = getCookie("endpoint");
     if (endpoint != "") {
-        joinGame(endpoint)
+        joinGame(endpoint, "auto")
     }
 } 
 
