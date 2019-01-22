@@ -225,11 +225,11 @@ window.onload = function() {
             data[name].forEach(function(icon) {
                 count += 1;
                 if (!icon.startsWith("Gold") && !icon.startsWith("Cards")){
-                    opponentNode += `<div class="col-sm-3 tools ${icon}"></div>`
+                    opponentNode += `<div class="col-sm-2 tools ${icon}"></div>`
                 }
-                if (count%3 == 0){
-                    opponentNode +='<div class="col-sm-2"></div></div><div class="row"><div class="col-sm-1"></div>';
-                }
+                //if (count%3 == 0){
+                //    opponentNode +='<div class="col-sm-2"></div></div><div class="row"><div class="col-sm-1"></div>';
+                //}
             });        
             //opponentNode += `<div class="col-sm-1"></div>
             opponentNode += `</div><div class="row-fluid">

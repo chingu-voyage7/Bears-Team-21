@@ -116,14 +116,21 @@ function buildRoomList(message_data){
     $('#tab2').css('visibility', 'visible');
     //.substr(1)
     var players = `<div class="row">
-    <div class="container" id="joinedDiv"><h2>Joined Room: ${message_data['room']}</h2><div class="row">`
+    <div class="container" id="joinedDiv">
+    <div class="row ">
+    	<div class="col-md-12"> 
+    	        <h2 class="section-title ">Joined Room: ${message_data['room']}</h2>
+    	        <h4 class="section-subtitle">Waiting for all players to be Ready!</h4>
+    	</div></div>
+    <div class="border"></div>
+    <div class="row">`;
    
     for (var i=0; i< message_data["players"].length; i++){
-    players += `<div class="profile-header-container  col-md-3">   
+    players += `<div class="profile-header-container  col-md-2">   
             <div class="profile-header-img">
                 <img class="img-circle" src="http://www.tectotum.com.br/perfilx/assets_pizza/img/search/avatar7_big.png" />
                 <div class="player-label-container">
-                    <span class="label label-default player-label">${message_data['players']}</span>
+                    <span class="label label-default player-label">${message_data['players'][i]}</span>
                 </div>
             </div>
         </div> `;

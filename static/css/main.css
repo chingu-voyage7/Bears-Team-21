@@ -276,7 +276,7 @@ img {
     text-align: center;
 }
 .profile-header-img {
-    padding: 54px;
+    padding: 10px;
 }
 .profile-header-img > img.img-circle {
     width: 120px;
@@ -296,7 +296,24 @@ img {
     padding: 5px 10px 5px 10px;
     border-radius: 27px;
 }
+.section-title {
+    font-weight:400;
+    letter-spacing:.5px;
+    text-transform:none;
+    color:#000;
+}
+.section-subtitle {
+    font-weight:400;
+    text-transform:none;
+    color:#636363;
+}
 
+.border {
+    border-bottom: 1px solid #e2e2e2;
+    width: 30%;
+    margin-bottom:25px;
+    
+}
 .with-nav-tabs.panel-primary .nav-tabs > li > a,
 .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
 .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
