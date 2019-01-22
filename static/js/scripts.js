@@ -58,7 +58,8 @@ socket.on('roomsList',(rmData)=>{
     let roomListDiv = document.querySelector('.list-group');
     roomListDiv.innerHTML = "";
     Object.keys(rmData['roomList']).forEach(room => {
-        roomListDiv.innerHTML += `<li class="list-group-item room" ns="${room}">${room} - Players ${rmData['roomList'][room]}/10</li>`;
+        var color = rmData['started'].includes("/"+room) ? "red" : "green";
+        roomListDiv.innerHTML += `<li class="list-group-item room" ns="${room}">${room} - Players ${rmData['roomList'][room]}/10 <span class="dot  pull-right ${color}"></span></li>`;
     });
 
     Array.from(document.getElementsByClassName('room')).forEach(room=>{

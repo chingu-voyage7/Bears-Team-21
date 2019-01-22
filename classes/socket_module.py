@@ -7,8 +7,8 @@ startedGame = {}
 
 class GameLobbyNs(Namespace):
     clients = {}
-    game_rooms = {}#{'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
-    player_ready = {}#{"Jhon":False,"Alex":True,"Alice":False,"Bob":True,"Ted":True,"Max":False}
+    game_rooms = {'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
+    player_ready = {"Jhon":False,"Alex":True,"Alice":False,"Bob":True,"Ted":True,"Max":False}
 
     def make_rm_List(self):
         roomList = {}
@@ -24,26 +24,26 @@ class GameLobbyNs(Namespace):
         if (userId) in self.game_rooms[roomId]:
             self.game_rooms[roomId].remove(current_user.username)
             emit('roomsList', {'data': 'Connected',
-            'roomList': self.make_rm_List()},room='/lobby')
+            'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def remove_player(self, userId):
         for key in self.game_rooms:
             self.remove_player_room(userId, key)
         emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def add_player(self, userId, roomId):
         self.game_rooms[roomId].append(userId)
         self.player_ready[userId]= False
         emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def on_connect(self):
         self.clients[current_user.username] = session['username']
         join_room('/lobby')
         print('/room joined ')#+ session['username']
         emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def on_disconnect(self):
         self.remove_player(request.sid)
@@ -68,7 +68,7 @@ class GameLobbyNs(Namespace):
         self.game_rooms[roomId] = []
         self.on_join_room( data)
         emit('roomsList',{'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def on_my_event(self, message):
         emit('my_response', {'data': message['data']})
@@ -95,7 +95,7 @@ class GameLobbyNs(Namespace):
                 emit("room_busy", {"room": data['roomId']}, room=request.sid)
             return
         emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
         roomId = data['roomId']
         #leave_room('/lobby')
         join_room('/'+roomId)
@@ -130,7 +130,7 @@ class GameLobbyNs(Namespace):
         if message['room'] != '/lobby':
             self.remove_player_room(current_user.username, message['room'][1:])
         emit('roomsList',{'data': 'Connected', 
-        'roomList': self.make_rm_List()},room='/lobby')
+        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
         emit('restore_input',{'data': 'Connected', 
         'roomList': self.make_rm_List()},room=request.sid)
         return redirect('dashboard')

@@ -314,6 +314,25 @@ img {
     margin-bottom:25px;
     
 }
+
+.dot {
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.red{
+    background-color: red;
+    border-color: #7e0202;
+    border-bottom-style: inset;
+}
+.green{
+    background-color: green;
+    border-color: #003800;
+    border-bottom-style: inset;
+}
+
 .with-nav-tabs.panel-primary .nav-tabs > li > a,
 .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
 .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
