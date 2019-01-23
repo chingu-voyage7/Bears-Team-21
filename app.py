@@ -20,7 +20,7 @@ game_rooms = {'roomId1': ["Jhon","Alex","Alice"],
             'roomId3': ["Ted","Max"]}
 
 
-socketio.on_namespace(GameLobbyNs('/lobby'))
+socketio.on_namespace(GameLobbyNs('/lobby', appCtx=app, sio=socketio))
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -91,7 +91,7 @@ def game(gamename):
     print(gamename)
     gamename = request.cookies.get('endpoint')
     print(gamename)
-    socketio.on_namespace(GameRoomNs('/'+gamename))
+    socketio.on_namespace(GameRoomNs('/'+gamename, appCtx=app, sio=socketio))
     return make_response(render_template('game.html', gamename=gamename, user=session['username']))
 
 if __name__ == "__main__":

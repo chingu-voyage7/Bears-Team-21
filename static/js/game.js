@@ -347,6 +347,11 @@ window.onload = function() {
         $("#deck-cards").text(data["deck"]);
     })
 
+    socket.on("wait_for_timer", (data)=> {
+        console.log("wait");
+        socket.emit('received_timer', data);
+    })
+
     socket.on("update_board", (data)=> {
         jQuery('.square').each(function(i, cell) {
             cell.className = "square";
@@ -435,6 +440,24 @@ window.onload = function() {
             $('div #tab2primary').append(base_receive);
             $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
     }) 
+    socket.on('time_out', function(data) {
+       console.log("time out");
+       if (active_player == false) {
+        return;
+        }
+        selected.forEach(function(card){
+            i = card.index;
+            if ($('#hand .card:nth-child('+i+')').hasClass( "red-border" )){
+                $('#hand .card:nth-child('+i+')').removeClass('red-border');
+            }
+        });
+        socket.emit('card_discarded', {'cards':[0]});
+        active_player = false;
+        selected = [];
+    }) 
+    socket.on('seconds_left', function(data) {
+        $("#seconds").text(padding_left(data['number'].toString()) + " seconds");
+     }) 
 };
 
 info = {}
@@ -449,5 +472,10 @@ function coordsToPos(x, y){
     return n
 }
 
-
+function padding_left(s) {
+    if (s.length >= 2) {
+      return s;
+    }
+    return "0" + s;
+  }
 
