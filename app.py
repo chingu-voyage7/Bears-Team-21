@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import os, sqlite3
+import eventlet
 from flask import Flask, render_template, redirect, url_for, request, session, jsonify, json, make_response
 from flask_socketio import SocketIO, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
@@ -7,13 +8,16 @@ from classes.socket_module import GameLobbyNs, GameRoomNs
 from classes.database import add_user, find_user
 import classes.settings as config
 
+
+eventlet.monkey_patch()
 app = Flask(__name__)
 app.secret_key = 'thisissecret' # os.getenv("SABOTEUR_SECRET_KEY")
 DATABASE = 'database.db'
 db = sqlite3.connect(DATABASE)
 c = db.cursor()
 
-socketio = SocketIO(app, ping_timeout=30000)
+socketio = SocketIO(app, ping_timeout=30000, async_mode='eventlet')
+
 
 game_rooms = {'roomId1': ["Jhon","Alex","Alice"],
             'roomId2': ["Bob"],
@@ -95,5 +99,6 @@ def game(gamename):
     return make_response(render_template('game.html', gamename=gamename, user=session['username']))
 
 if __name__ == "__main__":
-    app.debug = True
-    app.run()
+    #app.debug = True
+    #app.run(host='0.0.0.0', port=8079)
+    socketio.run(app, host='0.0.0.0', debug = False, use_reloader=False)
