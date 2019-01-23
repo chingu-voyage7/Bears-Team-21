@@ -10,6 +10,7 @@ class Player():
         self.free = True
         self.steal = False
         self.sid = ""
+        self.disconnect = False
 
     def __gt__(self, other):
         return self.gold > other.gold

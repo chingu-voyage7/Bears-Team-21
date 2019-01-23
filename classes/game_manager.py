@@ -2,6 +2,9 @@ from .player import Player
 from .deck import Deck, ActionCard, DoorCard, PathCard, RoleCard, ToolCard
 from .board import Board
 from .utility import sub_one
+from threading import Thread, Event
+from .timer_thread import TimerThread
+import time
 
 class GameManager():
     def __init__(self,room,player_list):
@@ -14,6 +17,7 @@ class GameManager():
         self.round_scores = {}
         self.winners = []
         self.log_message = 'Starting Game!'
+        self.timerThread = None
         #self.state_listener()
 
     def state_listener(self):
@@ -61,7 +65,7 @@ class GameManager():
         self.state = 'wait_for_move'    
         #self.handle_move() #test only    
 
-    def handle_move(self, card, x=None, y=None, target=None):
+    def handle_move(self, card, x=None, y=None, target=None, timeOut = False):
         #handle move logic
         result = False # could be used positive or negative outcome of move
         print("handle move logic",card,x,y,target)
@@ -87,6 +91,8 @@ class GameManager():
                     result = self.action_played(player, 
                     card, target)
             if result:
+                if not timeOut:
+                    self.timerThread.pause()
                 round_over = self.board.check_end() or self.cards_in_play == 0        
                 if round_over:
                     self.state = 'round_over'
@@ -94,6 +100,9 @@ class GameManager():
                     self.current_player += 1 
                     self.current_player %= len(self.players)
                     self.state = 'wait_for_move'
+                    print("set event")
+                    if not timeOut:
+                        self.timerThread.resume()
                 print(self.state)   
             return result  
         except Exception as exception:
@@ -321,6 +330,7 @@ class GameManager():
         return notMe
 
     def game_over(self):
+        self.timerThread.pause()
         self.winners = []
         max_gold = max(self.players).gold
         for player in self.players:
@@ -369,9 +379,17 @@ class GameManager():
         for player in self.players:
             if player.name == name:
                 print(name,"->",sid)
+                player.disconnect = False
                 return player.set_sid(sid)
         return ""
     
     def get_current_player(self):
         turn_pl = self.players[self.current_player]
         return [turn_pl.sid, turn_pl.name]
+
+    def player_disconnected(self, name, card):
+        for player in self.players:
+            if player.name == name:
+                player.disconnect = True
+                return True
+        return False
