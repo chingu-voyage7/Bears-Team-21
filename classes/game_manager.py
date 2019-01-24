@@ -387,7 +387,7 @@ class GameManager():
         turn_pl = self.players[self.current_player]
         return [turn_pl.sid, turn_pl.name]
 
-    def player_disconnected(self, name, card):
+    def player_disconnected(self, name):
         for player in self.players:
             if player.name == name:
                 player.disconnect = True
