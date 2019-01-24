@@ -3,12 +3,18 @@ from flask_socketio import SocketIO, Namespace, emit, send, join_room, leave_roo
 from flask_login import current_user
 from .settings import *
 from .game_manager import GameManager
+from .timer_thread import TimerThread
 startedGame = {}
 
 class GameLobbyNs(Namespace):
     clients = {}
     game_rooms = {'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
     player_ready = {"Jhon":False,"Alex":True,"Alice":False,"Bob":True,"Ted":True,"Max":False}
+
+    def __init__(self, namespace=None, appCtx=None, sio=None):
+        super(GameLobbyNs, self).__init__(namespace)
+        self.appCtx = appCtx
+        self.sio = sio
 
     def make_rm_List(self):
         roomList = {}
@@ -142,6 +148,7 @@ class GameLobbyNs(Namespace):
 
 
 class GameRoomNs(Namespace):
+
     TEST_DATA = {
         "test_players":["User Player","Opponent 1","Opponent 2"],
         "test_hand":["path-01","path-02","path-03","path-19","path-20"],
@@ -149,6 +156,11 @@ class GameRoomNs(Namespace):
         "test_board":{"203":"path-03","8":"path-02","208":"path-01","408":"path-01"}
     }
     last_log = ""
+
+    def __init__(self, namespace=None, appCtx=None, sio=None):
+        super(GameRoomNs, self).__init__(namespace)
+        self.appCtx = appCtx
+        self.sio = sio
 
     def on_connect(self):
         print("got connection", request.namespace)
@@ -159,6 +171,11 @@ class GameRoomNs(Namespace):
         emit("available_cells", startedGame[request.namespace].board.available, broadcast= True)
         startedGame[request.namespace].set_player_sid(current_user.username, request.sid)
         self.active_player(request.sid, request.namespace)
+        if startedGame[request.namespace].timerThread is None:
+            print("Starting Timer Thread") 
+            startedGame[request.namespace].timerThread = TimerThread(request.namespace, self.appCtx, self.sio, startedGame[request.namespace])
+            startedGame[request.namespace].timerThread.start()
+        #   startedGame[request.namespace].timerThread.start()
 
     def on_disconnect(self):
         print("got disconnection")
@@ -232,7 +249,7 @@ class GameRoomNs(Namespace):
         if startedGame[ns].state == "start_round":
             startedGame[ns].start_round()
             emit("update_board", startedGame[ns].board.getBoardData(), broadcast= True)
-            emit("available_cells", startedGame[request.namespace].board.available, broadcast= True)
+            emit("available_cells", startedGame[ns].board.available, broadcast= True)
             for player in startedGame[ns].players:
                 emit("update_hand", startedGame[ns].player_hand_list(player.name), room=player.sid)
                 emit("update_role", {"role":startedGame[ns].get_player_role(player.name)}, room=player.sid)
@@ -254,3 +271,13 @@ class GameRoomNs(Namespace):
         if (message != self.last_log):
             emit('game_message', {'message':message}, broadcast=True)
             self.last_log = message
+    
+    def on_disconnect(self):
+        print(current_user.username, "game disconnect")
+        startedGame[request.namespace].player_disconnected(current_user.username)
+
+    def on_received_timer(self, data):
+        print("update stuff after timeout")
+        self.all_update_hand(request.namespace)
+        self.active_player(request.sid, request.namespace)
+    
