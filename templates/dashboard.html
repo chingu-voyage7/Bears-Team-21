@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
     <script type="text/javascript" src="{{url_for('static', filename='vendor/bootstrap-toggle.min.js')}}"></script> 
     <script type="text/javascript" src="{{url_for('static', filename='js/scripts.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static', filename='js/draggable.js')}}"></script>
 </head>
 <body>
     <div class="container">
@@ -54,7 +55,7 @@
                 <div class="panel with-nav-tabs panel-primary">
                     <div class="panel-heading top-bar">
                         <div class="col-md-2 col-xs-2">
-                            <h3 class="panel-title"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
+                            <h3 class="panel-title" id="drag-chat"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
                         </div>    
                         <div class="col-md-9 col-xs-9" id="chatTabs">
                             <ul class="nav nav-tabs">

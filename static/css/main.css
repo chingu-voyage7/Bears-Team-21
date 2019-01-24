@@ -101,9 +101,7 @@ body {
     width: 750px; 
     z-index: 999;
 }
-.chatbody .panel{
-    height: 100%;
-}
+
 .msg_container_base{
   background: #e5e5e5;
   margin: 0;
@@ -142,6 +140,10 @@ body {
     padding: 10px;
     overflow: hidden;
     display: flex;
+}
+
+#drag-chat{
+    cursor: move;
 }
 
 .toggle-chat{

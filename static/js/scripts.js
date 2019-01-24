@@ -233,6 +233,6 @@ $( document ).ready(function() {
         $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
     });
     $("#leave-room").on("click",  leaveRooms);
-
+    dragElement(document.getElementById("chat"));
 });
 
