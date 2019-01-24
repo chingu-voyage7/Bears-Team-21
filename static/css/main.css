@@ -101,9 +101,11 @@ body {
     width: 750px; 
     z-index: 999;
 }
-.chatbody .panel{
-    height: 100%;
+
+#drag-chat{
+    cursor: move;
 }
+
 .msg_container_base{
   background: #e5e5e5;
   margin: 0;

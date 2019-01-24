@@ -72,6 +72,7 @@ window.onload = function() {
             }); 
             divMain.appendChild(sqr); 
         }
+        dragElement(document.getElementById("chat"));
     }
 
     function modifyPlayer(player, card){
