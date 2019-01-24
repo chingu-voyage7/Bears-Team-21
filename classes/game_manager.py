@@ -7,6 +7,8 @@ from .timer_thread import TimerThread
 import time
 
 class GameManager():
+    timerThread = None
+    
     def __init__(self,room,player_list):
         self.room = room
         self.prev_state = ''
@@ -17,7 +19,6 @@ class GameManager():
         self.round_scores = {}
         self.winners = []
         self.log_message = 'Starting Game!'
-        self.timerThread = None
         #self.state_listener()
 
     def state_listener(self):
@@ -43,6 +44,8 @@ class GameManager():
     def start_round(self):
         self.log_message = 'Round started!'
         #create decks
+        if self.timerThread is not None:
+            self.timerThread.resume()
         self.deck = Deck('classes\paths.json','path-cards')
         self.deck.concat(Deck('classes\paths.json', 'action-cards'))
         self.roles = Deck('classes\paths.json', 'role-cards')
@@ -330,7 +333,7 @@ class GameManager():
         return notMe
 
     def game_over(self):
-        self.timerThread.pause()
+        #self.timerThread.pause()
         self.winners = []
         max_gold = max(self.players).gold
         for player in self.players:
@@ -387,7 +390,7 @@ class GameManager():
         turn_pl = self.players[self.current_player]
         return [turn_pl.sid, turn_pl.name]
 
-    def player_disconnected(self, name, card):
+    def player_disconnected(self, name):
         for player in self.players:
             if player.name == name:
                 player.disconnect = True

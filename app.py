@@ -101,4 +101,4 @@ def game(gamename):
 if __name__ == "__main__":
     #app.debug = True
     #app.run(host='0.0.0.0', port=8079)
-    socketio.run(app, host='0.0.0.0', debug = False, use_reloader=False)
+    socketio.run(app, host='0.0.0.0', debug = True, use_reloader=False)
