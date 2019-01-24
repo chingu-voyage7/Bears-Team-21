@@ -31,6 +31,8 @@ class TimerThread(Thread):
                         self.number = 0
                         currentPl = self.gm.get_current_player()
                         self.gm.handle_move(card=[0], timeOut = True)
+                        left = config.TIMER_TURN - (self.number//10)
+                        self.sio.emit('seconds_left', {'number': left}, namespace=self.room) 
                         self.sio.emit("update_hand", self.gm.player_hand_list(currentPl[1]), namespace=self.room, room=currentPl[0])
                         self.gm.log_message = "Time Out Discard: "+currentPl[1]
                         self.sio.emit('game_message', {'message':self.gm.log_message}, namespace=self.room, broadcast=True)
