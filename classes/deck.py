@@ -8,16 +8,17 @@ def load_cards_data(path, name_set):
 
 class Card:
 
-    def __init__(self, name):
+    def __init__(self, name, tooltip):
         self.name = name
         self.rotated = False
+        self.tooltip = tooltip
     def rotate(self):
         self.rotated = not self.rotated
         
 class PathCard(Card):
 
-    def __init__(self, name, edges, crystal):
-        super().__init__(name)
+    def __init__(self, name, tooltip, edges, crystal):
+        super().__init__(name, tooltip)
         self.has_stairs = False
         self.connections = {-2: [], -1: [], 1: [], 2: [], 6:[]}
         self.edges = edges
@@ -53,28 +54,28 @@ class PathCard(Card):
                 
 class DoorCard(PathCard):
 
-    def __init__(self, name, edges, door):
-        super().__init__(name, edges, False)
+    def __init__(self, name, tooltip, edges, door):
+        super().__init__(name, tooltip, edges, False)
         self.door = door
 
 class ActionCard(Card):
 
-    def __init__(self, name, type):
-        super().__init__(name)
+    def __init__(self, name, tooltip, type):
+        super().__init__(name, tooltip)
         self.type = type
 
 class ToolCard(ActionCard):
 
-    def __init__(self, name, type, tools):
+    def __init__(self, name, tooltip, type, tools):
 
-        super().__init__(name, type)
+        super().__init__(name, tooltip, type)
         self.tools = tools
 
 class RoleCard(Card):
 
-    def __init__(self, name, type):
+    def __init__(self, name, tooltip, type):
 
-        super().__init__(name)
+        super().__init__(name, tooltip)
         self.type = type
 
 class Deck:
@@ -83,24 +84,25 @@ class Deck:
         cards = load_cards_data(path, name_set)
         self.cards = []
         for card in cards:
-            name = card['name']            
+            name = card['name']    
+            tooltip = card['tooltip']        
             if name.startswith('path') or name.startswith('goal'):                
                 edges = card['edges']
                 door = ['path-49','path-50','path-51',
                         'path-52','path-53','path-54'] 
                 if name in door: 
-                    self.cards.append(DoorCard(name, edges, card['door']))
+                    self.cards.append(DoorCard(name, tooltip, edges, card['door']))
                 else:
                     crystal = 'crystal' in card
-                    self.cards.append(PathCard(name, edges, crystal))
+                    self.cards.append(PathCard(name, tooltip, edges, crystal))
             if name.startswith('action'):
                 type = card['type']
                 if 'tools' in card:
-                    self.cards.append(ToolCard(name, type, card['tools']))
+                    self.cards.append(ToolCard(name, tooltip, type, card['tools']))
                 else:
-                    self.cards.append(ActionCard(name, type))
+                    self.cards.append(ActionCard(name, tooltip, type))
             if name.startswith('role'):
-                self.cards.append(RoleCard(name, card['type']))
+                self.cards.append(RoleCard(name, tooltip, card['type']))
 
     def getData(self):
         return self.cards

@@ -153,7 +153,7 @@ class GameManager():
                 self.cards_in_play -= 1
                 if len(self.deck.cards):
                     player.draw_card(self.deck.draw())
-                self.log_message = player.name + " plays a path card"
+                self.log_message = player.name + " plays a 'Path' card"
                 return True
         return False
 
@@ -168,7 +168,7 @@ class GameManager():
             print("action_reveal",target)
             result = self.board.getRevealCard(target[0],target[1])
             print(result)
-            self.log_message = player.name + " reveals a destination "
+            self.log_message = player.name + " plays 'Map' on a destination"
             return result
 
         elif card.type == 'remove':
@@ -176,7 +176,7 @@ class GameManager():
             print("remove", target_card.name)
             if isinstance(target_card, (PathCard, DoorCard)):
                 self.board.remove_card(target[0], target[1])
-                self.log_message = player.name + " removes a 'Path Card'"
+                self.log_message = player.name + " plays 'Rock fall' on a 'Path'"
                 return True
             return False
 
@@ -185,7 +185,7 @@ class GameManager():
             for tool in card.tools:
                 if not t_player.tools[tool]:
                     t_player.repair_tool(tool)  
-                    self.log_message = player.name + " plays 'Repair' on " + tool +" tool"
+                    self.log_message = player.name + " plays 'Repair' on " + t_player.name +"'s "+ tool +" tool"
                     return True              
         #either one of the tools shown, but not both. 
         elif card.type == 'damage':
@@ -193,7 +193,7 @@ class GameManager():
             for tool in card.tools:
                 if t_player.tools[tool]:
                     t_player.break_tool(tool)    
-                    self.log_message = player.name + " 'Break' on " + t_player.name +"'s "+ tool +"tool"
+                    self.log_message = player.name + " 'Sabotage' on " + t_player.name +"'s "+ tool +"tool"
                     return True            
 
         elif card.type == 'theft':

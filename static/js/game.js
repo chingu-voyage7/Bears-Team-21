@@ -285,6 +285,9 @@ window.onload = function() {
             cardNode.style.height = squareheight + 'px'; 
             cardNode.className= "card sprite " + card.name + (card.rotated ? " rotate" : "");
             cardNode.type = ("edges" in card ? 'path' : card.type);
+            cardNode.setAttribute("data-toggle", "tooltip");
+            cardNode.setAttribute("title", card.tooltip);
+            cardNode.tooltiptext = card.tooltip
             if (cardNode.type == "path"){
                 cardNode.required = card.required;
             }
@@ -313,6 +316,7 @@ window.onload = function() {
                 }            
             });
             document.getElementById("hand").appendChild(cardNode);
+            $('[data-toggle="tooltip"]').tooltip(); 
         });
     })
 
@@ -339,7 +343,29 @@ window.onload = function() {
         while (roleContainer.firstChild) {
             roleContainer.removeChild(roleContainer.firstChild);
         }
+        roleNode.setAttribute("data-toggle", "tooltip");
+        switch(data["role"]) {
+            case "bluedigger":
+                roleNode.setAttribute("title", "Blue Team Digger, build a path from the Start card to the treasure card, among the three End cards.");
+            break;
+            case "greendigger":
+                roleNode.setAttribute("title", "Green Team Digger, build a path from the Start card to the treasure card, among the three End cards.");
+            break;
+            case "profiteer":
+                roleNode.setAttribute("title", "The Profiteer, you win when the gold-diggers or The Saboteurs win. However, two Gold Pieces less.");
+            break;
+            case "geologist":
+                roleNode.setAttribute("title", "The Geologist, has no interest for gold, for each visible crystal, you receive 1 Gold Piece.");
+            break;
+            case "theboss":
+                roleNode.setAttribute("title", "The Boss, you win whenever the Green or the Blue Team wins, but always gets one Gold Piece less than them.");
+            break;
+            case "saboteurs":
+                roleNode.setAttribute("title", "The Saboteur, in association with other saboteurs, prevent the gold diggers from getting to the treasure.");
+            break;
+        }
         roleContainer.appendChild(roleNode);
+        $('[data-toggle="tooltip"]').tooltip(); 
     })
     
     socket.on("wait_for_player", (data)=> {

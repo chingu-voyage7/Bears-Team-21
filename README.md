@@ -84,6 +84,7 @@ The cards are of several types:
 - **Hands Off**: If you play this card, you can remove one Theft card from in front of any player. 
 - **Swap Your Hats**: Choose one player who has to discard their current Dwarf Card.
 - **Trapped!** Play this on another player. This player is trapped and cannot play any more path cards. When the round ends, they don‘t get any treasure.
+- **Free at last!**: If you play this card, remove one Trapped! card from in front of any player. 
 
 ### Cards in play
 
