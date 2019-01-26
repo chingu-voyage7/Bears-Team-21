@@ -21,6 +21,11 @@ class GameLobbyNs(Namespace):
         roomList = {}
         for key in self.game_rooms:
             roomList[key] = len(self.game_rooms[key])
+            if roomList[key] == 0:
+                try:
+                    del roomList[key]
+                except KeyError:
+                    pass
         return roomList
 
     def filterOutUser(self, userId, room):
