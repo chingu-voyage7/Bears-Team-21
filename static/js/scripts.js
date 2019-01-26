@@ -95,6 +95,15 @@ socket.on('room_exist', message_data => {
     $('#modalBtn').click();
 });
 
+socket.on('alpha_num', message_data => {
+    var node = document.createTextNode("Game room name must be alphanumeric!");
+    var modal = document.getElementById("modal-body");
+    modal.innerHTML="";
+    modal.appendChild(node);
+    document.getElementById("exampleModalLabel").innerText="Error";
+    $('#modalBtn').click();
+});
+
 socket.on('restore_input',createLobby);
 
 function createLobby(){

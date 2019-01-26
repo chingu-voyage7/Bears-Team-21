@@ -4,6 +4,7 @@ from flask_login import current_user
 from .settings import *
 from .game_manager import GameManager
 from .timer_thread import TimerThread
+from .utility import alphanum
 startedGame = {}
 
 class GameLobbyNs(Namespace):
@@ -70,6 +71,9 @@ class GameLobbyNs(Namespace):
         if ((data['roomId']) in self.game_rooms.keys()):
             emit("room_exist", {"room": data['roomId']}, room=request.sid)
             return
+        if (not alphanum(data['roomId'])):
+            emit("alpha_num", {"room": data['roomId']}, room=request.sid)
+            return 
         roomId = data['roomId']
         self.game_rooms[roomId] = []
         self.on_join_room( data)
