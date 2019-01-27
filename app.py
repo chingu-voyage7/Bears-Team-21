@@ -97,5 +97,5 @@ def game(gamename):
     return make_response(render_template('game.html', gamename=gamename, user=session['username']))
 
 if __name__ == "__main__":
-    app.debug = True
+    app.debug = False
     app.run(host='0.0.0.0')
