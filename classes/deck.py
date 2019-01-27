@@ -50,7 +50,7 @@ class PathCard(Card):
         for c in self.connections:
             if self.connections[c] and c != 6:
                 self.required.append(c)
-        print(self.required)
+        #print(self.required)
                 
 class DoorCard(PathCard):
 

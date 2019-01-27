@@ -88,8 +88,10 @@ def dashboard():
 
 @app.route('/game/<gamename>')
 def game(gamename):
+    if(isinstance(gamename, type(None))):
+        return redirect('dashboard')
     print(gamename)
-    gamename = request.cookies.get('endpoint')
+    #gamename = request.cookies.get('endpoint')
     print(gamename)
     socketio.on_namespace(GameRoomNs('/'+gamename, appCtx=app, sio=socketio))
     return make_response(render_template('game.html', gamename=gamename, user=session['username']))

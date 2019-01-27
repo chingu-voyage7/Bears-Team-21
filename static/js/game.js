@@ -13,6 +13,7 @@ var available = [];
 var active_player = false;
 
 window.onload = function() {
+    delete_lobby_cookie();
     $('footer').css('position', 'relative');
     const gameName = document.getElementById("gamename").firstChild.data;
     socket = io.connect('http://' + document.domain + ':' + location.port+'/' + gameName, { query: 'foo=bar', extra: 'extra'});
@@ -484,7 +485,17 @@ window.onload = function() {
     }) 
     socket.on('seconds_left', function(data) {
         $("#seconds").text(padding_left(data['number'].toString()) + " seconds");
-     }) 
+    }) 
+
+    $("#leave-room").click(function(e) {
+        e.preventDefault(); 
+        socket.emit('leave');
+        setTimeout(function () {
+            window.location.href = "/dashboard"; 
+         }, 500); 
+     
+    });
+
 };
 
 info = {}
@@ -506,3 +517,18 @@ function padding_left(s) {
     return "0" + s;
   }
 
+function delete_lobby_cookie( ) {
+    //var findCookie = document.cookie.split(";");
+    //for(var i = 0; i < findCookie.length; i++)
+    //{
+    //    
+    //    var cookie = findCookie[i].trim();
+    //    var cookieName = cookie.split("=")[0];
+    //    console.log(cookieName)
+    //    if(cookieName.indexOf("endpoint") === 0) {
+    //        console.log("delete")
+    //        document.cookie = cookieName + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    //    }
+    //}
+    $.removeCookie('endpoint', { path: '/' });
+}

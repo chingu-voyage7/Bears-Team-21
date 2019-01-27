@@ -26,12 +26,19 @@ class GameLobbyNs(Namespace):
                     del roomList[key]
                 except KeyError:
                     pass
-            elif ( ("/"+ key) in startedGame.keys() and  startedGame["/"+key].all_disconnected()):
+            if ( ("/"+ key) in startedGame.keys() and  startedGame["/"+key].all_disconnected()):
                 try:
                     del roomList[key]
                     del startedGame["/"+key]
                 except KeyError:
                     pass
+        keyToRemove = []
+        for key in startedGame.keys():
+            if (startedGame[key].all_disconnected()):
+                keyToRemove.append(key)
+            else:
+                roomList[key[1:]] = len(startedGame[key].players)
+        print (roomList)
         return roomList
 
     def filterOutUser(self, userId, room):
@@ -39,13 +46,14 @@ class GameLobbyNs(Namespace):
             if player.keys(0) == userId: yield player
 
     def remove_player_room(self, userId, roomId):
-        if (userId) in self.game_rooms[roomId]:
-            self.game_rooms[roomId].remove(current_user.username)
+        if userId in self.game_rooms[roomId]:
+            print("remove from", userId)
+            self.game_rooms[roomId].remove(userId)
             emit('roomsList', {'data': 'Connected',
             'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def remove_player(self, userId):
-        for key in self.game_rooms:
+        for key in self.game_rooms.keys():
             self.remove_player_room(userId, key)
         emit('roomsList', {'data': 'Connected', 
         'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
@@ -58,13 +66,14 @@ class GameLobbyNs(Namespace):
 
     def on_connect(self):
         self.clients[current_user.username] = session['username']
+        self.remove_player(current_user.username)
         join_room('/lobby')
         print('/room joined ')#+ session['username']
         emit('roomsList', {'data': 'Connected', 
         'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def on_disconnect(self):
-        self.remove_player(request.sid)
+        self.remove_player(current_user.username)
         if current_user.username in self.clients: 
             del self.clients[current_user.username] 
         print('Client disconnected', request.sid)
@@ -143,6 +152,9 @@ class GameLobbyNs(Namespace):
             startedGame['/'+roomId] = GameManager('/'+roomId,self.game_rooms[roomId])
             print("all ready")
             emit('start_game',{'room':'/'+roomId, 'players': self.game_rooms[roomId]}, room='/'+roomId)
+            #for player in self.game_rooms[roomId]:
+                #leave_room('/'+roomId)
+                #self.remove_player_room(player, roomId)
 
     def on_leave(self, message):
         print('leaving ' + message['room'])
@@ -179,6 +191,8 @@ class GameRoomNs(Namespace):
 
     def on_connect(self):
         print("got connection", request.namespace)
+        if (request.namespace == '/') or (request.namespace not in startedGame.keys()):
+            disconnect()
         emit("update_players", startedGame[request.namespace].players_list(), room=request.sid)
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
         emit("update_role", {"role":startedGame[request.namespace].get_player_role(current_user.username)}, room=request.sid)
@@ -190,7 +204,6 @@ class GameRoomNs(Namespace):
             print("Starting Timer Thread") 
             startedGame[request.namespace].timerThread = TimerThread(request.namespace, self.appCtx, self.sio, startedGame[request.namespace])
             startedGame[request.namespace].timerThread.start()
-        #   startedGame[request.namespace].timerThread.start()
 
     def on_disconnect(self):
         print("got disconnection")
@@ -290,6 +303,11 @@ class GameRoomNs(Namespace):
     def on_disconnect(self):
         print(current_user.username, "game disconnect")
         startedGame[request.namespace].player_disconnected(current_user.username)
+
+    def on_leave(self):
+        print(current_user.username, "game leave")
+        startedGame[request.namespace].player_disconnected(current_user.username)
+        return redirect('dashboard.html')
 
     def on_received_timer(self, data):
         print("update stuff after timeout")
