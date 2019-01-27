@@ -105,8 +105,8 @@ window.onload = function() {
     }
 
     document.getElementById('grid').scrollBy({
-        top: 620,
-        left: 1090
+        top: 400,
+        left: 420
     });
     $('#tab2').css('visibility', 'visible');
     $("a.nourl").click(function(e){
@@ -442,9 +442,6 @@ window.onload = function() {
 
     let el = document.querySelector(".game-board");
     let draggingFunction = (e) => {
-        document.addEventListener('mouseup', () => {
-            document.removeEventListener("mousemove", draggingFunction);
-        });
         el.scrollLeft = sleft - e.pageX + sx;
         el.scrollTop = stop - e.pageY + sy;
     };
@@ -456,7 +453,9 @@ window.onload = function() {
         sleft = el.scrollLeft;
         document.addEventListener('mousemove', draggingFunction);
     });
-
+    document.addEventListener('mouseup', () => {
+        document.removeEventListener("mousemove", draggingFunction);
+    });
     socket.on('game_message', function(msg) {
             var base_receive = `<div class="row msg_container base_receive">
                     <div class="col-md-12 col-xs-12">

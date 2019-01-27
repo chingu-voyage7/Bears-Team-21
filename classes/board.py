@@ -16,7 +16,7 @@ dim = 19
 
 class Board:
     start_x = 5
-    start_y = 9    
+    start_y = 5    
     crystal_count = 0
     #NUM_CELLS = dim * dim
     #PAD_NUM = '{0:0'+str(len(str(NUM_CELLS - 1)))+'d}' 
