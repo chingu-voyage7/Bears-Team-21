@@ -98,10 +98,14 @@ body {
     bottom: 0;
     right: 10px;
     margin-left:10px;
-    width: 750px; 
+    width: 450px;
     z-index: 999;
 }
-
+#handle {
+    width: 10px;
+    cursor: se-resize;
+    position: absolute;
+}
 #drag-chat{
     cursor: move;
 }

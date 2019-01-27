@@ -72,7 +72,8 @@ window.onload = function() {
             }); 
             divMain.appendChild(sqr); 
         }
-        dragElement(document.getElementById("chat"));
+        //dragElement(document.getElementById("chat"));//chat-body
+        document.getElementById('handle').addEventListener('mousedown', initialiseResize, false);
     }
 
     function modifyPlayer(player, card){

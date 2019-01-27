@@ -77,20 +77,21 @@
         <div class="chatbody" id="chat">
             <div class="panel with-nav-tabs panel-primary">
                 <div class="panel-heading top-bar">
-                    <div class="col-md-2 col-xs-2">
-                        <h3 class="panel-title" id="drag-chat"><span class="glyphicon glyphicon-comment"></span> Chat </h3>
+                    <div class="col-md-3 col-xs-3">
+                        <!--<div id="handle"><span class="glyphicon glyphicon-resize-full"></span></div>-->
+                        <div class="panel-title" id="handle"><span class="glyphicon glyphicon-resize-full"><!--drag-chat</span><span class="glyphicon glyphicon-move"></span>--></div>
                     </div>    
-                    <div class="col-md-9 col-xs-9" id="chatTabs">
+                    <div class="col-md-7 col-xs-7" id="chatTabs">
                         <ul class="nav nav-tabs">
                             <li><a href="#tab1primary" data-toggle="tab" class="nourl" id="tab1">Lobby</a></li>
                             <li class="active"><a href="#tab2primary" data-toggle="tab" class="nourl" id="tab2">Room</a></li>
                         </ul>
                     </div>   
-                    <div class="col-md-1 col-xs-1">
+                    <div class="col-md-2 col-xs-2">
                         <i class="glyphicon glyphicon-asterisk toggle-chat pull-right">Collapse</i>
                     </div>
                 </div>
-                <div class="panel-body msg_container_base">
+                <div class="panel-body msg_container_base" id="chat-body">
                     <div class="tab-content">
                         <div class="tab-pane fade" id="tab1primary"></div>
                         <div class="tab-pane fade in active" id="tab2primary"></div>
