@@ -11,6 +11,7 @@ var cards = [];
 var selected = [];
 var available = [];
 var active_player = false;
+var pause_updates = false;
 
 window.onload = function() {
     delete_lobby_cookie();
@@ -155,6 +156,10 @@ window.onload = function() {
                 }
             $('input.chat_input').val('').focus()
           } )
+    $('#exampleModal').on('hidden.bs.modal', function () {
+        pause_updates = false;
+        socket.emit('update_me', {"data":"continue"});
+    })
     });
 
     socket.on('receiveMessage', function(msg) {
@@ -278,6 +283,7 @@ window.onload = function() {
     })
 
     socket.on("update_hand", (data)=>{
+        if (pause_updates) return;
         document.getElementById("hand").innerHTML = "";
         cards = [];
         selected = [];
@@ -339,6 +345,7 @@ window.onload = function() {
     });
 
     socket.on("update_role", (data)=> {
+        if (pause_updates) return;
         var roleNode = document.createElement("DIV"); 
         roleNode.className= "card sprite " + data["role"];
         var roleContainer = document.getElementById("player-role");
@@ -382,6 +389,7 @@ window.onload = function() {
     })
 
     socket.on("update_board", (data)=> {
+        if (pause_updates) return;
         jQuery('.square').each(function(i, cell) {
             cell.className = "square";
         });
@@ -424,6 +432,7 @@ window.onload = function() {
     })
 
     socket.on("round_over", (data)=> { 
+        pause_updates = true;
         var modal = document.getElementById("modal-body");
         var htmlScores = `<div class="leaderboard"><ol>`;
         Object.keys(data).forEach(function(current,idx) {

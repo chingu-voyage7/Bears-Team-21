@@ -177,8 +177,7 @@ class GameLobbyNs(Namespace):
             self.remove_player_room(current_user.username, message['room'][1:])
         emit('roomsList',{'data': 'Connected', 
         'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
-        emit('restore_input',{'data': 'Connected', 
-        'roomList': self.make_rm_List()},room=request.sid)
+        emit('restore_input',{'data': 'Connected'},room=request.sid)
         return redirect('dashboard')
 
     def on_send_message(self, message, room, methods=['GET', 'POST']):
@@ -326,4 +325,12 @@ class GameRoomNs(Namespace):
         print("update stuff after timeout")
         self.all_update_hand(request.namespace)
         self.active_player(request.sid, request.namespace)
+    
+    def on_update_me(self, data):
+        print("update player")
+        emit("update_players", startedGame[request.namespace].players_list(), room=request.sid)
+        emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
+        emit("update_role", {"role":startedGame[request.namespace].get_player_role(current_user.username)}, room=request.sid)
+        emit("update_board", startedGame[request.namespace].board.getBoardData(), broadcast= True)
+        emit("available_cells", startedGame[request.namespace].board.available, broadcast= True)
     
