@@ -19,25 +19,38 @@ class GameLobbyNs(Namespace):
 
     def make_rm_List(self):
         roomList = {}
-        for key in self.game_rooms:
+        keyToRemove = []
+        for key in self.game_rooms.keys():
             roomList[key] = len(self.game_rooms[key])
             if roomList[key] == 0:
                 try:
                     del roomList[key]
+                    keyToRemove.append(key)
                 except KeyError:
                     pass
             if ( ("/"+ key) in startedGame.keys() and  startedGame["/"+key].all_disconnected()):
                 try:
                     del roomList[key]
-                    del startedGame["/"+key]
+                    keyToRemove.append(key)
                 except KeyError:
                     pass
+        for key in keyToRemove:
+            try:
+                print("£",key)
+                del self.game_rooms[key]
+            except KeyError:
+                pass
         keyToRemove = []
         for key in startedGame.keys():
             if (startedGame[key].all_disconnected()):
                 keyToRemove.append(key)
             else:
                 roomList[key[1:]] = len(startedGame[key].players)
+        for key in keyToRemove:
+            try:
+                del startedGame[key]
+            except KeyError:
+                pass
         print (roomList)
         return roomList
 
@@ -97,8 +110,8 @@ class GameLobbyNs(Namespace):
         roomId = data['roomId']
         self.game_rooms[roomId] = []
         self.on_join_room( data)
-        emit('roomsList',{'data': 'Connected', 
-        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
+        #emit('roomsList',{'data': 'Connected', 
+        #'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def on_my_event(self, message):
         emit('my_response', {'data': message['data']})
@@ -124,8 +137,8 @@ class GameLobbyNs(Namespace):
             else:    
                 emit("room_busy", {"room": data['roomId']}, room=request.sid)
             return
-        emit('roomsList', {'data': 'Connected', 
-        'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
+        #emit('roomsList', {'data': 'Connected', 
+        #'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
         roomId = data['roomId']
         #leave_room('/lobby')
         join_room('/'+roomId)
