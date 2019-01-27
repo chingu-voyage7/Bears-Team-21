@@ -396,3 +396,6 @@ class GameManager():
                 player.disconnect = True
                 return True
         return False
+
+    def all_disconnected(self):
+        return all(player.disconnect for player in self.players)

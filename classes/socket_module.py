@@ -26,6 +26,12 @@ class GameLobbyNs(Namespace):
                     del roomList[key]
                 except KeyError:
                     pass
+            elif ( ("/"+ key) in startedGame.keys() and  startedGame["/"+key].all_disconnected()):
+                try:
+                    del roomList[key]
+                    del startedGame["/"+key]
+                except KeyError:
+                    pass
         return roomList
 
     def filterOutUser(self, userId, room):
