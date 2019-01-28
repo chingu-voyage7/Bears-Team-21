@@ -51,6 +51,12 @@ def signup(text=''):
         username = request.form.get('username')
         password = request.form.get('password')
         text = add_user(username,password)
+        if text == 'Signed up successfully!':
+            user = find_user(username, password)
+            if user is not None:
+                login_user(User(username),remember=request.form.get('remember_me'))
+                session['username'] = username
+                return redirect('dashboard')
     return render_template('signup.html', text=text)
 
 @app.route('/login', methods=['GET','POST'])
