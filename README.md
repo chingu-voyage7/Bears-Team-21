@@ -84,7 +84,7 @@ The cards are of several types:
 - **Hands Off**: If you play this card, you can remove one Theft card from in front of any player. 
 - **Swap Your Hats**: Choose one player who has to discard their current Dwarf Card.
 - **Trapped!** Play this on another player. This player is trapped and cannot play any more path cards. When the round ends, they don‘t get any treasure.
-- **Free at last!**: If you play this card, remove one Trapped! card from in front of any player. 
+- **Free at last!**: If you play this card, remove the Trapped! status from any player. 
 
 ### Cards in play
 
@@ -149,3 +149,6 @@ This project is licensed under the GNU GPLv3 - see the [LICENSE.md](LICENSE.md) 
 
 * The original [Saboteur](https://boardgamegeek.com/boardgame/9220/saboteur)
 * Inspiration [Board Game Arena](https://en.boardgamearena.com)
+* Game Designer: Fréderic Moyersoen
+* Artists: Andrea Boekhoff, Fréderic Moyersoen
+* Publisher: AMIGO 
