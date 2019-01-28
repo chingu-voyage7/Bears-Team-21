@@ -46,9 +46,9 @@ class GameManager():
         #create decks
         if self.timerThread is not None:
             self.timerThread.resume()
-        self.deck = Deck('classes\paths.json','path-cards')
-        self.deck.concat(Deck('classes\paths.json', 'action-cards'))
-        self.roles = Deck('classes\paths.json', 'role-cards')
+        self.deck = Deck('classes/paths.json','path-cards')
+        self.deck.concat(Deck('classes/paths.json', 'action-cards'))
+        self.roles = Deck('classes/paths.json', 'role-cards')
         self.deck.shuffle()
         self.roles.shuffle()
         #deal roles and cards
