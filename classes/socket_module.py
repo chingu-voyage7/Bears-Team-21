@@ -217,9 +217,6 @@ class GameRoomNs(Namespace):
             startedGame[request.namespace].timerThread = TimerThread(request.namespace, self.appCtx, self.sio, startedGame[request.namespace])
             startedGame[request.namespace].timerThread.start()
 
-    def on_disconnect(self):
-        print("got disconnection")
-
     def on_my_event(self, data):
         print("got event")
         emit('my_response', data)
