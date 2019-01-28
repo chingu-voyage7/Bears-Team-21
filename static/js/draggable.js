@@ -35,9 +35,11 @@ function initialiseResize(e) {
 function startResizing(e) {
    var chatbody = document.getElementById('chat-body');
    var chatdiv = document.getElementById('chat')
-   chatdiv.style.width = noLessThen((window.innerWidth - (e.clientX )) , 370) + 'px';//- chat.offsetLeft)    - chatdiv.offsetLeft
-   chatbody.style.height = ( window.innerHeight  - (e.clientY  ) )+ 'px';//- chat.offsetTop   - chatdiv.offsetTop
-
+   var offset = chatdiv.offsetHeight - chatbody.offsetHeight - (document.getElementById('handle').offsetHeight / 2)
+   chatdiv.style.width = noLessThen((window.innerWidth - (e.clientX )) , 370) + 'px';
+   chatbody.style.height = ( window.innerHeight   - (e.clientY + offset) ) + 'px';
+   console.log(offHg)
+   console.log(e.clientY)
 }
 function stopResizing(e) {
     window.removeEventListener('mousemove', startResizing, false);
