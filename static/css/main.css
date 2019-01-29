@@ -109,7 +109,11 @@ body {
 #drag-chat{
     cursor: move;
 }
-
+.alert{
+    position: fixed;
+    top: 0px;
+    z-index: 9999;
+}
 .msg_container_base{
   background: #e5e5e5;
   margin: 0;

@@ -106,7 +106,7 @@ class GameManager():
                     print("set event")
                     if not timeOut:
                         self.timerThread.resume()
-                print(self.state)   
+                print(self.state)
             return result  
         except Exception as exception:
             print(exception)
@@ -155,6 +155,7 @@ class GameManager():
                     player.draw_card(self.deck.draw())
                 self.log_message = player.name + " plays a 'Path' card"
                 return True
+        self.msg_curr_player("Action not allowed!")
         return False
 
     def action_played(self, player, card, target=None):        
@@ -178,6 +179,7 @@ class GameManager():
                 self.board.remove_card(target[0], target[1])
                 self.log_message = player.name + " plays 'Rock fall' on a 'Path'"
                 return True
+            self.msg_curr_player("Action not allowed!")
             return False
 
         elif card.type == 'repair':
@@ -200,6 +202,8 @@ class GameManager():
             if player.free:
                 player.steal = True
                 self.log_message = player.name + " plays 'Theft' on self"
+            else:
+                self.msg_curr_player("Action not allowed!")
 
         elif card.type == 'handsoff':
             t_player = self.players[target]
@@ -222,6 +226,8 @@ class GameManager():
                 (player.cards, t_player.cards) = (t_player.cards, player.cards)
                 t_player.draw_card(self.deck.draw())
                 self.log_message = player.name + " plays 'Swap Your Hats' on " + t_player.name
+            else:
+                self.msg_curr_player("Action not allowed!")
 
         elif card.type == 'inspection':
             #show player role card
@@ -399,3 +405,6 @@ class GameManager():
 
     def all_disconnected(self):
         return all(player.disconnect for player in self.players)
+
+    def msg_curr_player(self, text):
+        self.timerThread.sio.emit("warn_msg", {"message" : text}, namespace=self.room, room = self.get_current_player()[0])

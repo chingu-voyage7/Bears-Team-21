@@ -495,7 +495,15 @@ window.onload = function() {
     socket.on('seconds_left', function(data) {
         $("#seconds").text(padding_left(data['number'].toString()) + " seconds");
     }) 
-
+    
+    socket.on('warn_msg', function(data) {
+        $("#text-msg").text(data.message) ;
+        $('.alert').show();
+        console.log(data.message)
+    }) 
+    $("#alert-close").click(function(e) {
+        $('.alert').hide();
+    });
     $("#leave-room").click(function(e) {
         e.preventDefault(); 
         socket.emit('leave');
@@ -505,6 +513,7 @@ window.onload = function() {
      
     });
 
+    $('.alert').hide();
 };
 
 info = {}
