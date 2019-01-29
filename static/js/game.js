@@ -12,6 +12,7 @@ var selected = [];
 var available = [];
 var active_player = false;
 var pause_updates = false;
+var warningOff;
 
 window.onload = function() {
     delete_lobby_cookie();
@@ -499,10 +500,15 @@ window.onload = function() {
     socket.on('warn_msg', function(data) {
         $("#text-msg").text(data.message) ;
         $('.alert').show();
-        console.log(data.message)
+        clearTimeout(warningOff);
+        warningOff = setTimeout(e=>{
+            $('.alert').hide();
+        }, 3000);
+        console.log(data.message);
     }) 
     $("#alert-close").click(function(e) {
         $('.alert').hide();
+        clearTimeout(warningOff);
     });
     $("#leave-room").click(function(e) {
         e.preventDefault(); 
