@@ -261,8 +261,8 @@ class GameRoomNs(Namespace):
     def on_inspect_player(self, message):
         print ("inspect:", message["player"])
         role = startedGame[request.namespace].handle_move(message["card"],target=message["player"])
-        print(role)
-        emit("reveal_role", {"role": role,"player":message["player"]}, room=request.sid)
+        if (role != False):
+            emit("reveal_role", {"role": role,"player":message["player"]}, room=request.sid)
         self.all_update_hand(request.namespace)
         self.active_player(request.sid, request.namespace)
 

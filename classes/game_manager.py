@@ -252,10 +252,11 @@ class GameManager():
         elif card.type == 'inspection':
             #show player role card            
             t_player = self.players[target]
-            if player != t_player:
+            if self.current_player != target:
                 print(t_player.role) 
                 self.log_message = player.name + " plays 'Inspection' on " + t_player.name
                 return t_player.role
+            self.msg_curr_player("Action not allowed!")
             return False
 
         elif card.type == 'free':
