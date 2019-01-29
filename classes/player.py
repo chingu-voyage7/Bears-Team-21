@@ -24,6 +24,9 @@ class Player():
     def draw_card(self, card):
         self.cards.append(card)
 
+    def get_card(self, index):
+        return self.cards[index]
+
     def play_card(self, index):
         return self.cards.pop(index)
 
