@@ -1,4 +1,4 @@
-from .deck import Deck, Card
+from .deck import *
 from .settings import *
 import math
 
@@ -116,10 +116,9 @@ class Board:
     def check_visited(self, x, y, direction):
         return self.visited[x][y][direction] 
 
-    def find_available_spots(self, x, y, direction,
-    px = None, py = None, door = None):       
+    def find_available_spots(self, x, y, direction, door = None):       
         flag = True
-        if door is not None and hasattr(self.board[x][y], door):
+        if door is not None and isinstance(self.board[x][y], DoorCard):
             flag = self.board[x][y].door == door
         if flag:
             if not self.check_visited(x, y, direction):
@@ -133,7 +132,7 @@ class Board:
                         if other is None:
                             self.mark_available(nx,ny)
                         else:
-                            self.find_available_spots(nx, ny, -d, x, y, door)
+                            self.find_available_spots(nx, ny, -d, door)
 
     def check_end(self):
         coords = self.goal_coords
