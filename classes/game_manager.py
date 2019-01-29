@@ -326,6 +326,11 @@ class GameManager():
         else:
             self.state = 'start_round'
         print(self.state)
+
+        for player in self.players:
+            if player.name not in self.round_scores.keys():
+                self.round_scores[player.name] = 0
+
         self.log_message = "Round Scores: " + ', '.join(" %s: %s, " % tup for tup in sorted(self.round_scores.items(), key=lambda kv: kv[1], reverse = True))
         return(self.round_scores)
     
