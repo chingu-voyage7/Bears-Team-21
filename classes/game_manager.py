@@ -93,6 +93,10 @@ class GameManager():
                 elif isinstance(card_obj, (ActionCard, ToolCard)):
                     result = self.action_played(player, 
                     card, target)
+                    if result:
+                        player.play_card(card)
+                        if len(self.deck.cards):
+                            player.draw_card(self.deck.draw())
             if result:
                 if not timeOut:
                     self.timerThread.pause()
@@ -159,10 +163,8 @@ class GameManager():
         return False
 
     def action_played(self, player, card, target=None):        
-        card = player.play_card(card)
-        self.cards_in_play -= 1
-        if len(self.deck.cards):
-                player.draw_card(self.deck.draw())
+        card = player.get_card(card)
+        self.cards_in_play -= 1        
         print("action card",card.type)
         if card.type == 'reveal': #show goal card
             #emit signal for showing the goal card
@@ -188,60 +190,82 @@ class GameManager():
                 if not t_player.tools[tool]:
                     t_player.repair_tool(tool)  
                     self.log_message = player.name + " plays 'Repair' on " + t_player.name +"'s "+ tool +" tool"
-                    return True              
+                    return True    
+            self.msg_curr_player("Action not allowed!")
+            return False
         #either one of the tools shown, but not both. 
         elif card.type == 'damage':
-            t_player = self.players[target]          
+            t_player = self.players[target]   
+            flag = False       
             for tool in card.tools:
                 if t_player.tools[tool]:
                     t_player.break_tool(tool)    
                     self.log_message = player.name + " 'Sabotage' on " + t_player.name +"'s "+ tool +"tool"
-                    return True            
+                    flag = True
+            if not flag:
+                self.msg_curr_player("Action not allowed!")
+            return flag     
 
         elif card.type == 'theft':
             if player.free:
-                player.steal = True
-                self.log_message = player.name + " plays 'Theft' on self"
-            else:
-                self.msg_curr_player("Action not allowed!")
+                if not player.steal:
+                    player.steal = True
+                    self.log_message = player.name + " plays 'Theft' on self"
+                    return True
+            self.msg_curr_player("Action not allowed!")
+            return False
 
         elif card.type == 'handsoff':
             t_player = self.players[target]
-            t_player.steal = False
-            self.log_message = player.name + " plays 'Hands Off' on " + t_player.name
+            if t_player.steal:
+                t_player.steal = False
+                self.log_message = player.name + " plays 'Hands Off' on " + t_player.name
+                return True
+            self.msg_curr_player("Action not allowed!")
+            return False
 
         elif card.type == 'swaphats':
             t_player = self.players[target]
             t_player.set_role(self.roles.draw().type)
             self.log_message = player.name + " plays 'Swap Your Hats' on " + t_player.name
+            return True
 
-        elif card.type == 'trapped':
+        elif card.type == 'trapped':            
             t_player = self.players[target] 
-            t_player.imprison()
-            self.log_message = player.name + " plays 'Trapped!' on " + t_player.name
+            if t_player.free:
+                t_player.imprison()
+                self.log_message = player.name + " plays 'Trapped!' on " + t_player.name
+                return True
+            self.msg_curr_player("Action not allowed!")
+            return False
 
         elif card.type == 'swaphand': #modify this to ID
-            if not self.current_player == target:
+            if self.current_player != target:
                 t_player = self.players[target] 
                 (player.cards, t_player.cards) = (t_player.cards, player.cards)
                 t_player.draw_card(self.deck.draw())
                 self.log_message = player.name + " plays 'Swap Your Hats' on " + t_player.name
-            else:
-                self.msg_curr_player("Action not allowed!")
+                return True
+            self.msg_curr_player("Action not allowed!")
+            return False
 
         elif card.type == 'inspection':
-            #show player role card
+            #show player role card            
             t_player = self.players[target]
-            print(t_player.role) 
-            self.log_message = player.name + " plays 'Inspection' on " + t_player.name
-            return t_player.role
+            if player != t_player:
+                print(t_player.role) 
+                self.log_message = player.name + " plays 'Inspection' on " + t_player.name
+                return t_player.role
+            return False
 
         elif card.type == 'free':
             t_player = self.players[target]
-            t_player.release()   
-            self.log_message = player.name + " plays 'Free at last!' on " + t_player.name
-            
-        return True #placeholder
+            if not t_player.free:                
+                t_player.release()   
+                self.log_message = player.name + " plays 'Free at last!' on " + t_player.name
+                return True
+            self.msg_curr_player("Action not allowed!")
+            return False
 
     def round_over(self):
         #split winnings
