@@ -48,6 +48,7 @@ class GameLobbyNs(Namespace):
                 roomList[key[1:]] = len(startedGame[key].players)
         for key in keyToRemove:
             try:
+                startedGame[key].timerThread.termiate()
                 del startedGame[key]
             except KeyError:
                 pass

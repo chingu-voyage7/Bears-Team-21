@@ -70,7 +70,11 @@ window.onload = function() {
                                 revealCard(coord, selected[0].index-1);
                             }
                             break;
+                        default:
+                            sendAlert("Can't play 'Action card' on Board.");
                     }                 
+                } else {
+                    sendAlert("Can only play 1 card on your turn.");
                 }
             }); 
             divMain.appendChild(sqr); 
@@ -258,6 +262,7 @@ window.onload = function() {
             $('.game-opponent').each(function (i,div) {
                 div.addEventListener('click', function(evt) { 
                     if (active_player == false) {
+                        sendAlert("It's not your turn.");
                         return;
                     }
                     player = parseInt(i);
@@ -276,7 +281,11 @@ window.onload = function() {
                             case 'inspection':
                                 inspectPlayer(player, selected[0].index-1);
                                 break;
+                            default:
+                                sendAlert("Can't play 'Path card' on Player.");
                     }                 
+                } else {
+                    sendAlert("Can only play 1 card on your turn.");
                 }
                 });
             });
@@ -522,6 +531,16 @@ window.onload = function() {
     $('.alert').hide();
 };
 
+function sendAlert(message) {
+    $("#text-msg").text("Action not allowed! " + message) ;
+    $('.alert').show();
+    clearTimeout(warningOff);
+    warningOff = setTimeout(e=>{
+        $('.alert').hide();
+    }, 3000);
+    console.log(message);
+}
+
 info = {}
 
 function posToCoords(cell){
@@ -542,17 +561,5 @@ function padding_left(s) {
   }
 
 function delete_lobby_cookie( ) {
-    //var findCookie = document.cookie.split(";");
-    //for(var i = 0; i < findCookie.length; i++)
-    //{
-    //    
-    //    var cookie = findCookie[i].trim();
-    //    var cookieName = cookie.split("=")[0];
-    //    console.log(cookieName)
-    //    if(cookieName.indexOf("endpoint") === 0) {
-    //        console.log("delete")
-    //        document.cookie = cookieName + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    //    }
-    //}
     $.removeCookie('endpoint', { path: '/' });
 }

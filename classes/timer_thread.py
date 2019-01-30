@@ -17,10 +17,11 @@ class TimerThread(Thread):
         self.thing_done.set()
         self.can_run.set()   
         self.gm = gm
+        self.im_alive = True
         super(TimerThread, self).__init__()
 
     def run(self):
-        while True:
+        while self.im_alive:
             self.can_run.wait()
             try:
                 self.thing_done.clear()
@@ -53,3 +54,6 @@ class TimerThread(Thread):
     def resume(self):
         self.can_run.set()
     
+    def termiate(self):
+        self.can_run.set()
+        self.im_alive = False
