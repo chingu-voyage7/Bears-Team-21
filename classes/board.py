@@ -111,7 +111,7 @@ class Board:
             ny += y
             try:
                 other = self.board[nx][ny]            
-                if other is not None:  
+                if other is not None and not other.name.startswith('goal'):  
                     print("other coords", nx,ny)
                     print("direction", direction)
                     print("other",other.required)
