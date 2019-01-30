@@ -55,7 +55,7 @@ class Board:
         self.board[x][y] = None
         self.available = []
         self.reset_visited()
-        self.find_available_spots(self.start_x, self.start_y, 6)
+        self.find_all_available_spots()
 
     def add_card(self, card, x, y):
         print('card placed')
@@ -75,6 +75,16 @@ class Board:
                 if True not in self.visited[x][y].values():
                     self.find_available_spots(x, y, 6)
         print(self.available)
+
+    def find_all_available_spots(self, door = None):        
+        self.available = []
+        self.reset_visited()
+        self.find_available_spots(self.start_x, self.start_y, 6, door = door)
+        for stair in self.stairs:
+            x = stair[0]
+            y = stair[1]
+            if True not in self.visited[x][y].values():
+                self.find_available_spots(x, y, 6, door = door)
 
     def mark_available(self, x, y):
         if [x, y] not in self.available:

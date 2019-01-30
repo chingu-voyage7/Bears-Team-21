@@ -278,13 +278,11 @@ class GameManager():
         boss_won = self.board.check_end()
         
         self.board.reset_visited()
-        self.board.find_available_spots(self.board.start_x, 
-        self.board.start_y, 6, door='blue')
+        self.board.find_all_available_spots(door='blue')
         blue_connected = self.board.check_end()
 
         self.board.reset_visited()
-        self.board.find_available_spots(self.board.start_x, 
-        self.board.start_y, 6, door='green')
+        self.board.find_all_available_spots(door='green')
         green_connected = self.board.check_end()
 
         last_player = self.players[self.current_player].role
