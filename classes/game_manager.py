@@ -159,7 +159,10 @@ class GameManager():
                     player.draw_card(self.deck.draw())
                 self.log_message = player.name + " plays a 'Path' card"
                 return True
-        self.msg_curr_player("Action not allowed!")
+            else:
+                self.msg_curr_player("Action not allowed! Card can't be placed on this position.")
+        else:
+            self.msg_curr_player("Action not allowed! You have broken tools or trapped.")
         return False
 
     def action_played(self, player, card, target=None):        
@@ -181,7 +184,7 @@ class GameManager():
                 self.board.remove_card(target[0], target[1])
                 self.log_message = player.name + " plays 'Rock fall' on a 'Path'"
                 return True
-            self.msg_curr_player("Action not allowed!")
+            self.msg_curr_player("Action not allowed! Card can't be removed.")
             return False
 
         elif card.type == 'repair':
@@ -191,7 +194,7 @@ class GameManager():
                     t_player.repair_tool(tool)  
                     self.log_message = player.name + " plays 'Repair' on " + t_player.name +"'s "+ tool +" tool"
                     return True    
-            self.msg_curr_player("Action not allowed!")
+            self.msg_curr_player("Action not allowed! Tool already repaired.")
             return False
         #either one of the tools shown, but not both. 
         elif card.type == 'damage':
@@ -203,7 +206,7 @@ class GameManager():
                     self.log_message = player.name + " 'Sabotage' on " + t_player.name +"'s "+ tool +"tool"
                     flag = True
             if not flag:
-                self.msg_curr_player("Action not allowed!")
+                self.msg_curr_player("Action not allowed! Tool already broken.")
             return flag     
 
         elif card.type == 'theft':
@@ -212,7 +215,7 @@ class GameManager():
                     player.steal = True
                     self.log_message = player.name + " plays 'Theft' on self"
                     return True
-            self.msg_curr_player("Action not allowed!")
+            self.msg_curr_player("Action not allowed! Already have steal card or trapped.")
             return False
 
         elif card.type == 'handsoff':
@@ -221,7 +224,7 @@ class GameManager():
                 t_player.steal = False
                 self.log_message = player.name + " plays 'Hands Off' on " + t_player.name
                 return True
-            self.msg_curr_player("Action not allowed!")
+            self.msg_curr_player("Action not allowed! Target can't steal.")
             return False
 
         elif card.type == 'swaphats':
@@ -236,7 +239,7 @@ class GameManager():
                 t_player.imprison()
                 self.log_message = player.name + " plays 'Trapped!' on " + t_player.name
                 return True
-            self.msg_curr_player("Action not allowed!")
+            self.msg_curr_player("Action not allowed! Target already trapped.")
             return False
 
         elif card.type == 'swaphand': #modify this to ID
@@ -246,17 +249,17 @@ class GameManager():
                 t_player.draw_card(self.deck.draw())
                 self.log_message = player.name + " plays 'Swap Your Hats' on " + t_player.name
                 return True
-            self.msg_curr_player("Action not allowed!")
+            self.msg_curr_player("Action not allowed! You can't swap hands with yourself.")
             return False
 
         elif card.type == 'inspection':
             #show player role card            
             t_player = self.players[target]
-            if self.current_player != target:
+            if player != t_player:
                 print(t_player.role) 
                 self.log_message = player.name + " plays 'Inspection' on " + t_player.name
                 return t_player.role
-            self.msg_curr_player("Action not allowed!")
+            self.msg_curr_player("Action not allowed! You can't inspect yourself.")
             return False
 
         elif card.type == 'free':
@@ -265,7 +268,7 @@ class GameManager():
                 t_player.release()   
                 self.log_message = player.name + " plays 'Free at last!' on " + t_player.name
                 return True
-            self.msg_curr_player("Action not allowed!")
+            self.msg_curr_player("Action not allowed! Target not trapped.")
             return False
 
     def round_over(self):
