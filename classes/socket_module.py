@@ -206,6 +206,7 @@ class GameRoomNs(Namespace):
         print("got connection", request.namespace)
         if (request.namespace == '/') or (request.namespace not in startedGame.keys()):
             disconnect()
+            return
         emit("update_players", startedGame[request.namespace].players_list(), room=request.sid)
         emit("update_hand", startedGame[request.namespace].player_hand_list(current_user.username), room=request.sid)
         emit("update_role", {"role":startedGame[request.namespace].get_player_role(current_user.username)}, room=request.sid)
@@ -312,7 +313,10 @@ class GameRoomNs(Namespace):
     
     def on_disconnect(self):
         print(current_user.username, "game disconnect")
-        startedGame[request.namespace].player_disconnected(current_user.username)
+        try:
+            startedGame[request.namespace].player_disconnected(current_user.username)
+        except KeyError:
+            print(request.namespace, "room was already deleted")
 
     def on_leave(self):
         print(current_user.username, "game leave")
