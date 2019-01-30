@@ -11,6 +11,7 @@ class Player():
         self.steal = False
         self.sid = ""
         self.disconnect = False
+        self.role_history = []
 
     def __gt__(self, other):
         return self.gold > other.gold
@@ -20,6 +21,10 @@ class Player():
 
     def set_role(self, role):
         self.role = role
+        self.role_history.append(role)
+
+    def get_role_hs(self):
+        return "-".join( self.role_history)
 
     def draw_card(self, card):
         self.cards.append(card)

@@ -5,6 +5,7 @@ from .utility import sub_one
 from threading import Thread, Event
 from .timer_thread import TimerThread
 import time
+from .database import add_scores
 
 class GameManager():
     timerThread = None
@@ -19,7 +20,7 @@ class GameManager():
         self.round_scores = {}
         self.winners = []
         self.log_message = 'Starting Game!'
-        #self.state_listener()
+        #self.state_listener() 
 
     def state_listener(self):
         #while True:          
@@ -65,7 +66,7 @@ class GameManager():
         #set up map and player divs
         self.board = Board()
         self.current_player = 0
-        self.state = 'wait_for_move'    
+        self.state = 'wait_for_move'  
         #self.handle_move() #test only    
 
     def handle_move(self, card, x=None, y=None, target=None, timeOut = False):
@@ -357,6 +358,8 @@ class GameManager():
             if player.name not in self.round_scores.keys():
                 self.round_scores[player.name] = 0
 
+        #json_scores = json.dumps(self.round_scores, separators=(',',':'))
+
         self.log_message = "Round Scores: " + ', '.join(" %s: %s, " % tup for tup in sorted(self.round_scores.items(), key=lambda kv: kv[1], reverse = True))
         return(self.round_scores)
     
@@ -373,10 +376,17 @@ class GameManager():
         self.timerThread.pause()
         self.winners = []
         max_gold = max(self.players).gold
+        sc_name = ""
+        sc_role = ""
+        sc_score = ""
         for player in self.players:
+            sc_name = sc_name + player.name+", "
+            sc_role = sc_role + player.get_role_hs()+", "
+            sc_score = sc_score + str(player.gold) +", "
             if player.gold == max_gold:
                 self.winners.append(player.name)
         print('winners =', self.winners)
+        gameId = add_scores(sc_name,sc_role,sc_score, self.name)
         self.log_message = "Game Winners: " + ', '.join(self.winners)
         print(self.state)
 

@@ -67,8 +67,11 @@ class GameLobbyNs(Namespace):
             'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def remove_player(self, userId):
-        for key in self.game_rooms.keys():
-            self.remove_player_room(userId, key)
+        try:
+            for key in self.game_rooms.keys():
+                self.remove_player_room(userId, key)
+        except RuntimeError:
+            print("removed room before player")
         emit('roomsList', {'data': 'Connected', 
         'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
