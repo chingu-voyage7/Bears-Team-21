@@ -1,3 +1,8 @@
+.scale-game{
+    zoom: 0.85;
+    -moz-transform: scale(0.85);
+    transform-origin: top center;
+}
 .gold { 
     background:url("../imgs/gold.png") left top; 
     width:20px; 
