@@ -9,8 +9,8 @@ startedGame = {}
 
 class GameLobbyNs(Namespace):
     clients = {}
-    game_rooms = {'roomId1': ["Jhon","Alex","Alice"],'roomId2': ["Bob"],'roomId3': ["Ted","Max"]}
-    player_ready = {"Jhon":False,"Alex":True,"Alice":False,"Bob":True,"Ted":True,"Max":False}
+    game_rooms = {}
+    player_ready = {}
 
     def __init__(self, namespace=None, appCtx=None, sio=None):
         super(GameLobbyNs, self).__init__(namespace)
