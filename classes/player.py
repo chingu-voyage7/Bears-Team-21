@@ -21,7 +21,9 @@ class Player():
 
     def set_role(self, role):
         self.role = role
-        self.role_history.append(role)
+    
+    def save_role(self):
+        self.role_history.append(self.role)
 
     def get_role_hs(self):
         return "-".join( self.role_history)

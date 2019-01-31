@@ -263,7 +263,9 @@ window.onload = function() {
             $('.game-opponent').each(function (i,div) {
                 div.addEventListener('click', function(evt) { 
                     if (active_player == false) {
-                        sendAlert("It's not your turn.");
+                        if (selected.length > 1){
+                            sendAlert("It's not your turn.");
+                        }
                         return;
                     }
                     player = parseInt(i);
@@ -341,7 +343,9 @@ window.onload = function() {
 
     $('#discard').click(function(){
         if (active_player == false) {
-            sendAlert("It's not yor turn yet.");
+            if (selected.length > 1){
+                sendAlert("It's not your turn.");
+            }
             return;
         }
         selected.forEach(function(card){
@@ -466,7 +470,10 @@ window.onload = function() {
         $("#discard").addClass("btn-success"); 
         $("#discard").text("View Scores");
         $("#discard").on("click",e=>{
-            window.location.href = "/scores/"+data;;
+            socket.emit('leave');
+            setTimeout(function () {
+                window.location.href = "/scores/"+data;
+            }, 500); 
         });
     })
 

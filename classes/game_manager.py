@@ -308,6 +308,7 @@ class GameManager():
 
         winners_count = 0
         for player in self.players:
+            player.save_role()
             if player.role == 'bluedigger':
                 winners_count += int(blue_won)
             elif player.role == 'greendigger':
