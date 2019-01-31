@@ -5,9 +5,8 @@ Multiplayer Board Game - Saboteur | Voyage-7 | https://chingu.io/
 
 ## Chingu-Voyage Project Idea
 
-Develop a turn based board game, using JavaScript/socket.io for the front-end and Python/Flask for the back-end. The general idea it’s to build a Tile Game inspired by Saboteur. The web client interface should allow the users to join different rooms and join a Game, each game should allow a minimum of 2 players up to 10. ~~Also there should be the option to play against Bots AI~~. 
+Develop a turn based board game, using JavaScript/socket.io for the front-end and Python/Flask for the back-end. The general idea it’s to build a Tile Game inspired by Saboteur, a game by **Frederic Moyersoen** published by [Amigo](https://www.amigo-spiele.de/). The web client interface should allow the users to join different rooms and join a Game, each game should allow a minimum of 2 players up to 10.
 
-⚠️ This Project is still a work in progress.
 
 ### Prerequisites
 
@@ -55,7 +54,7 @@ http://127.0.0.1:5000/
 
 ## About Saboteur
 
-⚠️ This Project is still a work in progress, rules of the game might be changed and be updated accordingly.
+⚠️ This Project is an online multiplayer version of the board game Saboteur 2 published by **AMIGO**, built for educational purposes only. Rules of the game might have been  changed and be updated accordingly.
 
 ### Goal
 
@@ -84,7 +83,7 @@ The cards are of several types:
 - **Hands Off**: If you play this card, you can remove one Theft card from in front of any player. 
 - **Swap Your Hats**: Choose one player who has to discard their current Dwarf Card.
 - **Trapped!** Play this on another player. This player is trapped and cannot play any more path cards. When the round ends, they don‘t get any treasure.
-- **Free at last!**: If you play this card, remove the Trapped! status from any player. 
+- **Free at last!**: If you play this card, remove the **Trapped!** status from any player. 
 
 ### Cards in play
 
@@ -149,6 +148,6 @@ This project is licensed under the GNU GPLv3 - see the [LICENSE.md](LICENSE.md) 
 
 * The original [Saboteur](https://boardgamegeek.com/boardgame/9220/saboteur)
 * Inspiration [Board Game Arena](https://en.boardgamearena.com)
-* Game Designer: Fréderic Moyersoen
-* Artists: Andrea Boekhoff, Fréderic Moyersoen
-* Publisher: AMIGO 
+* Game Designer: **Fréderic Moyersoen**
+* Artists: **Andrea Boekhoff**, **Fréderic Moyersoen**
+* Publisher: **AMIGO**
