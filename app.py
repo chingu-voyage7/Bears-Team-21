@@ -4,8 +4,9 @@ from flask import Flask, render_template, redirect, url_for, request, session, j
 from flask_socketio import SocketIO, emit, send, join_room, leave_room, close_room, rooms, disconnect
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from classes.socket_module import GameLobbyNs, GameRoomNs
-from classes.database import add_user, find_user
+from classes.database import add_user, find_user, find_scores
 import classes.settings as config
+from classes.utility import alphanum
 
 app = Flask(__name__)
 app.secret_key = 'thisissecret' # os.getenv("SABOTEUR_SECRET_KEY")
@@ -49,6 +50,8 @@ def signup(text=''):
         return redirect('dashboard')
     if request.method == 'POST':
         username = request.form.get('username')
+        if not alphanum(username):
+            return render_template('signup.html', text="Username must be alphanumeric")
         password = request.form.get('password')
         text = add_user(username,password)
         if text == 'Signed up successfully!':
@@ -93,6 +96,7 @@ def dashboard():
     return resp
 
 @app.route('/game/<gamename>')
+@login_required
 def game(gamename):
     if(isinstance(gamename, type(None))):
         return redirect('dashboard')
@@ -101,6 +105,30 @@ def game(gamename):
     print(gamename)
     socketio.on_namespace(GameRoomNs('/'+gamename, appCtx=app, sio=socketio))
     return make_response(render_template('game.html', gamename=gamename, user=session['username']))
+
+@app.route('/scores/<gameid>')
+@login_required
+def scores(gameid):
+    if(isinstance(gameid, type(None)) or not alphanum(gameid)):
+        return redirect('dashboard')
+    scores = find_scores(gameid)
+    if scores is not None:
+        print(scores)
+        return render_template('scores.html', data = build_score(scores) , gamename=gameid[:-14])
+    return render_template('scores.html')
+
+def build_score(scores):
+    users=scores[0].split(", ")
+    roles=scores[1].split(", ")
+    score=scores[2].split(", ")
+    lista = []
+    for i in range(len(users)):
+        dicto = {}
+        dicto['name'] = users[i]
+        dicto['role'] = roles[i]
+        dicto['score']= score[i]
+        lista.append(dicto)
+    return lista
 
 if __name__ == "__main__":
     app.debug = False

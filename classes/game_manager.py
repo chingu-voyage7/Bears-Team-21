@@ -5,6 +5,7 @@ from .utility import sub_one
 from threading import Thread, Event
 from .timer_thread import TimerThread
 import time
+from .database import add_scores
 
 class GameManager():
     timerThread = None
@@ -19,7 +20,8 @@ class GameManager():
         self.round_scores = {}
         self.winners = []
         self.log_message = 'Starting Game!'
-        #self.state_listener()
+        self.gameId = ""
+        #self.state_listener() 
 
     def state_listener(self):
         #while True:          
@@ -29,7 +31,7 @@ class GameManager():
             if self.state == 'start_game':
                 self.start_game()
             elif self.state == 'start_round':
-                self.start_round()                
+                self.start_round()              
             elif self.state == 'round_over':
                 self.round_over()
             elif self.state == 'game_over':
@@ -65,7 +67,7 @@ class GameManager():
         #set up map and player divs
         self.board = Board()
         self.current_player = 0
-        self.state = 'wait_for_move'    
+        self.state = 'wait_for_move'  
         #self.handle_move() #test only    
 
     def handle_move(self, card, x=None, y=None, target=None, timeOut = False):
@@ -101,6 +103,7 @@ class GameManager():
                 if not timeOut:
                     self.timerThread.pause()
                 round_over = self.board.check_end() or self.cards_in_play == 0        
+                #round_over = True # to test end round
                 if round_over:
                     self.state = 'round_over'
                 else:
@@ -357,6 +360,8 @@ class GameManager():
             if player.name not in self.round_scores.keys():
                 self.round_scores[player.name] = 0
 
+        #json_scores = json.dumps(self.round_scores, separators=(',',':'))
+
         self.log_message = "Round Scores: " + ', '.join(" %s: %s, " % tup for tup in sorted(self.round_scores.items(), key=lambda kv: kv[1], reverse = True))
         return(self.round_scores)
     
@@ -373,10 +378,17 @@ class GameManager():
         self.timerThread.pause()
         self.winners = []
         max_gold = max(self.players).gold
+        sc_name = ""
+        sc_role = ""
+        sc_score = ""
         for player in self.players:
+            sc_name = sc_name + player.name+", "
+            sc_role = sc_role + player.get_role_hs()+", "
+            sc_score = sc_score + str(player.gold) +", "
             if player.gold == max_gold:
                 self.winners.append(player.name)
         print('winners =', self.winners)
+        self.gameId = add_scores(sc_name,sc_role,sc_score, self.room[1:])
         self.log_message = "Game Winners: " + ', '.join(self.winners)
         print(self.state)
 

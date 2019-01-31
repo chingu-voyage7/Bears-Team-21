@@ -460,6 +460,15 @@ window.onload = function() {
         $("#player-active").text("Game Over! Winners: " + data.join(" "));
     })
 
+    socket.on("red_score",(data)=>{
+        $("#discard").removeClass("btn-danger");
+        $("#discard").addClass("btn-success"); 
+        $("#discard").text("View Scores");
+        $("#discard").on("click",e=>{
+            window.location.href = "/scores/"+data;;
+        });
+    })
+
     let el = document.querySelector(".game-board");
     let draggingFunction = (e) => {
         el.scrollLeft = sleft - e.pageX + sx;

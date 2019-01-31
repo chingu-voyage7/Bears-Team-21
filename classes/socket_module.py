@@ -67,8 +67,11 @@ class GameLobbyNs(Namespace):
             'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
     def remove_player(self, userId):
-        for key in self.game_rooms.keys():
-            self.remove_player_room(userId, key)
+        try:
+            for key in self.game_rooms.keys():
+                self.remove_player_room(userId, key)
+        except RuntimeError:
+            print("removed room before player")
         emit('roomsList', {'data': 'Connected', 
         'roomList': self.make_rm_List(), 'started':list(startedGame.keys())},room='/lobby')
 
@@ -296,6 +299,7 @@ class GameRoomNs(Namespace):
         elif startedGame[ns].state == "game_over":
             startedGame[ns].game_over()
             emit("game_over", startedGame[ns].winners, broadcast= True)
+            emit("red_score", startedGame[ns].gameId, broadcast = True)
             self.broadcastGameLog(startedGame[ns].log_message)
         emit("update_players", startedGame[ns].players_list(), broadcast=True) 
 
