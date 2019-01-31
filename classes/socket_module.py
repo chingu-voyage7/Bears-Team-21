@@ -162,7 +162,7 @@ class GameLobbyNs(Namespace):
         self.player_ready[current_user.username] = message['Toggle']
         playersReady = True
         roomId = message['room'][1:]
-        if len(self.game_rooms[roomId]) < 1: # test -> 2
+        if len(self.game_rooms[roomId]) < 2: 
             return
         for player in self.game_rooms[roomId]:
             if (self.player_ready[player] == False):
