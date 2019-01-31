@@ -348,6 +348,15 @@ img {
     border-bottom-style: inset;
 }
 
+.table > tbody > tr > td {
+    vertical-align:  middle !important;
+}
+.td-name{
+    font-weight: bold;
+}
+.td-score{
+    font-weight: bold;
+}
 .with-nav-tabs.panel-primary .nav-tabs > li > a,
 .with-nav-tabs.panel-primary .nav-tabs > li > a:hover,
 .with-nav-tabs.panel-primary .nav-tabs > li > a:focus {
