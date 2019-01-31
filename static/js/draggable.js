@@ -14,7 +14,6 @@ function dragElement(elmnt) {
     function elementDrag(e) {
       e = e || window.event;
       e.preventDefault();
-      offsetx = 
       elmnt.style.top =( e.clientY -offY) + "px";
       elmnt.style.left =( e.clientX - offX) + "px";
     }
@@ -23,9 +22,6 @@ function dragElement(elmnt) {
       document.onmousemove = null;
     }
 } 
-
-
-//document.getElementById('chat').addEventListener('mousedown', initialiseResize, false);
 
 function initialiseResize(e) {
 	window.addEventListener('mousemove', startResizing, false);
@@ -38,8 +34,6 @@ function startResizing(e) {
    var offset = chatdiv.offsetHeight - chatbody.offsetHeight - (document.getElementById('handle').offsetHeight / 2)
    chatdiv.style.width = noLessThen((window.innerWidth - (e.clientX )) , 370) + 'px';
    chatbody.style.height = ( window.innerHeight   - (e.clientY + offset) ) + 'px';
-   console.log(offHg)
-   console.log(e.clientY)
 }
 function stopResizing(e) {
     window.removeEventListener('mousemove', startResizing, false);

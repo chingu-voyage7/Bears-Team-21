@@ -40,6 +40,7 @@ window.onload = function() {
             sqr.style.transform = `scale(${CELL_ZOOM})`;
             sqr.addEventListener('click', function(evt) { 
                 if (active_player == false) {
+                    sendAlert("It's not yor turn yet.");
                     return;
                 }
                 cell = this.id.split('-')[1];
@@ -340,6 +341,7 @@ window.onload = function() {
 
     $('#discard').click(function(){
         if (active_player == false) {
+            sendAlert("It's not yor turn yet.");
             return;
         }
         selected.forEach(function(card){
@@ -507,25 +509,29 @@ window.onload = function() {
                 $('#hand .card:nth-child('+i+')').removeClass('red-border');
             }
         });
+        sendAlert("Your turn is over.");
         socket.emit('card_discarded', {'cards':[0]});
         active_player = false;
         selected = [];
     }) 
     socket.on('seconds_left', function(data) {
         $("#seconds").text(padding_left(data['number'].toString()) + " seconds");
+        if (active_player && (parseInt(data['number']) > 58)){
+            sendTurnAlert();
+        }
     }) 
     
     socket.on('warn_msg', function(data) {
         $("#text-msg").text(data.message) ;
-        $('.alert').show();
+        $('.alert-warn').show();
         clearTimeout(warningOff);
         warningOff = setTimeout(e=>{
-            $('.alert').hide();
+            $('.alert-warn').hide();
         }, 3000);
         console.log(data.message);
     }) 
     $("#alert-close").click(function(e) {
-        $('.alert').hide();
+        $('.alert-warn').hide();
         clearTimeout(warningOff);
     });
     $("#leave-room").click(function(e) {
@@ -542,12 +548,19 @@ window.onload = function() {
 
 function sendAlert(message) {
     $("#text-msg").text("Action not allowed! " + message) ;
-    $('.alert').show();
+    $('.alert-warn').show();
     clearTimeout(warningOff);
     warningOff = setTimeout(e=>{
-        $('.alert').hide();
+        $('.alert-warn').hide();
     }, 3000);
     console.log(message);
+}
+
+function sendTurnAlert() {
+    $('.alert-turn').show();
+    infoTurn = setTimeout(e=>{
+        $('.alert-turn').hide();
+    }, 2000);
 }
 
 info = {}

@@ -114,6 +114,9 @@ body {
     top: 0px;
     z-index: 9999;
 }
+#alert-turn{
+    right: 0px;
+}
 .msg_container_base{
   background: #e5e5e5;
   margin: 0;
