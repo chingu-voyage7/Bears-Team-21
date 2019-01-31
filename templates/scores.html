@@ -10,14 +10,14 @@
                     <li role="presentation" id="leave-room"><a href="{{url_for('logout')}}">Log Out</a></li>
                   </ul>
                 </nav>
-                <h3 class="text-muted">Scores <small id="username">{{gamename|safe}}</small> </h3>
+                <h3 class="text-muted">Scores</h3>
               </div>  
               <div class="row">
         </div>
         <div class="row">
             <div class="panel panel-primary filterable">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Scores</h3>
+                    <h3 class="panel-title">Game: {{gamename|safe}}</h3>
                 </div>
                 <table class="table">
                     <thead>

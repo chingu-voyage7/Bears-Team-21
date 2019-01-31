@@ -20,6 +20,7 @@ class GameManager():
         self.round_scores = {}
         self.winners = []
         self.log_message = 'Starting Game!'
+        self.gameId = ""
         #self.state_listener() 
 
     def state_listener(self):
@@ -30,7 +31,7 @@ class GameManager():
             if self.state == 'start_game':
                 self.start_game()
             elif self.state == 'start_round':
-                self.start_round()                
+                self.start_round()              
             elif self.state == 'round_over':
                 self.round_over()
             elif self.state == 'game_over':
@@ -102,6 +103,7 @@ class GameManager():
                 if not timeOut:
                     self.timerThread.pause()
                 round_over = self.board.check_end() or self.cards_in_play == 0        
+                #round_over = True # to test end round
                 if round_over:
                     self.state = 'round_over'
                 else:
@@ -386,7 +388,7 @@ class GameManager():
             if player.gold == max_gold:
                 self.winners.append(player.name)
         print('winners =', self.winners)
-        gameId = add_scores(sc_name,sc_role,sc_score, self.name)
+        self.gameId = add_scores(sc_name,sc_role,sc_score, self.room[1:])
         self.log_message = "Game Winners: " + ', '.join(self.winners)
         print(self.state)
 

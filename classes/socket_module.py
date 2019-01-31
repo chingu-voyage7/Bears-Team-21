@@ -299,6 +299,7 @@ class GameRoomNs(Namespace):
         elif startedGame[ns].state == "game_over":
             startedGame[ns].game_over()
             emit("game_over", startedGame[ns].winners, broadcast= True)
+            emit("red_score", startedGame[ns].gameId, broadcast = True)
             self.broadcastGameLog(startedGame[ns].log_message)
         emit("update_players", startedGame[ns].players_list(), broadcast=True) 
 

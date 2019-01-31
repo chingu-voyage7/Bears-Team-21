@@ -6,6 +6,7 @@ from flask_login import LoginManager, UserMixin, login_user, login_required, log
 from classes.socket_module import GameLobbyNs, GameRoomNs
 from classes.database import add_user, find_user, find_scores
 import classes.settings as config
+from classes.utility import alphanum
 
 app = Flask(__name__)
 app.secret_key = 'thisissecret' # os.getenv("SABOTEUR_SECRET_KEY")
@@ -49,6 +50,8 @@ def signup(text=''):
         return redirect('dashboard')
     if request.method == 'POST':
         username = request.form.get('username')
+        if not alphanum(username):
+            return render_template('signup.html', text="Username must be alphanumeric")
         password = request.form.get('password')
         text = add_user(username,password)
         if text == 'Signed up successfully!':
@@ -106,10 +109,12 @@ def game(gamename):
 @app.route('/scores/<gameid>')
 @login_required
 def scores(gameid):
+    if(isinstance(gameid, type(None)) or not alphanum(gameid)):
+        return redirect('dashboard')
     scores = find_scores(gameid)
     if scores is not None:
         print(scores)
-        return render_template('scores.html', data = build_score(scores) )
+        return render_template('scores.html', data = build_score(scores) , gamename=gameid[:-14])
     return render_template('scores.html')
 
 def build_score(scores):
