@@ -7,6 +7,7 @@ Multiplayer Board Game - Saboteur | Voyage-7 | https://chingu.io/
 
 Develop a turn based board game, using JavaScript/socket.io for the front-end and Python/Flask for the back-end. The general idea it’s to build a Tile Game inspired by Saboteur, a game by **Frederic Moyersoen** published by [Amigo](https://www.amigo-spiele.de/). The web client interface should allow the users to join different rooms and join a Game, each game should allow a minimum of 2 players up to 10.
 
+Live Demo on [Heroku](https://saboteur-heroku.herokuapp.com/)
 
 ### Prerequisites
 
