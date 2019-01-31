@@ -396,7 +396,6 @@ window.onload = function() {
     })
 
     socket.on("wait_for_timer", (data)=> {
-        console.log("wait");
         socket.emit('received_timer', data);
     })
 
@@ -499,7 +498,6 @@ window.onload = function() {
             $('div.msg_container_base').scrollTop($('div.msg_container_base')[0].scrollHeight);
     }) 
     socket.on('time_out', function(data) {
-       console.log("time out");
        if (active_player == false) {
         return;
         }
@@ -528,7 +526,6 @@ window.onload = function() {
         warningOff = setTimeout(e=>{
             $('.alert-warn').hide();
         }, 3000);
-        console.log(data.message);
     }) 
     $("#alert-close").click(function(e) {
         $('.alert-warn').hide();
@@ -553,7 +550,6 @@ function sendAlert(message) {
     warningOff = setTimeout(e=>{
         $('.alert-warn').hide();
     }, 3000);
-    console.log(message);
 }
 
 function sendTurnAlert() {
