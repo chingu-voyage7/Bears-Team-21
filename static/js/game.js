@@ -73,7 +73,7 @@ window.onload = function() {
                         default:
                             sendAlert("Can't play 'Action card' on Board.");
                     }                 
-                } else {
+                } else if (selected.length > 1){
                     sendAlert("Can only play 1 card on your turn.");
                 }
             }); 
@@ -284,7 +284,7 @@ window.onload = function() {
                             default:
                                 sendAlert("Can't play 'Path card' on Player.");
                     }                 
-                } else {
+                } else if (selected.length > 1){
                     sendAlert("Can only play 1 card on your turn.");
                 }
                 });
