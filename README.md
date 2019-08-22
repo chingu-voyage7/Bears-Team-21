@@ -53,6 +53,19 @@ Browse on your local machine
 http://127.0.0.1:5000/ 
 ```
 
+#### Using a Docker Container 
+
+```
+docker build --tag=saboteur .
+docker run -p 5000:33507 saboteur
+```
+
+Browse on your local machine 
+
+```
+http://localhost:5000/
+```
+
 ## About Saboteur
 
 ⚠️ This Project is an online multiplayer version of the board game Saboteur 2 published by **AMIGO**, built for educational purposes only. Rules of the game might have been  changed and be updated accordingly.
@@ -128,6 +141,9 @@ When it is your turn, you have to take one of the four following actions:
 * Pass and discard 1-3 face-down cards from your hand.
 
 Then your turn is over and it‘s the next player‘s turn.
+
+## Screenshot
+![screenshot](docs/screenshots/Game.PNG?raw=true "Screenshot")
 
 ## Built With
 

@@ -7,6 +7,8 @@ from classes.socket_module import GameLobbyNs, GameRoomNs
 from classes.database import add_user, find_user, find_scores
 import classes.settings as config
 from classes.utility import alphanum
+#from gevent import monkey
+#monkey.patch_all()
 
 app = Flask(__name__)
 app.secret_key = 'thisissecret' # os.getenv("SABOTEUR_SECRET_KEY")
